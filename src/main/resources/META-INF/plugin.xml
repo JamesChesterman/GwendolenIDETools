@@ -5,7 +5,7 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>GwendolenPlugin</name>
+    <name>Gwendolen Language Support</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
@@ -24,7 +24,14 @@
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
-    <extensions defaultExtensionNs="com.intellij">
-
+    <extensions defaultExtensionNs="com.intellij">#
+        <fileType
+            name="Gwendolen File"
+            implementationClass="Language.GwendolenFileType"
+            fieldName="INSTANCE"
+            language="Gwendolen"
+            extensions="gwen"/>
     </extensions>
+
+
 </idea-plugin>
