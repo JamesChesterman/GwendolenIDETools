@@ -1,6 +1,8 @@
 package Grammar;
 
 import Language.GwendolenLanguage;
+import Language.psi.GwendolenTypes;
+import Language.Parser.GwendolenParser;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
@@ -71,7 +73,7 @@ public class GwendolenParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public TokenSet getCommentTokens(){
-        return GwendolenTokenSets.COMMENT;
+        return GwendolenTokenSets.EQUAL;
     }
 
     @NotNull
@@ -84,7 +86,7 @@ public class GwendolenParserDefinition implements ParserDefinition {
 
     @Override
     public PsiParser createParser(final Project project){
-        return null;
+        return new GwendolenParser();
     }
 
 
@@ -96,7 +98,7 @@ public class GwendolenParserDefinition implements ParserDefinition {
 
 
     public PsiElement createElement(ASTNode node){
-        return null;
+        return GwendolenTypes.Factory.createElement(node);
     }
 
     @NotNull

@@ -45,3 +45,15 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
 }
+
+dependencies {
+    implementation("org.antlr:antlr4-runtime:4.7")
+}
+
+sourceSets {
+    main{
+        java{
+            srcDirs("src/main/gen")
+        }
+    }
+}

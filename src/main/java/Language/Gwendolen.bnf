@@ -1,0 +1,77 @@
+{
+    parserClass="Language.Parser.GwendolenParser"
+
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="Gwendolen"
+    psiImplClassSuffix="Impl"
+    psiPackage="Language.psi"
+    psiImplPackage="Language.psi.impl"
+
+    elementTypeHolderClass="Language.psi.GwendolenTypes"
+    elementTypeClass="Language.psi.GwendolenElementType"
+    tokenTypeClass="Language.psi.GwendolenTokenType"
+}
+
+mas ::= glist
+
+glist ::= GWENDOLEN gwendolenagent+
+
+gwendolenagent ::= (GWENDOLEN)?
+    (NAME | NAME_PM) CONST
+    BELIEFS (BELIEF_BLOCK)*
+    (BELIEFRULES (RR_NEWLINE)* (RR_BLOCK)*)?
+    (GOAL_IB | GOAL_RR) (initial_goal)*
+    PLANS (plan)+
+
+initial_goal ::= GOAL_BLOCK GL_SQOPEN (GL_ACHIEVEGOAL | GL_PERFORMGOAL) GL_SQCLOSE;
+
+plan ::= event
+    COLON CURLYOPEN guard_atom (COMMA guard_atom)* CURLYCLOSE
+    (RULEARROW
+    deed (COMMA deed)*)?
+    SEMI
+
+guard_atom ::= ((NOT)? (BELIEVE fof_expr | GOAL goal | fof_expr
+    | SENT OPEN (agentnameterm) COMMA (agentnameterm COMMA)? performative COMMA fof_expr CLOSE)
+    | TRUE)
+
+event ::= (PLUS
+                (RECEIVED OPEN performative COMMA fof_expr CLOSE |
+                    (fof_expr | SHRIEK goal)
+                )
+            ) |
+            (MINUS
+                (fof_expr | SHRIEK goal)
+            )
+
+performative ::= (TELL | COLON PL_PERFORMGOAL | COLON PL_ACHIEVEGOAL);
+
+deed ::= (
+            ((PLUS (fof_expr | SHRIEK goal | LOCK))
+                |
+            (MINUS (fof_expr | SHRIEK goal | LOCK)))
+                |
+            action |
+            waitfor
+        )
+
+goal ::= fof_expr PL_SQOPEN (PL_ACHIEVEGOAL | PL_PERFORMGOAL) PL_SQCLOSE;
+
+waitfor ::= MULT (NOT?) fof_expr;
+
+action ::=
+    (SEND OPEN fof_expr COMMA performative COMMA fof_expr CLOSE) |
+    fof_expr;
+
+fof_expr ::= ((MINUS)? NUMBER | PL_VAR) (oper ((MINUS)? NUMBER | PL_VAR))? |
+            (const_var (IDPUNCT const_var)* (OPEN (fof_expr | QUOTED_STRING) (COMMA (fof_expr | QUOTED_STRING))* CLOSE)?) |
+            PL_SQOPEN (fof_expr (COMMA fof_expr)* (PL_BAR PL_VAR)?)? PL_SQCLOSE |
+            OPEN fof_expr CLOSE;
+
+const_var ::= PL_CONST | PL_VAR
+oper ::= EQUAL | LESS | PLUS | MINUS;
+
+agentnameterm ::= PL_CONST | PL_VAR;
+
+

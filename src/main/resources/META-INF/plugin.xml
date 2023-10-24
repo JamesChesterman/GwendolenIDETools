@@ -31,7 +31,14 @@
             fieldName="INSTANCE"
             language="Gwendolen"
             extensions="gwen"/>
+        <lang.parserDefinition
+            language="Gwendolen"
+            implementationClass="Grammar.GwendolenParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+            language="Gwendolen"
+            implementationClass="Language.GwendolenSyntaxHighlighterFactory"/>
     </extensions>
+
 
 
 </idea-plugin>

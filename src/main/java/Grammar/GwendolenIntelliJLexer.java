@@ -2,12 +2,13 @@ package Grammar;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerPosition;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 
 import groovyjarjarantlr4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.*;
 import org.jetbrains.annotations.NotNull;
-import psi.GwendolenTypes;
+import Language.psi.GwendolenTypes;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class GwendolenIntelliJLexer extends Lexer {
     private int startOffset;
     private int endOffset;
     private int currentOffset;
+    private boolean emptyCharSequence;
 
     public GwendolenIntelliJLexer(CharSequence buffer) {
         this.buffer = buffer;
@@ -32,6 +34,7 @@ public class GwendolenIntelliJLexer extends Lexer {
         Token antlrToken = antlrLexer.nextToken();
         //Map the ANTLR token types to the PSI token types (those in 'GwendolenTypes')
         int antlrTokenType = antlrToken.getType();
+        System.out.println(antlrToken.getText());
 
         //Returning null as the token type will finish the lexing process
         if(antlrToken.getText().equals("<EOF>")){
@@ -40,8 +43,8 @@ public class GwendolenIntelliJLexer extends Lexer {
 
         return switch (antlrTokenType) {
             case GwendolenLexer.GWENDOLEN -> GwendolenTypes.GWENDOLEN;
-            case GwendolenLexer.COMMENT -> GwendolenTypes.COMMENT;
-            case GwendolenLexer.LINE_COMMENT -> GwendolenTypes.LINE_COMMENT;
+            case GwendolenLexer.GOAL -> GwendolenTypes.GOAL;
+            case GwendolenLexer.BELIEFS -> GwendolenTypes.BELIEFS;
             default -> GwendolenTypes.UNKNOWN;
         };
 
@@ -73,7 +76,7 @@ public class GwendolenIntelliJLexer extends Lexer {
     @Override
     public int getTokenEnd(){
         //Add 1 to include final character
-        return startOffset + antlrLexer._tokenStartCharIndex + antlrLexer._text.length() + 1;
+        return startOffset + antlrLexer._tokenStartCharIndex + antlrLexer.getText().length() + 1;
 
     }
 
