@@ -16,6 +16,7 @@ public class GwendolenSyntaxHighlighterFactory extends SyntaxHighlighterFactory 
         GwendolenSyntaxHighlighter gwenSyntaxHighlighter = new GwendolenSyntaxHighlighter();
         gwenSyntaxHighlighter.setVirtualFile(virtualFile);
         gwenSyntaxHighlighter.setProject(project);
+        //System.out.println(gwenSyntaxHighlighter.)
         return gwenSyntaxHighlighter;
     }
 }
