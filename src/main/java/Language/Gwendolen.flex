@@ -3,7 +3,7 @@ package Language;
 import Language.psi.GwendolenTypes;
 import com.intellij.lexer.FlexLexer;
 import Grammar.GwendolenElementType;
-import Language.Parser.psi.GwendolenTypes;
+import Language.psi.GwendolenTypes;
 import com.intellij.psi.TokenType;
 
 
@@ -118,34 +118,34 @@ QUOTED_STRING="\"" [^\"]* "\"" | "'" [^']* "'"
 
 <YYINITIAL> {GWENDOLEN}             {yybegin(YYINITIAL); return GwendolenTypes.GWENDOLEN; }
 <YYINITIAL> {NAME}                  {yybegin(YYINITIAL); return GwendolenTypes.NAME; }
-<YYINITIAL> {CONST}                 {yybegin(YYINITAL); return GwendolenTypes.CONST; }
+<YYINITIAL> {CONST}                 {yybegin(YYINITIAL); return GwendolenTypes.CONST; }
 <YYINITIAL> {COMMENT}               {yybegin(YYINITIAL); return GwendolenTypes.COMMENT; }
-<YYINITIAL> {LINE_COMMENT}          {yybegin(YYINITIAL); return GwendolenTypes.}
-<YYINITIAL> {NEWLINE}               {yybegin(YYINITIAL); return GwendolenTypes.}
-<YYINITIAL> {WS}                    {yybegin(YYINITIAL); return GwendolenTypes.}
+<YYINITIAL> {LINE_COMMENT}          {yybegin(YYINITIAL); return GwendolenTypes.LINE_COMMENT;}
+<YYINITIAL> {NEWLINE}               {yybegin(YYINITIAL); return GwendolenTypes.NEWLINE;}
+<YYINITIAL> {WS}                    {yybegin(YYINITIAL); return GwendolenTypes.WS;}
 
 <YYINITIAL> {BELIEFS}               {yybegin(INITIAL_BELIEFS); return GwendolenTypes.BELIEFS; }
 
 <INITIAL_BELIEFS> {BELIEFRULES}     {yybegin(REASONING_RULES); return GwendolenTypes.BELIEFRULES; }
 <INITIAL_BELIEFS> {GOAL_IB}         {yybegin(GOALS); return GwendolenTypes.GOAL_IB; }
-<INITIAL_BELIEFS> {IB_COMMENT}      {yybegin(INITIAL_BELIEFS); return GwendolenTypes.}
-<INITIAL_BELIEFS> {IB_LINE_COMMENT} {yybegin(INITIAL_BELIEFS); return GwendolenTypes.; }
-<INITIAL_BELIEFS> {IB_NEWLINE}      {yybegin(INITIAL_BELIEFS); return GwendolenTypes.; }
-<INITIAL_BELIEFS> {IB_WS}           {yybegin(INITIAL_BELIEFS); return GwendolenTypes.; }
+<INITIAL_BELIEFS> {IB_COMMENT}      {yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_COMMENT;}
+<INITIAL_BELIEFS> {IB_LINE_COMMENT} {yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_LINE_COMMENT; }
+<INITIAL_BELIEFS> {IB_NEWLINE}      {yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_NEWLINE; }
+<INITIAL_BELIEFS> {IB_WS}           {yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_WS; }
 <INITIAL_BELIEFS> {BELIEF_BLOCK}    {yybegin(INITIAL_BELIEFS); return GwendolenTypes.BELIEF_BLOCK; }
 
 <REASONING_RULES> {GOAL_RR}         {yybegin(GOALS); return GwendolenTypes.GOAL_RR; }
-<REASONING_RULES> {RR_COMMENT}      {yybegin(REASONING_RULES); return GwendolenTypes.;}
-<REASONING_RULES> {RR_LINE_COMMENT} {yybegin(REASONING_RULES); return GwendolenTypes.;}
+<REASONING_RULES> {RR_COMMENT}      {yybegin(REASONING_RULES); return GwendolenTypes.RR_COMMENT;}
+<REASONING_RULES> {RR_LINE_COMMENT} {yybegin(REASONING_RULES); return GwendolenTypes.RR_LINE_COMMENT;}
 <REASONING_RULES> {RR_NEWLINE}      {yybegin(REASONING_RULES); return GwendolenTypes.RR_NEWLINE;}
-<REASONING_RULES> {RR_WS}           {yybegin(REASONING_RULES); return GwendolenTypes.;}
+<REASONING_RULES> {RR_WS}           {yybegin(REASONING_RULES); return GwendolenTypes.RR_WS;}
 <REASONING_RULES> {RR_BLOCK}        {yybegin(REASONING_RULES); return GwendolenTypes.RR_BLOCK;}
 
 <GOALS> {PLANS}                     {yybegin(PLANS_MODE); return GwendolenTypes.PLANS;}
-<GOALS> {GL_COMMENT}                {yybegin(GOALS); return GwendolenTypes.;}
-<GOALS> {GL_LINE_COMMENT}           {yybegin(GOALS); return GwendolenTypes.;}
-<GOALS> {GL_NEWLINE}                {yybegin(GOALS); return GwendolenTypes.;}
-<GOALS> {GL_WS}                     {yybegin(GOALS); return GwendolenTypes.;}
+<GOALS> {GL_COMMENT}                {yybegin(GOALS); return GwendolenTypes.GL_COMMENT;}
+<GOALS> {GL_LINE_COMMENT}           {yybegin(GOALS); return GwendolenTypes.GL_LINE_COMMENT;}
+<GOALS> {GL_NEWLINE}                {yybegin(GOALS); return GwendolenTypes.GL_NEWLINE;}
+<GOALS> {GL_WS}                     {yybegin(GOALS); return GwendolenTypes.GL_WS;}
 <GOALS> {GL_ACHIEVEGOAL}            {
           if(sq_nesting > 0){
               yybegin(GOALS);
@@ -169,10 +169,10 @@ QUOTED_STRING="\"" [^\"]* "\"" | "'" [^']* "'"
 <GOALS> {GOAL_BLOCK}                {yybegin(GOALS); return GwendolenTypes.GOAL_BLOCK;}
 
 <PLANS_MODE> {NAME_PM}              {yybegin(YYINITIAL); return GwendolenTypes.NAME_PM;}
-<PLANS_MODE> {PL_COMMENT}           {yybegin(PLANS_MODE); return GwendolenTypes.;}
-<PLANS_MODE> {PL_LINE_COMMENT}      {yybegin(PLANS_MODE); return GwendolenTypes.;}
-<PLANS_MODE> {PL_NEWLINE}           {yybegin(PLANS_MODE); return GwendolenTypes.;}
-<PLANS_MODE> {PL_WS}                {yybegin(PLANS_MODE); return GwendolenTypes.;}
+<PLANS_MODE> {PL_COMMENT}           {yybegin(PLANS_MODE); return GwendolenTypes.PL_COMMENT;}
+<PLANS_MODE> {PL_LINE_COMMENT}      {yybegin(PLANS_MODE); return GwendolenTypes.PL_LINE_COMMENT;}
+<PLANS_MODE> {PL_NEWLINE}           {yybegin(PLANS_MODE); return GwendolenTypes.PL_NEWLINE;}
+<PLANS_MODE> {PL_WS}                {yybegin(PLANS_MODE); return GwendolenTypes.PL_WS;}
 <PLANS_MODE> {SEND}                 {yybegin(PLANS_MODE); return GwendolenTypes.SEND;}
 <PLANS_MODE> {RECEIVED}             {yybegin(PLANS_MODE); return GwendolenTypes.RECEIVED; }
 <PLANS_MODE> {BELIEVE}              {

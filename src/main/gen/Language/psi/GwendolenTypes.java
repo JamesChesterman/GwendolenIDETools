@@ -78,6 +78,25 @@ public interface GwendolenTypes {
   IElementType TRUE = new GwendolenTokenType("TRUE");
   IElementType UNKNOWN = new GwendolenTokenType("UNKNOWN");
 
+  IElementType LINE_COMMENT = new GwendolenElementType("LINE_COMMENT");
+  IElementType NEWLINE = new GwendolenElementType("NEWLINE");
+  IElementType WS = new GwendolenElementType("WS");
+  IElementType IB_COMMENT = new GwendolenElementType("IB_COMMENT");
+  IElementType IB_LINE_COMMENT = new GwendolenElementType("IB_LINE_COMMENT");
+  IElementType IB_NEWLINE = new GwendolenElementType("IB_NEWLINE");
+  IElementType IB_WS = new GwendolenElementType("IB_WS");
+  IElementType RR_COMMENT = new GwendolenElementType("RR_COMMENT");
+  IElementType RR_LINE_COMMENT = new GwendolenElementType("RR_LINE_COMMENT");
+  IElementType RR_WS = new GwendolenElementType("RR_WS");
+  IElementType GL_COMMENT = new GwendolenElementType("GL_COMMENT");
+  IElementType GL_LINE_COMMENT = new GwendolenElementType("GL_LINE_COMMENT");
+  IElementType GL_NEWLINE = new GwendolenElementType("GL_NEWLINE");
+  IElementType GL_WS = new GwendolenElementType("GL_WS");
+  IElementType PL_COMMENT = new GwendolenElementType("PL_COMMENT");
+  IElementType PL_LINE_COMMENT = new GwendolenElementType("PL_LINE_COMMENT");
+  IElementType PL_NEWLINE = new GwendolenElementType("PL_NEWLINE");
+  IElementType PL_WS = new GwendolenElementType("PL_WS");
+
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();

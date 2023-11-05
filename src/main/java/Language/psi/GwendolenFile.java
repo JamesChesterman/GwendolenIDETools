@@ -1,4 +1,4 @@
-package Grammar;
+package Language.psi;
 
 import Language.GwendolenFileType;
 import Language.GwendolenLanguage;
@@ -22,4 +22,5 @@ public class GwendolenFile extends PsiFileBase {
     public String toString(){
         return "Gwendolen File";
     }
+
 }

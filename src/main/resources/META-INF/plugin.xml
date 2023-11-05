@@ -33,8 +33,10 @@
             extensions="gwen"/>
         <lang.parserDefinition
             language="Gwendolen"
-            implementationClass="Grammar.GwendolenParserDefinition"/>
-
+            implementationClass="Language.GwendolenParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+            language="Gwendolen"
+            implementationClass="Language.GwendolenSyntaxHighlighterFactory"/>
     </extensions>
 
 

@@ -1,14 +1,12 @@
-package Grammar;
+package Language.psi;
 
-import Language.psi.GwendolenTypes;
 import com.intellij.psi.tree.TokenSet;
 
-
 public interface GwendolenTokenSets {
-
     TokenSet ACTION = TokenSet.create(GwendolenTypes.ACTION);
     TokenSet AGENTNAMETERM = TokenSet.create(GwendolenTypes.AGENTNAMETERM);
     TokenSet CONST_VAR = TokenSet.create(GwendolenTypes.CONST_VAR);
+    TokenSet COMMENT = TokenSet.create(GwendolenTypes.COMMENT);
     TokenSet DEED = TokenSet.create(GwendolenTypes.DEED);
     TokenSet EVENT = TokenSet.create(GwendolenTypes.EVENT);
     TokenSet FOF_EXPR = TokenSet.create(GwendolenTypes.FOF_EXPR);
@@ -42,11 +40,13 @@ public interface GwendolenTokenSets {
     TokenSet GWENDOLEN = TokenSet.create(GwendolenTypes.GWENDOLEN);
     TokenSet IDPUNCT = TokenSet.create(GwendolenTypes.IDPUNCT);
     TokenSet LESS = TokenSet.create(GwendolenTypes.LESS);
+    TokenSet LINE_COMMENT = TokenSet.create(GwendolenTypes.LINE_COMMENT);
     TokenSet LOCK = TokenSet.create(GwendolenTypes.LOCK);
     TokenSet MINUS = TokenSet.create(GwendolenTypes.MINUS);
     TokenSet MULT = TokenSet.create(GwendolenTypes.MULT);
     TokenSet NAME = TokenSet.create(GwendolenTypes.NAME);
     TokenSet NAME_PM = TokenSet.create(GwendolenTypes.NAME_PM);
+    TokenSet NEWLINE = TokenSet.create(GwendolenTypes.NEWLINE);
     TokenSet NOT = TokenSet.create(GwendolenTypes.NOT);
     TokenSet NUMBER = TokenSet.create(GwendolenTypes.NUMBER);
     TokenSet OPEN = TokenSet.create(GwendolenTypes.OPEN);
@@ -72,4 +72,21 @@ public interface GwendolenTokenSets {
     TokenSet TRUE = TokenSet.create(GwendolenTypes.TRUE);
     TokenSet UNKNOWN = TokenSet.create(GwendolenTypes.UNKNOWN);
 
+
+    TokenSet WS = TokenSet.create(GwendolenTypes.WS);
+    TokenSet IB_COMMENT = TokenSet.create(GwendolenTypes.IB_COMMENT);
+    TokenSet IB_LINE_COMMENT = TokenSet.create(GwendolenTypes.IB_LINE_COMMENT);
+    TokenSet IB_NEWLINE = TokenSet.create(GwendolenTypes.IB_NEWLINE);
+    TokenSet IB_WS = TokenSet.create(GwendolenTypes.IB_WS);
+    TokenSet RR_COMMENT = TokenSet.create(GwendolenTypes.RR_COMMENT);
+    TokenSet RR_LINE_COMMENT = TokenSet.create(GwendolenTypes.RR_LINE_COMMENT);
+    TokenSet RR_WS = TokenSet.create(GwendolenTypes.RR_WS);
+    TokenSet GL_COMMENT = TokenSet.create(GwendolenTypes.GL_COMMENT);
+    TokenSet GL_LINE_COMMENT = TokenSet.create(GwendolenTypes.GL_LINE_COMMENT);
+    TokenSet GL_NEWLINE = TokenSet.create(GwendolenTypes.GL_NEWLINE);
+    TokenSet GL_WS = TokenSet.create(GwendolenTypes.GL_WS);
+    TokenSet PL_COMMENT = TokenSet.create(GwendolenTypes.PL_COMMENT);
+    TokenSet PL_LINE_COMMENT = TokenSet.create(GwendolenTypes.PL_LINE_COMMENT);
+    TokenSet PL_NEWLINE = TokenSet.create(GwendolenTypes.PL_NEWLINE);
+    TokenSet PL_WS = TokenSet.create(GwendolenTypes.PL_WS);
 }
