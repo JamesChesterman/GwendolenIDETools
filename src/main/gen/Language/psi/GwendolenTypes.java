@@ -13,6 +13,7 @@ public interface GwendolenTypes {
   IElementType ACTION = new GwendolenElementType("ACTION");
   IElementType AGENTNAMETERM = new GwendolenElementType("AGENTNAMETERM");
   IElementType CONST_VAR = new GwendolenElementType("CONST_VAR");
+  IElementType COMMENT = new GwendolenElementType("COMMENT");
   IElementType DEED = new GwendolenElementType("DEED");
   IElementType EVENT = new GwendolenElementType("EVENT");
   IElementType FOF_EXPR = new GwendolenElementType("FOF_EXPR");

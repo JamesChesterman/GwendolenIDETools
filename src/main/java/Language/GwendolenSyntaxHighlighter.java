@@ -1,19 +1,15 @@
 package Language;
 
-import Grammar.GwendolenIntelliJLexer;
 import Language.psi.GwendolenTypes;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.project.Project;
-
-import java.util.Objects;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
@@ -228,6 +224,9 @@ public class GwendolenSyntaxHighlighter extends SyntaxHighlighterBase {
         }
         if(tokenType.equals(GwendolenTypes.COMMA)){
             return COMMA_KEYS;
+        }
+        if(tokenType.equals(GwendolenTypes.COMMENT)){
+            return COMMENT;
         }
         if(tokenType.equals(GwendolenTypes.CONST)){
             return CONST_KEYS;
