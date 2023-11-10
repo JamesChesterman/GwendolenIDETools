@@ -113,19 +113,20 @@ class GwendolenLexer implements FlexLexer {
     "\1\17\1\20\1\0\1\21\2\0\1\22\1\23\1\24"+
     "\1\25\1\26\1\27\1\30\1\0\1\31\1\32\1\33"+
     "\1\34\1\0\1\35\1\36\1\0\1\37\1\40\3\41"+
-    "\1\42\1\43\1\44\1\45\4\0\1\3\7\0\2\14"+
-    "\1\46\6\0\1\47\1\50\1\0\2\41\3\0\1\3"+
-    "\7\0\2\14\7\0\2\41\1\0\1\51\2\0\1\3"+
-    "\1\0\1\52\3\0\1\53\2\0\1\54\1\0\2\14"+
-    "\4\0\1\55\2\0\1\56\2\41\2\0\1\3\4\0"+
-    "\2\14\1\57\1\0\1\60\1\61\1\0\1\62\2\41"+
-    "\1\0\1\63\1\3\4\0\2\14\1\0\1\64\2\41"+
-    "\1\0\1\3\3\0\1\65\1\66\1\67\1\0\1\70"+
-    "\1\71\1\0\1\3\5\0\1\72\3\0\1\73\25\0"+
-    "\1\74\1\0\1\75\2\0\1\76\1\77";
+    "\1\42\1\43\1\44\1\45\1\0\1\46\2\0\1\3"+
+    "\1\0\1\47\3\0\1\50\2\0\1\51\1\0\2\14"+
+    "\1\52\4\0\1\53\2\0\1\54\1\55\1\0\2\41"+
+    "\3\0\1\3\7\0\2\14\7\0\2\41\1\56\2\0"+
+    "\1\3\1\57\2\0\1\60\1\0\1\61\1\0\2\14"+
+    "\3\0\1\62\2\0\1\63\2\41\2\0\1\3\4\0"+
+    "\2\14\1\64\1\0\1\65\1\66\1\0\1\67\2\41"+
+    "\1\0\1\70\1\3\4\0\2\14\1\0\1\71\2\41"+
+    "\1\0\1\3\3\0\1\72\1\73\1\74\1\0\1\75"+
+    "\1\76\1\0\1\3\5\0\1\77\3\0\1\100\25\0"+
+    "\1\101\1\0\1\102\2\0\1\103\1\104";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[222];
+    int [] result = new int[221];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -158,29 +159,29 @@ class GwendolenLexer implements FlexLexer {
     "\0\u07bc\0\u0168\0\u0168\0\u0168\0\u0168\0\u0168\0\u0168\0\u07f8"+
     "\0\u0834\0\u0870\0\u08ac\0\u0168\0\u08e8\0\u0924\0\u0168\0\u0168"+
     "\0\u0960\0\u0168\0\u0168\0\u099c\0\u09d8\0\u0a14\0\u0168\0\u0168"+
-    "\0\u0168\0\u0168\0\u0a50\0\u0168\0\u0a8c\0\u0ac8\0\u0b04\0\u0b40"+
-    "\0\u0b7c\0\u0bb8\0\u0bf4\0\u0c30\0\u0c6c\0\u0ca8\0\u0ce4\0\u0d20"+
-    "\0\u0168\0\u0d5c\0\u0d98\0\u0dd4\0\u0e10\0\u0e4c\0\u0e88\0\u0168"+
-    "\0\u0168\0\u0ec4\0\u0f00\0\u0f3c\0\u0f78\0\u0fb4\0\u0ff0\0\u102c"+
-    "\0\u1068\0\u10a4\0\u10e0\0\u111c\0\u1158\0\u1194\0\u11d0\0\u120c"+
-    "\0\u1248\0\u1284\0\u12c0\0\u12fc\0\u1338\0\u1374\0\u13b0\0\u13ec"+
-    "\0\u1428\0\u1464\0\u14a0\0\u0168\0\u14dc\0\u1518\0\u1554\0\u1590"+
-    "\0\u0168\0\u15cc\0\u1608\0\u1644\0\u0168\0\u1680\0\u16bc\0\u0168"+
-    "\0\u16f8\0\u1734\0\u1770\0\u17ac\0\u17e8\0\u1824\0\u1860\0\u0168"+
-    "\0\u189c\0\u18d8\0\u0168\0\u1914\0\u1950\0\u198c\0\u19c8\0\u1a04"+
-    "\0\u1a40\0\u1a7c\0\u1ab8\0\u1af4\0\u1b30\0\u1b6c\0\u0168\0\u1ba8"+
-    "\0\u0168\0\u0168\0\u1be4\0\u0168\0\u1c20\0\u1c5c\0\u1c98\0\u0168"+
-    "\0\u1cd4\0\u1d10\0\u1d4c\0\u1d88\0\u1dc4\0\u1e00\0\u1e3c\0\u1e78"+
-    "\0\u0168\0\u1eb4\0\u1ef0\0\u1f2c\0\u1f68\0\u1fa4\0\u1fe0\0\u201c"+
-    "\0\u0168\0\u05dc\0\u05dc\0\u2058\0\u09d8\0\u09d8\0\u2094\0\u20d0"+
-    "\0\u210c\0\u2148\0\u2184\0\u21c0\0\u21fc\0\u021c\0\u2238\0\u2274"+
-    "\0\u22b0\0\u0168\0\u22ec\0\u2328\0\u2364\0\u23a0\0\u23dc\0\u2418"+
-    "\0\u2454\0\u2490\0\u24cc\0\u2508\0\u2544\0\u2580\0\u25bc\0\u25f8"+
-    "\0\u2634\0\u2670\0\u26ac\0\u26e8\0\u2724\0\u2760\0\u279c\0\u0168"+
-    "\0\u27d8\0\u0168\0\u2814\0\u2850\0\u0168\0\u0168";
+    "\0\u0168\0\u0168\0\u0a50\0\u0a8c\0\u0ac8\0\u0b04\0\u0b40\0\u0b7c"+
+    "\0\u0bb8\0\u0bf4\0\u0c30\0\u0c6c\0\u0ca8\0\u0ce4\0\u0d20\0\u0d5c"+
+    "\0\u0d98\0\u0dd4\0\u0e10\0\u0168\0\u0e4c\0\u0e88\0\u0ec4\0\u0f00"+
+    "\0\u0f3c\0\u0f78\0\u0fb4\0\u0168\0\u0168\0\u0ff0\0\u102c\0\u1068"+
+    "\0\u10a4\0\u10e0\0\u111c\0\u1158\0\u1194\0\u11d0\0\u120c\0\u1248"+
+    "\0\u1284\0\u12c0\0\u12fc\0\u1338\0\u1374\0\u13b0\0\u13ec\0\u1428"+
+    "\0\u1464\0\u14a0\0\u14dc\0\u1518\0\u1554\0\u1590\0\u0a50\0\u15cc"+
+    "\0\u1608\0\u1644\0\u0b7c\0\u1680\0\u16bc\0\u0c6c\0\u16f8\0\u0d20"+
+    "\0\u1734\0\u1770\0\u17ac\0\u17e8\0\u1824\0\u1860\0\u0f00\0\u189c"+
+    "\0\u18d8\0\u0168\0\u1914\0\u1950\0\u198c\0\u19c8\0\u1a04\0\u1a40"+
+    "\0\u1a7c\0\u1ab8\0\u1af4\0\u1b30\0\u1b6c\0\u0168\0\u1ba8\0\u0168"+
+    "\0\u0168\0\u1be4\0\u0168\0\u1c20\0\u1c5c\0\u1c98\0\u0168\0\u1cd4"+
+    "\0\u1d10\0\u1d4c\0\u1d88\0\u1dc4\0\u1e00\0\u1e3c\0\u1e78\0\u0168"+
+    "\0\u1eb4\0\u1ef0\0\u1f2c\0\u1f68\0\u1fa4\0\u1fe0\0\u201c\0\u0168"+
+    "\0\u05dc\0\u05dc\0\u2058\0\u09d8\0\u09d8\0\u2094\0\u20d0\0\u210c"+
+    "\0\u2148\0\u2184\0\u21c0\0\u21fc\0\u021c\0\u2238\0\u2274\0\u22b0"+
+    "\0\u0168\0\u22ec\0\u2328\0\u2364\0\u23a0\0\u23dc\0\u2418\0\u2454"+
+    "\0\u2490\0\u24cc\0\u2508\0\u2544\0\u2580\0\u25bc\0\u25f8\0\u2634"+
+    "\0\u2670\0\u26ac\0\u26e8\0\u2724\0\u2760\0\u279c\0\u0168\0\u27d8"+
+    "\0\u0168\0\u2814\0\u2850\0\u0168\0\u0168";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[222];
+    int [] result = new int[221];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -226,103 +227,101 @@ class GwendolenLexer implements FlexLexer {
     "\2\0\3\20\1\0\1\20\4\0\43\20\1\0\1\20"+
     "\3\0\1\20\1\16\2\20\1\0\1\20\1\0\2\20"+
     "\2\0\3\20\1\0\1\20\4\0\43\20\1\0\1\20"+
-    "\14\0\1\110\4\0\1\104\106\0\1\111\4\0\1\112"+
+    "\14\0\1\110\4\0\1\111\106\0\1\112\4\0\1\113"+
     "\35\0\1\23\2\26\1\23\1\0\1\26\1\0\2\26"+
     "\2\0\3\26\1\0\1\26\4\0\43\26\1\0\1\26"+
     "\3\0\4\26\1\0\1\26\1\0\2\26\2\0\3\26"+
     "\1\0\1\26\4\0\43\26\1\0\1\26\3\0\1\26"+
     "\1\24\2\26\1\0\1\26\1\0\2\26\2\0\3\26"+
-    "\1\0\1\26\4\0\43\26\1\0\1\26\14\0\1\113"+
-    "\4\0\1\104\106\0\1\114\42\0\1\31\2\0\1\31"+
+    "\1\0\1\26\4\0\43\26\1\0\1\26\14\0\1\114"+
+    "\4\0\1\115\106\0\1\116\42\0\1\31\2\0\1\31"+
     "\71\0\1\32\72\0\1\31\2\0\1\34\3\0\2\35"+
     "\2\0\1\35\1\0\1\35\1\0\1\35\4\0\15\35"+
     "\2\0\24\35\10\0\1\35\3\0\2\35\2\0\1\35"+
     "\1\0\1\35\1\0\1\35\4\0\15\35\2\0\24\35"+
-    "\16\0\1\115\4\0\1\104\112\0\1\116\41\0\1\35"+
+    "\16\0\1\117\4\0\1\120\112\0\1\121\41\0\1\35"+
     "\3\0\2\35\2\0\1\35\1\0\1\35\1\0\1\35"+
-    "\4\0\15\35\2\0\2\35\1\117\21\35\10\0\1\35"+
+    "\4\0\15\35\2\0\2\35\1\122\21\35\10\0\1\35"+
     "\3\0\2\35\2\0\1\35\1\0\1\35\1\0\1\35"+
-    "\4\0\15\35\2\0\4\35\1\120\17\35\5\0\1\44"+
-    "\2\0\1\44\71\0\1\45\71\0\6\50\1\121\65\50"+
-    "\7\51\1\121\64\51\26\0\1\67\2\0\1\70\24\0"+
-    "\1\122\4\0\1\123\1\124\21\0\1\125\4\0\1\104"+
-    "\72\0\1\62\1\0\1\62\133\0\1\126\4\0\1\127"+
-    "\23\0\1\130\102\0\1\131\132\0\1\132\26\0\1\75"+
-    "\1\0\1\75\4\0\15\75\2\0\2\75\1\133\21\75"+
+    "\4\0\15\35\2\0\4\35\1\123\17\35\5\0\1\44"+
+    "\2\0\1\44\71\0\1\45\71\0\6\50\1\124\65\50"+
+    "\7\51\1\124\64\51\26\0\1\67\2\0\1\70\24\0"+
+    "\1\125\4\0\1\126\1\127\21\0\1\130\4\0\1\131"+
+    "\72\0\1\62\1\0\1\62\133\0\1\132\4\0\1\133"+
+    "\23\0\1\134\102\0\1\135\132\0\1\136\26\0\1\75"+
+    "\1\0\1\75\4\0\15\75\2\0\2\75\1\137\21\75"+
     "\22\0\1\75\1\0\1\75\4\0\15\75\2\0\24\75"+
     "\22\0\1\75\1\0\1\75\4\0\15\75\2\0\4\75"+
-    "\1\134\17\75\4\0\12\103\1\135\61\103\60\0\1\136"+
-    "\57\0\1\137\47\0\1\12\4\0\3\12\1\140\11\12"+
-    "\2\0\24\12\4\0\12\110\1\141\61\110\60\0\1\142"+
-    "\63\0\1\143\23\0\12\113\1\144\61\113\60\0\1\145"+
-    "\13\0\12\115\1\146\61\115\56\0\1\147\21\0\1\35"+
-    "\3\0\2\35\2\0\1\35\1\0\1\35\1\0\1\35"+
-    "\4\0\15\35\2\0\7\35\1\150\14\35\10\0\1\35"+
-    "\3\0\2\35\2\0\1\35\1\0\1\35\1\0\1\35"+
-    "\4\0\15\35\2\0\17\35\1\151\4\35\65\0\1\152"+
-    "\62\0\1\153\73\0\1\154\23\0\12\125\1\155\61\125"+
-    "\44\0\1\156\77\0\1\157\111\0\1\160\23\0\1\75"+
-    "\1\0\1\75\4\0\15\75\2\0\7\75\1\161\14\75"+
-    "\22\0\1\75\1\0\1\75\4\0\15\75\2\0\17\75"+
-    "\1\162\4\75\4\0\12\103\1\163\4\103\1\164\54\103"+
-    "\54\0\1\165\76\0\1\166\34\0\1\12\4\0\7\12"+
-    "\1\167\5\12\2\0\24\12\4\0\12\110\1\170\4\110"+
-    "\1\171\54\110\54\0\1\172\63\0\1\173\27\0\12\113"+
-    "\1\174\4\113\1\175\54\113\54\0\1\176\17\0\12\115"+
-    "\1\177\4\115\1\200\54\115\44\0\1\201\33\0\1\35"+
-    "\3\0\2\35\2\0\1\35\1\0\1\35\1\0\1\35"+
-    "\4\0\15\35\2\0\10\35\1\202\13\35\10\0\1\35"+
-    "\3\0\2\35\2\0\1\35\1\0\1\35\1\0\1\35"+
-    "\4\0\15\35\2\0\5\35\1\203\16\35\52\0\1\204"+
-    "\73\0\1\205\105\0\1\206\13\0\12\125\1\207\4\125"+
-    "\1\210\54\125\57\0\1\211\72\0\1\212\65\0\1\213"+
-    "\41\0\1\75\1\0\1\75\4\0\15\75\2\0\10\75"+
-    "\1\214\13\75\22\0\1\75\1\0\1\75\4\0\15\75"+
-    "\2\0\5\75\1\215\16\75\4\0\12\103\1\163\4\103"+
-    "\1\0\54\103\65\0\1\216\56\0\1\217\43\0\1\12"+
-    "\4\0\2\12\1\220\12\12\2\0\24\12\4\0\12\110"+
-    "\1\170\4\110\1\0\54\110\65\0\1\221\72\0\1\222"+
-    "\7\0\12\113\1\174\4\113\1\0\54\113\65\0\1\223"+
-    "\6\0\12\115\1\177\4\115\1\0\54\115\60\0\1\224"+
-    "\17\0\1\35\3\0\2\35\2\0\1\35\1\0\1\35"+
-    "\1\0\1\35\4\0\15\35\2\0\4\35\1\225\17\35"+
-    "\10\0\1\35\3\0\2\35\2\0\1\35\1\0\1\35"+
-    "\1\0\1\35\4\0\15\35\2\0\15\35\1\226\6\35"+
-    "\61\0\1\227\66\0\1\230\72\0\1\231\15\0\1\232"+
-    "\6\0\12\125\1\207\4\125\1\0\54\125\50\0\1\233"+
-    "\101\0\1\234\33\0\1\75\1\0\1\75\4\0\15\75"+
-    "\2\0\4\75\1\235\17\75\22\0\1\75\1\0\1\75"+
-    "\4\0\15\75\2\0\15\75\1\236\6\75\60\0\1\237"+
-    "\40\0\1\240\72\0\1\12\4\0\10\12\1\241\4\12"+
-    "\2\0\24\12\60\0\1\242\100\0\1\243\66\0\1\244"+
-    "\103\0\1\245\13\0\1\35\3\0\2\35\2\0\1\35"+
-    "\1\0\1\35\1\0\1\35\4\0\15\35\2\0\23\35"+
-    "\1\246\10\0\1\35\3\0\2\35\2\0\1\35\1\0"+
-    "\1\35\1\0\1\35\4\0\15\35\2\0\17\35\1\247"+
-    "\4\35\60\0\1\250\40\0\1\251\70\0\1\75\1\0"+
-    "\1\75\4\0\15\75\2\0\23\75\1\252\22\0\1\75"+
-    "\1\0\1\75\4\0\15\75\2\0\17\75\1\253\4\75"+
-    "\50\0\1\254\47\0\1\12\4\0\6\12\1\255\6\12"+
-    "\2\0\24\12\50\0\1\256\107\0\1\257\57\0\1\260"+
-    "\50\0\1\261\56\0\1\35\3\0\2\35\2\0\1\35"+
-    "\1\0\1\35\1\0\1\35\4\0\15\35\2\0\4\35"+
-    "\1\262\17\35\10\0\1\35\3\0\2\35\2\0\1\35"+
-    "\1\0\1\35\1\0\1\35\4\0\15\35\2\0\13\35"+
-    "\1\263\10\35\73\0\1\264\22\0\1\75\1\0\1\75"+
-    "\4\0\15\75\2\0\4\75\1\265\17\75\22\0\1\75"+
-    "\1\0\1\75\4\0\15\75\2\0\13\75\1\266\10\75"+
-    "\62\0\1\267\35\0\1\12\4\0\3\12\1\270\11\12"+
-    "\2\0\24\12\62\0\1\271\71\0\1\272\75\0\1\273"+
-    "\65\0\1\274\27\0\1\275\107\0\1\12\4\0\7\12"+
-    "\1\276\5\12\2\0\24\12\10\0\1\277\147\0\1\300"+
-    "\17\0\1\301\136\0\1\302\52\0\1\303\76\0\1\304"+
-    "\114\0\1\305\52\0\1\306\112\0\1\307\104\0\1\310"+
-    "\16\0\1\311\150\0\1\312\70\0\1\313\61\0\1\314"+
-    "\66\0\1\315\100\0\1\316\103\0\1\317\75\0\1\320"+
-    "\103\0\1\321\63\0\1\322\65\0\1\323\107\0\1\324"+
-    "\65\0\1\325\101\0\1\326\60\0\1\327\43\0\1\330"+
-    "\122\0\1\331\44\0\1\332\136\0\1\333\73\0\1\334"+
-    "\30\0\1\335\73\0\1\336\52\0";
+    "\1\140\17\75\4\0\12\103\1\141\61\103\2\104\2\0"+
+    "\70\104\60\0\1\142\57\0\1\143\47\0\1\12\4\0"+
+    "\3\12\1\144\11\12\2\0\24\12\4\0\12\110\1\145"+
+    "\61\110\2\111\2\0\70\111\60\0\1\146\63\0\1\147"+
+    "\23\0\12\114\1\150\61\114\2\115\2\0\70\115\60\0"+
+    "\1\151\13\0\12\117\1\152\61\117\2\120\2\0\70\120"+
+    "\56\0\1\153\21\0\1\35\3\0\2\35\2\0\1\35"+
+    "\1\0\1\35\1\0\1\35\4\0\15\35\2\0\7\35"+
+    "\1\154\14\35\10\0\1\35\3\0\2\35\2\0\1\35"+
+    "\1\0\1\35\1\0\1\35\4\0\15\35\2\0\17\35"+
+    "\1\155\4\35\65\0\1\156\62\0\1\157\73\0\1\160"+
+    "\23\0\12\130\1\161\61\130\2\131\2\0\70\131\44\0"+
+    "\1\162\77\0\1\163\111\0\1\164\23\0\1\75\1\0"+
+    "\1\75\4\0\15\75\2\0\7\75\1\165\14\75\22\0"+
+    "\1\75\1\0\1\75\4\0\15\75\2\0\17\75\1\166"+
+    "\4\75\4\0\12\103\1\141\4\103\1\167\54\103\54\0"+
+    "\1\170\76\0\1\171\34\0\1\12\4\0\7\12\1\172"+
+    "\5\12\2\0\24\12\4\0\12\110\1\145\4\110\1\173"+
+    "\54\110\54\0\1\174\63\0\1\175\27\0\12\114\1\150"+
+    "\4\114\1\176\54\114\54\0\1\177\17\0\12\117\1\152"+
+    "\4\117\1\200\54\117\44\0\1\201\33\0\1\35\3\0"+
+    "\2\35\2\0\1\35\1\0\1\35\1\0\1\35\4\0"+
+    "\15\35\2\0\10\35\1\202\13\35\10\0\1\35\3\0"+
+    "\2\35\2\0\1\35\1\0\1\35\1\0\1\35\4\0"+
+    "\15\35\2\0\5\35\1\203\16\35\52\0\1\204\73\0"+
+    "\1\205\105\0\1\206\13\0\12\130\1\161\4\130\1\207"+
+    "\54\130\57\0\1\210\72\0\1\211\65\0\1\212\41\0"+
+    "\1\75\1\0\1\75\4\0\15\75\2\0\10\75\1\213"+
+    "\13\75\22\0\1\75\1\0\1\75\4\0\15\75\2\0"+
+    "\5\75\1\214\16\75\71\0\1\215\56\0\1\216\43\0"+
+    "\1\12\4\0\2\12\1\217\12\12\2\0\24\12\71\0"+
+    "\1\220\72\0\1\221\74\0\1\222\66\0\1\223\17\0"+
+    "\1\35\3\0\2\35\2\0\1\35\1\0\1\35\1\0"+
+    "\1\35\4\0\15\35\2\0\4\35\1\224\17\35\10\0"+
+    "\1\35\3\0\2\35\2\0\1\35\1\0\1\35\1\0"+
+    "\1\35\4\0\15\35\2\0\15\35\1\225\6\35\61\0"+
+    "\1\226\66\0\1\227\72\0\1\230\15\0\1\231\56\0"+
+    "\1\232\101\0\1\233\33\0\1\75\1\0\1\75\4\0"+
+    "\15\75\2\0\4\75\1\234\17\75\22\0\1\75\1\0"+
+    "\1\75\4\0\15\75\2\0\15\75\1\235\6\75\60\0"+
+    "\1\236\40\0\1\237\72\0\1\12\4\0\10\12\1\240"+
+    "\4\12\2\0\24\12\60\0\1\241\100\0\1\242\66\0"+
+    "\1\243\103\0\1\244\13\0\1\35\3\0\2\35\2\0"+
+    "\1\35\1\0\1\35\1\0\1\35\4\0\15\35\2\0"+
+    "\23\35\1\245\10\0\1\35\3\0\2\35\2\0\1\35"+
+    "\1\0\1\35\1\0\1\35\4\0\15\35\2\0\17\35"+
+    "\1\246\4\35\60\0\1\247\40\0\1\250\70\0\1\75"+
+    "\1\0\1\75\4\0\15\75\2\0\23\75\1\251\22\0"+
+    "\1\75\1\0\1\75\4\0\15\75\2\0\17\75\1\252"+
+    "\4\75\50\0\1\253\47\0\1\12\4\0\6\12\1\254"+
+    "\6\12\2\0\24\12\50\0\1\255\107\0\1\256\57\0"+
+    "\1\257\50\0\1\260\56\0\1\35\3\0\2\35\2\0"+
+    "\1\35\1\0\1\35\1\0\1\35\4\0\15\35\2\0"+
+    "\4\35\1\261\17\35\10\0\1\35\3\0\2\35\2\0"+
+    "\1\35\1\0\1\35\1\0\1\35\4\0\15\35\2\0"+
+    "\13\35\1\262\10\35\73\0\1\263\22\0\1\75\1\0"+
+    "\1\75\4\0\15\75\2\0\4\75\1\264\17\75\22\0"+
+    "\1\75\1\0\1\75\4\0\15\75\2\0\13\75\1\265"+
+    "\10\75\62\0\1\266\35\0\1\12\4\0\3\12\1\267"+
+    "\11\12\2\0\24\12\62\0\1\270\71\0\1\271\75\0"+
+    "\1\272\65\0\1\273\27\0\1\274\107\0\1\12\4\0"+
+    "\7\12\1\275\5\12\2\0\24\12\10\0\1\276\147\0"+
+    "\1\277\17\0\1\300\136\0\1\301\52\0\1\302\76\0"+
+    "\1\303\114\0\1\304\52\0\1\305\112\0\1\306\104\0"+
+    "\1\307\16\0\1\310\150\0\1\311\70\0\1\312\61\0"+
+    "\1\313\66\0\1\314\100\0\1\315\103\0\1\316\75\0"+
+    "\1\317\103\0\1\320\63\0\1\321\65\0\1\322\107\0"+
+    "\1\323\65\0\1\324\101\0\1\325\60\0\1\326\43\0"+
+    "\1\327\122\0\1\330\44\0\1\331\136\0\1\332\73\0"+
+    "\1\333\30\0\1\334\73\0\1\335\52\0";
 
   private static int [] zzUnpacktrans() {
     int [] result = new int[10380];
@@ -367,18 +366,19 @@ class GwendolenLexer implements FlexLexer {
     "\4\1\2\0\1\1\1\11\1\0\2\1\2\0\2\11"+
     "\3\1\1\11\1\0\1\11\2\0\6\11\1\1\1\0"+
     "\2\1\1\11\1\1\1\0\2\11\1\0\2\11\3\1"+
-    "\4\11\1\0\1\10\2\0\1\1\7\0\2\1\1\11"+
-    "\6\0\2\11\1\0\2\1\3\0\1\1\7\0\2\1"+
-    "\7\0\2\1\1\0\1\11\2\0\1\1\1\0\1\11"+
-    "\3\0\1\11\2\0\1\11\1\0\2\1\4\0\1\11"+
-    "\2\0\1\11\2\1\2\0\1\1\4\0\2\1\1\11"+
-    "\1\0\2\11\1\0\1\11\2\1\1\0\1\11\1\1"+
-    "\4\0\2\1\1\0\1\11\2\1\1\0\1\1\3\0"+
-    "\1\11\2\1\1\0\2\1\1\0\1\1\5\0\1\1"+
-    "\3\0\1\11\25\0\1\11\1\0\1\11\2\0\2\11";
+    "\4\11\1\0\1\1\2\0\1\1\1\0\1\1\3\0"+
+    "\1\1\2\0\1\1\1\0\2\1\1\11\4\0\1\1"+
+    "\2\0\2\11\1\0\2\1\3\0\1\1\7\0\2\1"+
+    "\7\0\3\1\2\0\2\1\2\0\1\1\1\0\1\1"+
+    "\1\0\2\1\3\0\1\1\2\0\1\11\2\1\2\0"+
+    "\1\1\4\0\2\1\1\11\1\0\2\11\1\0\1\11"+
+    "\2\1\1\0\1\11\1\1\4\0\2\1\1\0\1\11"+
+    "\2\1\1\0\1\1\3\0\1\11\2\1\1\0\2\1"+
+    "\1\0\1\1\5\0\1\1\3\0\1\11\25\0\1\11"+
+    "\1\0\1\11\2\0\2\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[222];
+    int [] result = new int[221];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -708,148 +708,148 @@ class GwendolenLexer implements FlexLexer {
             { yybegin(YYINITIAL); return GwendolenTypes.WS;
             }
           // fall through
-          case 64: break;
+          case 69: break;
           case 2:
             { yybegin(YYINITIAL); return GwendolenTypes.NEWLINE;
             }
           // fall through
-          case 65: break;
+          case 70: break;
           case 3:
             { yybegin(YYINITIAL); return GwendolenTypes.CONST;
             }
           // fall through
-          case 66: break;
+          case 71: break;
           case 4:
             { yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_WS;
             }
           // fall through
-          case 67: break;
+          case 72: break;
           case 5:
             { yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_NEWLINE;
             }
           // fall through
-          case 68: break;
+          case 73: break;
           case 6:
             { yybegin(INITIAL_BELIEFS); return GwendolenTypes.BELIEF_BLOCK;
             }
           // fall through
-          case 69: break;
+          case 74: break;
           case 7:
             { yybegin(REASONING_RULES); return GwendolenTypes.RR_WS;
             }
           // fall through
-          case 70: break;
+          case 75: break;
           case 8:
             { yybegin(REASONING_RULES); return GwendolenTypes.RR_NEWLINE;
             }
           // fall through
-          case 71: break;
+          case 76: break;
           case 9:
             { yybegin(REASONING_RULES); return GwendolenTypes.RR_BLOCK;
             }
           // fall through
-          case 72: break;
+          case 77: break;
           case 10:
             { yybegin(GOALS); return GwendolenTypes.GL_WS;
             }
           // fall through
-          case 73: break;
+          case 78: break;
           case 11:
             { yybegin(GOALS); return GwendolenTypes.GL_NEWLINE;
             }
           // fall through
-          case 74: break;
+          case 79: break;
           case 12:
             { yybegin(GOALS); return GwendolenTypes.GOAL_BLOCK;
             }
           // fall through
-          case 75: break;
+          case 80: break;
           case 13:
             { sq_nesting++;
           return GwendolenTypes.GL_SQOPEN;
             }
           // fall through
-          case 76: break;
+          case 81: break;
           case 14:
             { sq_nesting--;
           return GwendolenTypes.GL_SQCLOSE;
             }
           // fall through
-          case 77: break;
+          case 82: break;
           case 15:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_WS;
             }
           // fall through
-          case 78: break;
+          case 83: break;
           case 16:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_NEWLINE;
             }
           // fall through
-          case 79: break;
+          case 84: break;
           case 17:
             { yybegin(PLANS_MODE); return GwendolenTypes.SHRIEK;
             }
           // fall through
-          case 80: break;
+          case 85: break;
           case 18:
             { plain_nesting++;
             yybegin(PLANS_MODE);
             return GwendolenTypes.OPEN;
             }
           // fall through
-          case 81: break;
+          case 86: break;
           case 19:
             { plain_nesting--;
             yybegin(PLANS_MODE);
             return GwendolenTypes.CLOSE;
             }
           // fall through
-          case 82: break;
+          case 87: break;
           case 20:
             { yybegin(PLANS_MODE); return GwendolenTypes.MULT;
             }
           // fall through
-          case 83: break;
+          case 88: break;
           case 21:
             { yybegin(PLANS_MODE); return GwendolenTypes.PLUS;
             }
           // fall through
-          case 84: break;
+          case 89: break;
           case 22:
             { yybegin(PLANS_MODE); return GwendolenTypes.COMMA;
             }
           // fall through
-          case 85: break;
+          case 90: break;
           case 23:
             { yybegin(PLANS_MODE); return GwendolenTypes.MINUS;
             }
           // fall through
-          case 86: break;
+          case 91: break;
           case 24:
             { yybegin(PLANS_MODE); return GwendolenTypes.IDPUNCT;
             }
           // fall through
-          case 87: break;
+          case 92: break;
           case 25:
             { yybegin(PLANS_MODE); return GwendolenTypes.NUMBER;
             }
           // fall through
-          case 88: break;
+          case 93: break;
           case 26:
             { yybegin(PLANS_MODE); return GwendolenTypes.COLON;
             }
           // fall through
-          case 89: break;
+          case 94: break;
           case 27:
             { yybegin(PLANS_MODE); return GwendolenTypes.SEMI;
             }
           // fall through
-          case 90: break;
+          case 95: break;
           case 28:
             { yybegin(PLANS_MODE); return GwendolenTypes.LESS;
             }
           // fall through
-          case 91: break;
+          case 96: break;
           case 29:
             { if(curly_nesting > 0){
                 yybegin(PLANS_MODE);
@@ -857,7 +857,7 @@ class GwendolenLexer implements FlexLexer {
             }
             }
           // fall through
-          case 92: break;
+          case 97: break;
           case 30:
             { if(curly_nesting > 0){
                 yybegin(PLANS_MODE);
@@ -865,182 +865,207 @@ class GwendolenLexer implements FlexLexer {
             }
             }
           // fall through
-          case 93: break;
+          case 98: break;
           case 31:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_SQOPEN;
             }
           // fall through
-          case 94: break;
+          case 99: break;
           case 32:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_SQCLOSE;
             }
           // fall through
-          case 95: break;
+          case 100: break;
           case 33:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_CONST;
             }
           // fall through
-          case 96: break;
+          case 101: break;
           case 34:
             { curly_nesting++;
             yybegin(PLANS_MODE);
             return GwendolenTypes.CURLYOPEN;
             }
           // fall through
-          case 97: break;
+          case 102: break;
           case 35:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_BAR;
             }
           // fall through
-          case 98: break;
+          case 103: break;
           case 36:
             { curly_nesting--;
           yybegin(PLANS_MODE);
           return GwendolenTypes.CURLYCLOSE;
             }
           // fall through
-          case 99: break;
+          case 104: break;
           case 37:
             { yybegin(PLANS_MODE); return GwendolenTypes.NOT;
             }
           // fall through
-          case 100: break;
-          case 38:
-            { yybegin(PLANS_MODE); return GwendolenTypes.QUOTED_STRING;
-            }
-          // fall through
-          case 101: break;
-          case 39:
-            { yybegin(PLANS_MODE); return GwendolenTypes.RULEARROW;
-            }
-          // fall through
-          case 102: break;
-          case 40:
-            { yybegin(PLANS_MODE); return GwendolenTypes.EQUAL;
-            }
-          // fall through
-          case 103: break;
-          case 41:
-            { yybegin(YYINITIAL); return GwendolenTypes.COMMENT;
-            }
-          // fall through
-          case 104: break;
-          case 42:
-            { yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_COMMENT;
-            }
-          // fall through
           case 105: break;
-          case 43:
-            { yybegin(REASONING_RULES); return GwendolenTypes.RR_COMMENT;
+          case 38:
+            { yybegin(YYINITIAL); return GwendolenTypes.LINE_COMMENT;
             }
           // fall through
           case 106: break;
-          case 44:
-            { yybegin(GOALS); return GwendolenTypes.GL_COMMENT;
+          case 39:
+            { yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_LINE_COMMENT;
             }
           // fall through
           case 107: break;
-          case 45:
-            { yybegin(PLANS_MODE); return GwendolenTypes.PL_COMMENT;
+          case 40:
+            { yybegin(REASONING_RULES); return GwendolenTypes.RR_LINE_COMMENT;
             }
           // fall through
           case 108: break;
-          case 46:
-            { yybegin(PLANS_MODE); return GwendolenTypes.TRUE;
+          case 41:
+            { yybegin(GOALS); return GwendolenTypes.GL_LINE_COMMENT;
             }
           // fall through
           case 109: break;
-          case 47:
-            { yybegin(PLANS_MODE); return GwendolenTypes.LOCK;
+          case 42:
+            { yybegin(PLANS_MODE); return GwendolenTypes.QUOTED_STRING;
             }
           // fall through
           case 110: break;
-          case 48:
-            { yybegin(PLANS_MODE); return GwendolenTypes.SEND;
+          case 43:
+            { yybegin(PLANS_MODE); return GwendolenTypes.PL_LINE_COMMENT;
             }
           // fall through
           case 111: break;
-          case 49:
-            { yybegin(PLANS_MODE); return GwendolenTypes.SENT;
+          case 44:
+            { yybegin(PLANS_MODE); return GwendolenTypes.RULEARROW;
             }
           // fall through
           case 112: break;
-          case 50:
-            { yybegin(PLANS_MODE); return GwendolenTypes.TELL;
+          case 45:
+            { yybegin(PLANS_MODE); return GwendolenTypes.EQUAL;
             }
           // fall through
           case 113: break;
-          case 51:
-            { yybegin(YYINITIAL); return GwendolenTypes.NAME;
+          case 46:
+            { yybegin(YYINITIAL); return GwendolenTypes.COMMENT;
             }
           // fall through
           case 114: break;
-          case 52:
-            { yybegin(YYINITIAL); return GwendolenTypes.NAME_PM;
+          case 47:
+            { yybegin(INITIAL_BELIEFS); return GwendolenTypes.IB_COMMENT;
             }
           // fall through
           case 115: break;
-          case 53:
-            { yybegin(PLANS_MODE); return GwendolenTypes.PLANS;
+          case 48:
+            { yybegin(REASONING_RULES); return GwendolenTypes.RR_COMMENT;
             }
           // fall through
           case 116: break;
+          case 49:
+            { yybegin(GOALS); return GwendolenTypes.GL_COMMENT;
+            }
+          // fall through
+          case 117: break;
+          case 50:
+            { yybegin(PLANS_MODE); return GwendolenTypes.PL_COMMENT;
+            }
+          // fall through
+          case 118: break;
+          case 51:
+            { yybegin(PLANS_MODE); return GwendolenTypes.TRUE;
+            }
+          // fall through
+          case 119: break;
+          case 52:
+            { yybegin(PLANS_MODE); return GwendolenTypes.LOCK;
+            }
+          // fall through
+          case 120: break;
+          case 53:
+            { yybegin(PLANS_MODE); return GwendolenTypes.SEND;
+            }
+          // fall through
+          case 121: break;
           case 54:
+            { yybegin(PLANS_MODE); return GwendolenTypes.SENT;
+            }
+          // fall through
+          case 122: break;
+          case 55:
+            { yybegin(PLANS_MODE); return GwendolenTypes.TELL;
+            }
+          // fall through
+          case 123: break;
+          case 56:
+            { yybegin(YYINITIAL); return GwendolenTypes.NAME;
+            }
+          // fall through
+          case 124: break;
+          case 57:
+            { yybegin(YYINITIAL); return GwendolenTypes.NAME_PM;
+            }
+          // fall through
+          case 125: break;
+          case 58:
+            { yybegin(PLANS_MODE); return GwendolenTypes.PLANS;
+            }
+          // fall through
+          case 126: break;
+          case 59:
             { if(sq_nesting > 0){
               yybegin(GOALS);
               return GwendolenTypes.GL_ACHIEVEGOAL;
           }
             }
           // fall through
-          case 117: break;
-          case 55:
+          case 127: break;
+          case 60:
             { if(sq_nesting > 0){
               yybegin(GOALS);
               return GwendolenTypes.GL_PERFORMGOAL;
           }
             }
           // fall through
-          case 118: break;
-          case 56:
+          case 128: break;
+          case 61:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_ACHIEVEGOAL;
             }
           // fall through
-          case 119: break;
-          case 57:
+          case 129: break;
+          case 62:
             { yybegin(PLANS_MODE); return GwendolenTypes.PL_PERFORMGOAL;
             }
           // fall through
-          case 120: break;
-          case 58:
+          case 130: break;
+          case 63:
             { yybegin(YYINITIAL); return GwendolenTypes.GWENDOLEN;
             }
           // fall through
-          case 121: break;
-          case 59:
+          case 131: break;
+          case 64:
             { yybegin(PLANS_MODE); return GwendolenTypes.RECEIVED;
             }
           // fall through
-          case 122: break;
-          case 60:
+          case 132: break;
+          case 65:
             { yybegin(GOALS); return GwendolenTypes.GOAL_IB;
             }
           // fall through
-          case 123: break;
-          case 61:
+          case 133: break;
+          case 66:
             { yybegin(GOALS); return GwendolenTypes.GOAL_RR;
             }
           // fall through
-          case 124: break;
-          case 62:
+          case 134: break;
+          case 67:
             { yybegin(INITIAL_BELIEFS); return GwendolenTypes.BELIEFS;
             }
           // fall through
-          case 125: break;
-          case 63:
+          case 135: break;
+          case 68:
             { yybegin(REASONING_RULES); return GwendolenTypes.BELIEFRULES;
             }
           // fall through
-          case 126: break;
+          case 136: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

@@ -20,8 +20,8 @@ import com.intellij.psi.TokenType;
 GWENDOLEN="GWENDOLEN"
 NAME=":name:"
 CONST = [a-zA-Z0-9_]+
-COMMENT = "/*" ([^*] | \*+ [^*/])*"*/"
-LINE_COMMENT = "//" ~[\n]*
+COMMENT = "/*"([^]*?)"*/"
+LINE_COMMENT = ("//")[^\r\n]*
 NEWLINE = (\r?\n)
 WS = [ \t]+
 
@@ -30,24 +30,24 @@ BELIEFS = ":Initial Beliefs:"
 //When in INITIAL_BELIEFS mode
 BELIEFRULES=":Reasoning Rules:"
 GOAL_IB=":Initial Goals:"
-IB_COMMENT="/*" ([^*] | \*+ [^*/])*"*/"
-IB_LINE_COMMENT="//" ~[\n]*
+IB_COMMENT="/*"([^]*?)"*/"
+IB_LINE_COMMENT=("//")[^\r\n]*
 IB_NEWLINE=(\r?\n)
 IB_WS=[ \t]+
 BELIEF_BLOCK=([a-zA-Z0-9] |"_"|"("|")"|","|"."|" "|"\t"|"\n"|"\r"|"-"|"["|"]"|"|"|"\"")+
 
 //When in REASONING_RULES mode
 GOAL_RR=":Initial Goals:"
-RR_COMMENT="/*" ([^*] | \*+ [^*/])*"*/"
-RR_LINE_COMMENT="//" ~[\n]*
+RR_COMMENT="/*"([^]*?)"*/"
+RR_LINE_COMMENT=("//")[^\r\n]*
 RR_NEWLINE=(\r?\n)
 RR_WS=[ \t]+
 RR_BLOCK=([a-zA-Z0-9] |"_"|"("|")"|","|"."|" "|"\t"|"\n"|"\r"|"-"|"["|"]"|"|"|"\"")+
 
 //When in GOALS mode
 PLANS=":Plans:"
-GL_COMMENT="/*" ([^*] | \*+ [^*/])*"*/"
-GL_LINE_COMMENT="//" ~[\n]*
+GL_COMMENT="/*"([^]*?)"*/"
+GL_LINE_COMMENT=("//")[^\r\n]*
 GL_NEWLINE=(\r?\n)
 GL_WS=[ \t]+
 GL_ACHIEVEGOAL="achieve"
@@ -58,8 +58,8 @@ GOAL_BLOCK=([a-zA-Z0-9] |"_"|"("|")"|","|"."|" ")+
 
 //When in PLANS mode
 NAME_PM=":name:"
-PL_COMMENT="/*" ([^*] | \*+ [^*/])*"*/"
-PL_LINE_COMMENT="//" ~[\n]*
+PL_COMMENT="/*"([^]*?)"*/"
+PL_LINE_COMMENT=("//")[^\r\n]*
 PL_NEWLINE=(\r?\n)
 PL_WS=[ \t]+
 SEND=".send"
