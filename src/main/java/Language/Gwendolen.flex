@@ -42,7 +42,7 @@ RR_COMMENT="/*"([^]*?)"*/"
 RR_LINE_COMMENT=("//")[^\r\n]*
 RR_NEWLINE=(\r?\n)
 RR_WS=[ \t]+
-RR_BLOCK=([a-zA-Z0-9] |"_"|"("|")"|","|"."|" "|"\t"|"\n"|"\r"|"-"|"["|"]"|"|"|"\"")+
+RR_BLOCK=([a-zA-Z0-9] |"_"|"("|")"|","|":-"|" "|"\t"|"\n"|"\r"|";"|"~"|"["|"]"|"|"|"!")+
 
 //When in GOALS mode
 PLANS=":Plans:"
