@@ -229,8 +229,11 @@ QUOTED_STRING="\"" [^\"]* "\"" | "'" [^']* "'"
 <PLANS_MODE> {RULEARROW}            {yybegin(PLANS_MODE); return GwendolenTypes.RULEARROW;}
 <PLANS_MODE> {TRUE}                 {yybegin(PLANS_MODE); return GwendolenTypes.TRUE;}
 <PLANS_MODE> {PL_CONST}             {yybegin(PLANS_MODE); return GwendolenTypes.PL_CONST;}
+<PLANS_MODE> {PL_VAR}               {yybegin(PLANS_MODE); return GwendolenTypes.PL_VAR;}
 <PLANS_MODE> {NUMBER}               {yybegin(PLANS_MODE); return GwendolenTypes.NUMBER;}
 <PLANS_MODE> {QUOTED_STRING}        {yybegin(PLANS_MODE); return GwendolenTypes.QUOTED_STRING;}
+
+[^]                                 {return TokenType.BAD_CHARACTER;}
 
 
 

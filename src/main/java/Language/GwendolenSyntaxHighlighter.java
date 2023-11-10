@@ -36,6 +36,8 @@ public class GwendolenSyntaxHighlighter extends SyntaxHighlighterBase {
             createTextAttributesKey("GROUP8", DefaultLanguageHighlighterColors.NUMBER);
     public static final TextAttributesKey GROUP9 =
             createTextAttributesKey("GROUP9", DefaultLanguageHighlighterColors.METADATA);
+    public static final TextAttributesKey BAD_CHARACTER =
+            createTextAttributesKey("GWENDOLEN_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
 
 
@@ -48,6 +50,7 @@ public class GwendolenSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final TextAttributesKey[] GROUP7_KEYS = new TextAttributesKey[]{GROUP7};
     private static final TextAttributesKey[] GROUP8_KEYS = new TextAttributesKey[]{GROUP8};
     private static final TextAttributesKey[] GROUP9_KEYS = new TextAttributesKey[]{GROUP9};
+    private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
 
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
@@ -105,6 +108,9 @@ public class GwendolenSyntaxHighlighter extends SyntaxHighlighterBase {
         }
         if(Arrays.asList(group9Types).contains(tokenType)){
             return GROUP9_KEYS;
+        }
+        if(tokenType.equals(TokenType.BAD_CHARACTER)){
+            return BAD_CHAR_KEYS;
         }
         return EMPTY_KEYS;
     }
