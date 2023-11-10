@@ -37,6 +37,8 @@
         <lang.syntaxHighlighterFactory
             language="Gwendolen"
             implementationClass="Language.GwendolenSyntaxHighlighterFactory"/>
+        <colorSettingsPage
+            implementation="Language.GwendolenColourSettings"/>
     </extensions>
 
 
