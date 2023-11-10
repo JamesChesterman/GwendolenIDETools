@@ -27,6 +27,7 @@ final class GwendolenParserDefinition implements ParserDefinition {
         return new GwendolenLexerAdapter();
     }
 
+
     @NotNull
     @Override
     public TokenSet getCommentTokens(){
@@ -35,13 +36,25 @@ final class GwendolenParserDefinition implements ParserDefinition {
                 GwendolenTokenSets.LINE_COMMENT, GwendolenTokenSets.IB_LINE_COMMENT,
                 GwendolenTokenSets.GL_LINE_COMMENT, GwendolenTokenSets.RR_LINE_COMMENT,
                 GwendolenTokenSets.PL_LINE_COMMENT);
+
         return allComments;
     }
+
+    @Override
+    @NotNull
+    public TokenSet getWhitespaceTokens(){
+        TokenSet allWhitespace = TokenSet.orSet(GwendolenTokenSets.WS, GwendolenTokenSets.GL_WS,
+                GwendolenTokenSets.IB_WS, GwendolenTokenSets.RR_WS, GwendolenTokenSets.PL_WS,
+                GwendolenTokenSets.NEWLINE, GwendolenTokenSets.GL_NEWLINE, GwendolenTokenSets.IB_NEWLINE,
+                GwendolenTokenSets.PL_NEWLINE, GwendolenTokenSets.RR_NEWLINE);
+        return allWhitespace;
+    }
+
 
     @NotNull
     @Override
     public TokenSet getStringLiteralElements(){
-        return TokenSet.EMPTY;
+        return GwendolenTokenSets.QUOTED_STRING;
     }
 
     @NotNull
