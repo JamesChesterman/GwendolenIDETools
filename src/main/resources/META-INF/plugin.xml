@@ -31,6 +31,12 @@
             fieldName="INSTANCE"
             language="Gwendolen"
             extensions="gwen"/>
+        <toolWindow
+            id="GwenToolWindow"
+            secondary="true"
+            icon="Language.GwendolenIcons.FILE"
+            anchor="right"
+            factoryClass="GwendolenToolWindow.GwenToolWindowFactory"/>
         <lang.parserDefinition
             language="Gwendolen"
             implementationClass="Language.GwendolenParserDefinition"/>
