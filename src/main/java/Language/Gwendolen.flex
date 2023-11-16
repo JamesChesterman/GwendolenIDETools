@@ -150,12 +150,18 @@ QUOTED_STRING="\"" [^\"]* "\"" | "'" [^']* "'"
           if(sq_nesting > 0){
               yybegin(GOALS);
               return GwendolenTypes.GL_ACHIEVEGOAL;
+          }else{
+              yybegin(GOALS);
+              return GwendolenTypes.PL_VAR;
           }
 }
 <GOALS> {GL_PERFORMGOAL}            {
           if(sq_nesting > 0){
               yybegin(GOALS);
               return GwendolenTypes.GL_PERFORMGOAL;
+          }else{
+              yybegin(GOALS);
+              return GwendolenTypes.PL_VAR;
           }
 }
 <GOALS> {GL_SQOPEN}                 {
@@ -179,12 +185,18 @@ QUOTED_STRING="\"" [^\"]* "\"" | "'" [^']* "'"
             if(curly_nesting > 0){
                 yybegin(PLANS_MODE);
                 return GwendolenTypes.BELIEVE;
+            }else{
+                yybegin(PLANS_MODE);
+                return GwendolenTypes.PL_VAR;
             }
 }
 <PLANS_MODE> {GOAL}                 {
             if(curly_nesting > 0){
                 yybegin(PLANS_MODE);
                 return GwendolenTypes.GOAL;
+            }else{
+                yybegin(PLANS_MODE);
+                return GwendolenTypes.PL_VAR;
             }
 }
 <PLANS_MODE> {SENT}                 {yybegin(PLANS_MODE); return GwendolenTypes.SENT; }

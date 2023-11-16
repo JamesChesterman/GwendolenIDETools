@@ -869,6 +869,9 @@ class GwendolenLexer implements FlexLexer {
             { if(curly_nesting > 0){
                 yybegin(PLANS_MODE);
                 return GwendolenTypes.BELIEVE;
+            }else{
+                yybegin(PLANS_MODE);
+                return GwendolenTypes.PL_VAR;
             }
             }
           // fall through
@@ -877,6 +880,9 @@ class GwendolenLexer implements FlexLexer {
             { if(curly_nesting > 0){
                 yybegin(PLANS_MODE);
                 return GwendolenTypes.GOAL;
+            }else{
+                yybegin(PLANS_MODE);
+                return GwendolenTypes.PL_VAR;
             }
             }
           // fall through
@@ -1029,6 +1035,9 @@ class GwendolenLexer implements FlexLexer {
             { if(sq_nesting > 0){
               yybegin(GOALS);
               return GwendolenTypes.GL_ACHIEVEGOAL;
+          }else{
+              yybegin(GOALS);
+              return GwendolenTypes.PL_VAR;
           }
             }
           // fall through
@@ -1037,6 +1046,9 @@ class GwendolenLexer implements FlexLexer {
             { if(sq_nesting > 0){
               yybegin(GOALS);
               return GwendolenTypes.GL_PERFORMGOAL;
+          }else{
+              yybegin(GOALS);
+              return GwendolenTypes.PL_VAR;
           }
             }
           // fall through
