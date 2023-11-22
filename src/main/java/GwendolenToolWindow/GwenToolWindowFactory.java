@@ -12,8 +12,7 @@ final class GwenToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow){
-        GwenToolWindowContent gwenToolWindowContent = new GwenToolWindowContent(toolWindow);
-        gwenToolWindowContent.initBreakpointController(project);
+        GwenToolWindowContent gwenToolWindowContent = new GwenToolWindowContent(project, toolWindow);
         Content content = ContentFactory.getInstance().createContent(gwenToolWindowContent.getContentPanel(), "", false);
         toolWindow.getContentManager().addContent(content);
     }

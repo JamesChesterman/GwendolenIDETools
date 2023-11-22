@@ -13,8 +13,10 @@ import java.awt.event.ItemListener;
 public class GwenToolWindowContent {
     private final JPanel contentPanel = new JPanel();
     private BreakpointController breakpointController;
+    private boolean isStepping;
 
-    public GwenToolWindowContent(ToolWindow toolWindow){
+    public GwenToolWindowContent(Project project, ToolWindow toolWindow){
+        initBreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 20));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
         contentPanel.add(createControlsPanel(), BorderLayout.PAGE_START);
@@ -28,16 +30,13 @@ public class GwenToolWindowContent {
     private JPanel createControlsPanel(){
         JPanel controlsPanel = new JPanel();
         JCheckBox steppingCheckBox = new JCheckBox("Enable Stepping Mode: ");
-
+        isStepping = breakpointController.checkBreakpoint();
+        steppingCheckBox.setSelected(isStepping);
         steppingCheckBox.addItemListener(new ItemListener(){
             @Override
             public void itemStateChanged(ItemEvent e){
-                breakpointController.addBreakpoint();
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    System.out.println("Stepping mode enabled");
-                }else{
-                    System.out.println("Stepping mode disabled");
-                }
+                isStepping = !isStepping;
+                breakpointController.toggleBreakpoint();
             }
         });
 
