@@ -1,22 +1,15 @@
 package GwenDebugger;
 
-import com.google.common.base.Supplier;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.breakpoints.*;
-import com.intellij.xdebugger.impl.breakpoints.LineBreakpointState;
-import org.apache.tools.ant.taskdefs.Java;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
 
 public class BreakpointController {
 
