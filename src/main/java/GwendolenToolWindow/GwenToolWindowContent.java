@@ -66,7 +66,9 @@ public class GwenToolWindowContent {
         XDebuggerTreeNode rootNode = tree.getRoot();
         List<XDebuggerTreeNode> child1 = (List<XDebuggerTreeNode>) rootNode.getChildren();
         List<XDebuggerTreeNode> child2 = (List<XDebuggerTreeNode>) child1.get(0).getChildren();
-        
+        XValueNodeImpl val = (XValueNodeImpl) child2.get(2);
+        String str = val.getRawValue();
+
         System.out.println("HERE");
     }
 
