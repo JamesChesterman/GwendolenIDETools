@@ -25,6 +25,7 @@ public class GwenToolWindowContent {
     private boolean isStepping;
 
     private final Project project;
+    private XDebugSession debugSession;
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
@@ -56,7 +57,7 @@ public class GwenToolWindowContent {
 
     private void startTools() throws ExecutionException {
 
-        XDebugSession debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
+        debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
 
         RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
         JComponent component = runContentDescriptor.getComponent();
@@ -69,7 +70,6 @@ public class GwenToolWindowContent {
         XValueNodeImpl val = (XValueNodeImpl) child2.get(2);
         String str = val.getRawValue();
 
-        System.out.println("HERE");
     }
 
     @NotNull
@@ -99,8 +99,17 @@ public class GwenToolWindowContent {
             }
         });
 
+        JButton nextCycleButton = new JButton("Next Cycle");
+        nextCycleButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                breakpointController.goToNextCycle(debugSession);
+            }
+        });
+
         controlsPanel.add(steppingCheckBox);
         controlsPanel.add(startToolsButton);
+        controlsPanel.add(nextCycleButton);
         return controlsPanel;
     }
 

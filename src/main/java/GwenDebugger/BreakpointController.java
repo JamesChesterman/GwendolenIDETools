@@ -53,6 +53,14 @@ public class BreakpointController {
         return false;
     }
 
+    public void goToNextCycle(XDebugSession debugSession){
+        if(debugSession == null){
+            System.out.println("ERROR");
+        }else{
+            debugSession.resume();
+        }
+    }
+
     public BreakpointController(Project project){
         breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
         gwenLineBreakpointType = new GwenLineBreakpointType();
