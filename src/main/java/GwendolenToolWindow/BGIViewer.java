@@ -32,7 +32,6 @@ public class BGIViewer extends JPanel {
             stageReceived = true;
         }else if(!nameReceived){
             XValueNodeImpl valueNode = (XValueNodeImpl) nodeReceived;
-            System.out.println("STAGENUM: " + valueNode.getRawValue());
             stageLabel.setText("Stage: " + valueNode.getRawValue());
             nameReceived = true;
         }

@@ -55,6 +55,6 @@ public class DebugTreeUtils {
                 //Decide where to send response (call method with node found)
                 respondForFindNodeFromParent(node, receiver);
             }
-        }, 2, TimeUnit.SECONDS);
+        }, 500, TimeUnit.MILLISECONDS);
     }
 }

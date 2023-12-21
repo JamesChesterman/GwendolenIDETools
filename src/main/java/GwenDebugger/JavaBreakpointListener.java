@@ -58,67 +58,6 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         }, 500, TimeUnit.MILLISECONDS);
         executorService.shutdown();
 
-
-
-        /*
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.schedule(() -> {
-            RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
-            JComponent component = runContentDescriptor.getComponent();
-            XDebuggerTree tree;
-
-            tree = getDebugTree(component);
-            XDebuggerTreeNode rootNode = tree.getRoot();
-            List<XDebuggerTreeNode> child1 = (List<XDebuggerTreeNode>) rootNode.getChildren();
-            List<XDebuggerTreeNode> child2 = (List<XDebuggerTreeNode>) child1.get(0).getChildren();
-            XValueNodeImpl val = (XValueNodeImpl) child2.get(2);
-            List<XDebuggerTreeNode> layer1 = (List<XDebuggerTreeNode>) rootNode.getChildren();
-            int stageIndex = -1;
-            for(int i=0; i<layer1.size(); i++){
-                if(layer1.get(i).toString().equals("stage")){
-                    stageIndex = i;
-                    break;
-                }
-            }
-            if(stageIndex == -1){
-                System.out.println("ERROR - STAGE VALUE NOT FOUND");
-            }else{
-                layer1.get(stageIndex).getChildCount();
-                final XDebuggerTreeNode nodeLayer1 = layer1.get(stageIndex);
-                //This triggers calculation of children for that node
-                int numOfChildren = nodeLayer1.getChildCount();
-                ScheduledExecutorService executorService1 = Executors.newScheduledThreadPool(1);
-                executorService1.schedule(() -> {
-                    int stageNameIndex = -1;
-                    List<XDebuggerTreeNode> layer2 = (List<XDebuggerTreeNode>) nodeLayer1.getChildren();
-                    for(int i=0; i<layer2.size(); i++){
-                        if(layer2.get(i).toString().equals("name")){
-                            stageNameIndex = i;
-                            break;
-                        }
-                    }
-                    if(stageNameIndex == -1){
-                        System.out.println("ERROR - STAGE NAME VALUE NOT FOUND");
-                    }else{
-                        XValueNodeImpl val1 = (XValueNodeImpl) layer2.get(stageNameIndex);
-                        System.out.println("HERE " + val1.getRawValue());
-
-                        System.out.println(layer2.get(stageNameIndex).toString());
-                    }
-                }, 5, TimeUnit.SECONDS);
-                executorService1.shutdown();
-
-            }
-
-            String str = val.getRawValue();
-        }, 5, TimeUnit.SECONDS);
-        executorService.shutdown();
-
-
-         */
-
-
-
     }
 
     public JavaBreakpointListener(XDebugSession debugSession, GwenToolWindowContent gwenToolWindow){
