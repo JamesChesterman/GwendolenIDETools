@@ -23,6 +23,7 @@ public class BGIViewer extends JPanel {
     private void getStage(){
         stageReceived = false;
         nameReceived = false;
+        stageLabel.setText("Stage: loading...");
         DebugTreeUtils.findNodeFromParent(tree.getRoot(), "stage", 0);
     }
 
