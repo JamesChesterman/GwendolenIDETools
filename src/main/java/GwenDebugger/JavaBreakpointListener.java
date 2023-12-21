@@ -1,5 +1,6 @@
 package GwenDebugger;
 
+import GwendolenToolWindow.GwenToolWindowContent;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebugProcess;
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class JavaBreakpointListener implements XDebugSessionListener {
 
     XDebugSession debugSession;
+    GwenToolWindowContent gwenToolWindow;
 
     //Get the debug tree for the debug session's tool window (from RunContentDescriptor)
     private XDebuggerTree getDebugTree(Component component) {
@@ -45,7 +47,20 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     public void sessionPaused(){
         XDebugSessionListener.super.sessionPaused();
 
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        executorService.schedule(() -> {
+            //This is executed after the wait
+            RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
+            JComponent component = runContentDescriptor.getComponent();
+            XDebuggerTree tree = getDebugTree(component);
+            //Pass the new tree back to gwenToolWindow
+            gwenToolWindow.updateDebugTreeValues(tree);
+        }, 500, TimeUnit.MILLISECONDS);
+        executorService.shutdown();
 
+
+
+        /*
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         executorService.schedule(() -> {
             RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
@@ -85,6 +100,9 @@ public class JavaBreakpointListener implements XDebugSessionListener {
                     if(stageNameIndex == -1){
                         System.out.println("ERROR - STAGE NAME VALUE NOT FOUND");
                     }else{
+                        XValueNodeImpl val1 = (XValueNodeImpl) layer2.get(stageNameIndex);
+                        System.out.println("HERE " + val1.getRawValue());
+
                         System.out.println(layer2.get(stageNameIndex).toString());
                     }
                 }, 5, TimeUnit.SECONDS);
@@ -97,11 +115,16 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         executorService.shutdown();
 
 
+         */
+
+
+
     }
 
-    public JavaBreakpointListener(XDebugSession debugSession){
+    public JavaBreakpointListener(XDebugSession debugSession, GwenToolWindowContent gwenToolWindow){
         super();
         this.debugSession = debugSession;
+        this.gwenToolWindow = gwenToolWindow;
     }
 
 }

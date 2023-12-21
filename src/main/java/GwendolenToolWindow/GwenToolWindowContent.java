@@ -11,6 +11,7 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,8 +26,8 @@ public class GwenToolWindowContent {
 
     private final Project project;
     private XDebugSession debugSession;
-
-    private List<XDebuggerTree> listOfTrees;
+    private BGIViewer bgiViewer;
+    private List<XDebuggerTree> listOfTrees = new ArrayList<>();
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
@@ -36,25 +37,28 @@ public class GwenToolWindowContent {
         contentPanel.add(createControlsPanel(), BorderLayout.PAGE_START);
     }
 
-
+    //Get debug session and start breakpoint listener (to see when execution is paused)
     private void startTools() throws ExecutionException {
         debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
         if(debugSession != null){
-            JavaBreakpointListener breakpointListener = new JavaBreakpointListener(debugSession);
+            JavaBreakpointListener breakpointListener = new JavaBreakpointListener(debugSession, this);
             debugSession.addSessionListener(breakpointListener);
         }
     }
 
     //Store the values received in JavaBreakpointListener (whenever the program pauses)
     //Store them in this class as this class has access to the tabs BGIViewer, Breakpoints etc
-    private void updateDebugTreeValues(XDebuggerTree newDebugTree){
+    public void updateDebugTreeValues(XDebuggerTree newDebugTree){
         listOfTrees.add(newDebugTree);
+        bgiViewer.updateWindow(newDebugTree);
     }
 
     @NotNull
     private JPanel createControlsPanel(){
         JPanel controlsPanel = new JPanel();
         controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
+
+        //Stepping checkbox
         JCheckBox steppingCheckBox = new JCheckBox("Stepping Mode Enabled");
         isStepping = breakpointController.checkBreakpoint();
         steppingCheckBox.setSelected(isStepping);
@@ -66,6 +70,7 @@ public class GwenToolWindowContent {
             }
         });
 
+        //Start tools button
         JButton startToolsButton = new JButton("Start Tools");
         startToolsButton.addActionListener(new ActionListener(){
             @Override
@@ -78,6 +83,7 @@ public class GwenToolWindowContent {
             }
         });
 
+        //Next cycle button
         JButton nextCycleButton = new JButton("Next Cycle");
         nextCycleButton.addActionListener(new ActionListener(){
             @Override
@@ -86,10 +92,10 @@ public class GwenToolWindowContent {
             }
         });
 
+        //Pane containing the information windows
         JBTabbedPane tabbedPane = new JBTabbedPane();
-        JPanel panel1 = new JPanel();
-        panel1.add(new JLabel("Content of tab1"));
-        tabbedPane.addTab("Tab 1", panel1);
+        bgiViewer = new BGIViewer();
+        tabbedPane.addTab("BGIViewer", bgiViewer);
 
         controlsPanel.add(steppingCheckBox);
         controlsPanel.add(startToolsButton);
