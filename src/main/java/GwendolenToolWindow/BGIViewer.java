@@ -8,18 +8,29 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import javax.swing.*;
 
 public class BGIViewer extends JPanel {
-    boolean stageReceived = false;
-    boolean nameReceived = false;
     XDebuggerTree tree;
-    JLabel stageLabel;
+    JLabel stageLabel = null;
+    JLabel agentNameLabel = null;
+    JLabel intentionsLabel = null;
+    JLabel[] allLabels;
+    String STAGESTRING = "Stage: ";
+    String AGENTNAMESTRING = "Agent Name: ";
+    String INTENTIONSSTRING = "Intentions: ";
+    String[] labelStrings = {STAGESTRING, AGENTNAMESTRING, INTENTIONSSTRING};
 
     public BGIViewer(){
         super();
+        //Initialise Labels and give them their default strings
+        allLabels = new JLabel[]{stageLabel, agentNameLabel, intentionsLabel};
+        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, INTENTIONSSTRING};
+        for(int i=0; i<allLabels.length; i++){
+            allLabels[i] = new JLabel(labelStrings[i]);
+            add(allLabels[i]);
+        }
 
-        stageLabel = new JLabel("Stage: ");
-        add(stageLabel);
     }
 
+    /*
     private void getStage(){
         stageReceived = false;
         nameReceived = false;
@@ -36,7 +47,7 @@ public class BGIViewer extends JPanel {
 
     public void receiveStageName(XDebuggerTreeNode nodeReceived){
         if(!stageReceived){
-            DebugTreeUtils.findNodeFromParent(nodeReceived, "name", 0);
+            //DebugTreeUtils.findNodeFromParent(nodeReceived, "name", 0);
             stageReceived = true;
         }else if(!nameReceived){
             XValueNodeImpl valueNode = (XValueNodeImpl) nodeReceived;
@@ -45,13 +56,25 @@ public class BGIViewer extends JPanel {
         }
     }
 
-    public void updateWindow(XDebuggerTree tree){
-        this.tree = tree;
-        DebugTreeUtils.setBGIViewer(this);
-        getStage();
+     */
+
+    private void setLabelsLoading(){
+
     }
 
-    public void getInfo(){
+    private void sendInfoGet(){
+        String[][] findArray = {
+                {"this", "fAgName"},
+                {"this", "Is"},
+                {"stage", "name"}
+        };
+
+    }
+
+
+    public void updateWindow(XDebuggerTree tree) {
+        this.tree = tree;
+        DebugTreeUtils.setBGIViewer(this);
 
     }
 

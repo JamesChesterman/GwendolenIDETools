@@ -24,12 +24,15 @@ public class DebugTreeUtils {
         bgiViewer = bgiViewerToGive;
     }
 
+    /*
     private static void respondForFindNodeFromParent(XDebuggerTreeNode node, int receiver){
         switch(receiver){
             case 0 -> bgiViewer.receiveStageName(node);
             default -> System.out.println("None");
         }
     }
+
+     */
 
 
     public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged){
@@ -64,6 +67,9 @@ public class DebugTreeUtils {
 
     private static void treeFindRecursive(XDebuggerTreeNode rootNode, String[][] stringArrayJagged,
                                           int[][] indexArrayJagged, int maxLen, int currentIndex){
+        // See which nodes have their children loaded and which don't
+        // Add those that aren't loaded to an array
+
         //currentIndex is the index in each 1D array that will be used
         List<XDebuggerTreeNode> nodesToLoad = new ArrayList<>();
         for(int i=0; i<indexArrayJagged.length; i++){
@@ -74,6 +80,11 @@ public class DebugTreeUtils {
                 nodesToLoad.add(node);
             }
         }
+
+        // If there are nodes whose children haven't loaded yet
+        // Then initiate the load by doing getChildCount()
+        // Then wait a certain amount of time before calling the method again
+
         if(nodesToLoad.size() > 0){
             //Need to wait for these nodes to load
             for(int i=0; i<nodesToLoad.size(); i++){
@@ -84,19 +95,20 @@ public class DebugTreeUtils {
             ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
             int finalCurrentIndex = currentIndex;
             executorService.schedule(() -> {
+                //This is called after the wait
                 treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex);
             }, 500, TimeUnit.MILLISECONDS);
         }else{
-            //Can find the positions for each node
-            //Add the position to the correct index array
+            // The children of the nodes have loaded
+            // So go through and find the nodes you want
+            // Add the positions of the nodes you want to the indexArray
+            // Increment currentIndex and either call method again or call method to return info to where it was called from
+
             for(int i=0; i<indexArrayJagged.length; i++){
                 int nextNodePos = seeWhereNextNodeIs(indexArrayJagged[i], stringArrayJagged[i], currentIndex, rootNode);
-                if(nextNodePos == -1){
-                    System.out.println("ERROR - NODE NOT FOUND!");
-                }else{
-                    if(!isIndexArrayFull(indexArrayJagged[i])){
-                        indexArrayJagged[i][currentIndex] = nextNodePos;
-                    }
+                //If nextNodePos == -1 then node not found.
+                if(!isIndexArrayFull(indexArrayJagged[i])){
+                    indexArrayJagged[i][currentIndex] = nextNodePos;
                 }
             }
 
@@ -161,34 +173,6 @@ public class DebugTreeUtils {
         }else{
             return true;
         }
-    }
-
-    //Find node with certain name in tree using parent node
-    public static void findNodeFromParent(XDebuggerTreeNode parentNode, String nameToLookFor, int receiver){
-        //getChildCount will load the values of the children
-        parentNode.getChildCount();
-
-        //Then need to wait for these values to load
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.schedule(() -> {
-            //What to do when values loaded (after wait)
-            List<XDebuggerTreeNode> listOfChildren = (List<XDebuggerTreeNode>) parentNode.getChildren();
-            int index = -1;
-            XDebuggerTreeNode node = null;
-            for(int i=0; i<listOfChildren.size(); i++){
-                node = listOfChildren.get(i);
-                if(node.toString().equals(nameToLookFor)){
-                    index = i;
-                    break;
-                }
-            }
-            if(index == -1){
-                System.out.println("ERROR - NAME NOT FOUND IN FINDNODEFROMPARENT");
-            }else{
-                //Decide where to send response (call method with node found)
-                respondForFindNodeFromParent(node, receiver);
-            }
-        }, 500, TimeUnit.MILLISECONDS);
     }
 
 
