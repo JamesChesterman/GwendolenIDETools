@@ -2,10 +2,14 @@ package GwenDebugger;
 
 import GwendolenToolWindow.GwenToolWindowContent;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebugSessionListener;
+import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import com.intellij.xdebugger.impl.frame.XDebuggerFramesList;
+import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
@@ -43,13 +47,14 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         return null;
     }
 
+    //Called when the debug session is paused (when a breakpoint is hit in the Java code
     @Override
     public void sessionPaused(){
         XDebugSessionListener.super.sessionPaused();
 
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         executorService.schedule(() -> {
-            //This is executed after the wait
+            //This is executed after the wait (time specified below)
             RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
             JComponent component = runContentDescriptor.getComponent();
             XDebuggerTree tree = getDebugTree(component);

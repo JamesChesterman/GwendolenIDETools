@@ -27,7 +27,6 @@ public class GwenToolWindowContent {
     private final Project project;
     private XDebugSession debugSession;
     private BGIViewer bgiViewer;
-    private List<XDebuggerTree> listOfTrees = new ArrayList<>();
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
@@ -46,11 +45,10 @@ public class GwenToolWindowContent {
         }
     }
 
-    //Store the values received in JavaBreakpointListener (whenever the program pauses)
-    //Store them in this class as this class has access to the tabs BGIViewer, Breakpoints etc
+    //Call the updateWindow method of each of the windows.
     public void updateDebugTreeValues(XDebuggerTree newDebugTree){
-        listOfTrees.add(newDebugTree);
         bgiViewer.updateWindow(newDebugTree);
+
     }
 
     @NotNull

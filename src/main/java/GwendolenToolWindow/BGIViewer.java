@@ -24,7 +24,14 @@ public class BGIViewer extends JPanel {
         stageReceived = false;
         nameReceived = false;
         stageLabel.setText("Stage: loading...");
-        DebugTreeUtils.findNodeFromParent(tree.getRoot(), "stage", 0);
+       // DebugTreeUtils.findNodeFromParent(tree.getRoot(), "stage", 0);
+        //DebugTreeUtils.checkIfChildrenLoaded(tree.getRoot(), "stage", 0);
+        String[][] findArray = {
+                {"this", "fAgName"},
+                {"this", "Is"},
+                {"stage", "name"}
+        };
+        DebugTreeUtils.findInTree(tree.getRoot(), findArray);
     }
 
     public void receiveStageName(XDebuggerTreeNode nodeReceived){
@@ -42,6 +49,10 @@ public class BGIViewer extends JPanel {
         this.tree = tree;
         DebugTreeUtils.setBGIViewer(this);
         getStage();
+    }
+
+    public void getInfo(){
+
     }
 
 }
