@@ -20,6 +20,8 @@ public class BGIViewer extends JPanel {
 
     public BGIViewer(){
         super();
+        //Make labels be placed one below another
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //Initialise Labels and give them their default strings
         allLabels = new JLabel[]{stageLabel, agentNameLabel, intentionsLabel};
         labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, INTENTIONSSTRING};
@@ -59,10 +61,15 @@ public class BGIViewer extends JPanel {
      */
 
     private void setLabelsLoading(){
-
+        for(int i=0; i<allLabels.length; i++){
+            allLabels[i].setText(labelStrings[i] + "Loading ...");
+        }
     }
 
+    //Calls the find function on the tree
+    //Response is returned to a different function
     private void sendInfoGet(){
+        setLabelsLoading();
         String[][] findArray = {
                 {"this", "fAgName"},
                 {"this", "Is"},
@@ -71,11 +78,12 @@ public class BGIViewer extends JPanel {
 
     }
 
-
+    //Called when the tree is changed
+    //The parameter should be the new tree obtained
     public void updateWindow(XDebuggerTree tree) {
         this.tree = tree;
         DebugTreeUtils.setBGIViewer(this);
-
+        sendInfoGet();
     }
 
 }
