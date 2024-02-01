@@ -12,19 +12,23 @@ public class BGIViewer extends JPanel {
     JLabel stageLabel = null;
     JLabel agentNameLabel = null;
     JLabel intentionsLabel = null;
+    JLabel inboxLabel = null;
+    JLabel outboxLabel = null;
     JLabel[] allLabels;
     String STAGESTRING = "Stage: ";
     String AGENTNAMESTRING = "Agent Name: ";
     String INTENTIONSSTRING = "Intentions: ";
-    String[] labelStrings = {STAGESTRING, AGENTNAMESTRING, INTENTIONSSTRING};
+    String INBOXSTRING = "Inbox: ";
+    String OUTBOXSTRING = "Outbox: ";
+    String[] labelStrings;
 
     public BGIViewer(){
         super();
         //Make labels be placed one below another
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //Initialise Labels and give them their default strings
-        allLabels = new JLabel[]{stageLabel, agentNameLabel, intentionsLabel};
-        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, INTENTIONSSTRING};
+        allLabels = new JLabel[]{stageLabel, agentNameLabel, intentionsLabel, inboxLabel, outboxLabel};
+        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, INTENTIONSSTRING, INBOXSTRING, OUTBOXSTRING};
         for(int i=0; i<allLabels.length; i++){
             allLabels[i] = new JLabel(labelStrings[i]);
             add(allLabels[i]);
@@ -75,12 +79,16 @@ public class BGIViewer extends JPanel {
         String[][] findArray = {
                 {"stage", "name"},
                 {"this", "fAgName"},
-                {"this", "Is"}
+                {"this", "Is"},
+                {"this", "Inbox"},
+                {"this", "Outbox"}
         };
         //This is for when you want multiple data items to be returned
         //For Is (Intentions) you want to find all intentions and return them
         //Used in the respondForFind method in DebugTreeUtils
         boolean[] allowChildren = {
+                false,
+                false,
                 false,
                 false,
                 false
