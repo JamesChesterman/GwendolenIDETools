@@ -1,8 +1,10 @@
 package GwenDebugger;
 
 import GwendolenToolWindow.BGIViewer;
+import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
+import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class DebugTreeUtils {
      */
 
 
-    public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged){
+    public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged, boolean[] allowChildren){
         //Get max length of any array in the 2D array
         int maxLen = getLongestArrayIn2DArray(stringArrayJagged);
 
@@ -50,7 +52,7 @@ public class DebugTreeUtils {
 
         }
 
-        treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, 0);
+        treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, 0, allowChildren);
 
     }
 
@@ -66,7 +68,7 @@ public class DebugTreeUtils {
     }
 
     private static void treeFindRecursive(XDebuggerTreeNode rootNode, String[][] stringArrayJagged,
-                                          int[][] indexArrayJagged, int maxLen, int currentIndex){
+                                          int[][] indexArrayJagged, int maxLen, int currentIndex, boolean[] allowChildren){
         // See which nodes have their children loaded and which don't
         // Add those that aren't loaded to an array
 
@@ -96,7 +98,7 @@ public class DebugTreeUtils {
             int finalCurrentIndex = currentIndex;
             executorService.schedule(() -> {
                 //This is called after the wait
-                treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex);
+                treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex, allowChildren);
             }, 500, TimeUnit.MILLISECONDS);
         }else{
             // The children of the nodes have loaded
@@ -114,12 +116,12 @@ public class DebugTreeUtils {
 
             currentIndex = currentIndex + 1;
             if(currentIndex >= maxLen){
-                System.out.println("DONE!"); //Need to call something that calls to BGIViewer with results.
+                respondForFind(indexArrayJagged, rootNode, allowChildren);
             }
             //Don't need to wait before calling the method again
             //It's likely that the children of these nodes found don't have their children loaded
             //So the wait will just happen in this function call.
-            treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, currentIndex);
+            treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, currentIndex, allowChildren);
         }
     }
 
@@ -130,7 +132,7 @@ public class DebugTreeUtils {
         }else{
             XDebuggerTreeNode currentNode = rootNode;
             for(int i=0; i<currentIndex; i++){
-                currentNode = (XDebuggerTreeNode) rootNode.getChildAt(currentIndexArray[i]);
+                currentNode = (XDebuggerTreeNode) currentNode.getChildAt(currentIndexArray[i]);
             }
             return currentNode;
         }
@@ -175,5 +177,32 @@ public class DebugTreeUtils {
         }
     }
 
+    private static void respondForFind(int[][] indexArrayJagged, XDebuggerTreeNode rootNode, boolean[] allowChildren){
+        String[][] returnArray = new String[indexArrayJagged.length][];
+        for(int i=0; i<indexArrayJagged.length; i++){
+            //Need the + 1 here because otherwise it'll stop one short
+            XDebuggerTreeNode node = getNodeAtPath(rootNode, indexArrayJagged[i], indexArrayJagged[i].length);
+
+            String[] returnedItem;
+            if(allowChildren[i]){
+                //Node has children, all of which need to be returned
+                //That's why each node reponse is returned as an array
+                //For situtations like for {"this", "Is"} (Intentions)
+                List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) node.getChildren();
+                List<String> childValueList = new ArrayList<String>();
+                for(XDebuggerTreeNode child : children){
+                    XValueNodeImpl valueNode = (XValueNodeImpl) child;
+                    childValueList.add(valueNode.getRawValue());
+                }
+                returnedItem = childValueList.toArray(new String[0]);
+            }else{
+                //Just want to return the value
+                XValueNodeImpl valueNode = (XValueNodeImpl) node;
+                returnedItem = new String[]{valueNode.getRawValue()};
+            }
+            returnArray[i] = returnedItem;
+        }
+        bgiViewer.receiveInfoGet(returnArray);
+    }
 
 }

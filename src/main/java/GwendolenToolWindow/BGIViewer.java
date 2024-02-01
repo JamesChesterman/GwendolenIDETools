@@ -60,24 +60,6 @@ public class BGIViewer extends JPanel {
 
      */
 
-    private void setLabelsLoading(){
-        for(int i=0; i<allLabels.length; i++){
-            allLabels[i].setText(labelStrings[i] + "Loading ...");
-        }
-    }
-
-    //Calls the find function on the tree
-    //Response is returned to a different function
-    private void sendInfoGet(){
-        setLabelsLoading();
-        String[][] findArray = {
-                {"this", "fAgName"},
-                {"this", "Is"},
-                {"stage", "name"}
-        };
-
-    }
-
     //Called when the tree is changed
     //The parameter should be the new tree obtained
     public void updateWindow(XDebuggerTree tree) {
@@ -85,5 +67,41 @@ public class BGIViewer extends JPanel {
         DebugTreeUtils.setBGIViewer(this);
         sendInfoGet();
     }
+
+    //Calls the find function on the tree
+    //Response is returned to a different function
+    private void sendInfoGet(){
+        setLabelsLoading();
+        String[][] findArray = {
+                {"stage", "name"},
+                {"this", "fAgName"},
+                {"this", "Is"}
+        };
+        //This is for when you want multiple data items to be returned
+        //For Is (Intentions) you want to find all intentions and return them
+        //Used in the respondForFind method in DebugTreeUtils
+        boolean[] allowChildren = {
+                false,
+                false,
+                false
+        };
+        DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren);
+    }
+
+    private void setLabelsLoading(){
+        for(int i=0; i<allLabels.length; i++){
+            allLabels[i].setText(labelStrings[i] + "Loading ...");
+        }
+    }
+
+    public void receiveInfoGet(String[][] returnArray){
+        for(int i=0; i<returnArray.length; i++){
+            allLabels[i].setText(labelStrings[i] + returnArray[i][0]);
+        }
+    }
+
+
+
+
 
 }
