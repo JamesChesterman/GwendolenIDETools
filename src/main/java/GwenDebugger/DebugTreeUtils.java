@@ -8,6 +8,7 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -17,6 +18,7 @@ public class DebugTreeUtils {
 
     int index;
     private static BGIViewer bgiViewer;
+    private static boolean respondReady;
     private DebugTreeUtils(){
         //Private constructor prevents instantiation
     }
@@ -88,18 +90,20 @@ public class DebugTreeUtils {
         // Then wait a certain amount of time before calling the method again
 
         if(nodesToLoad.size() > 0){
-            //Need to wait for these nodes to load
-            for(int i=0; i<nodesToLoad.size(); i++){
-                //Initiate load for each node (that's what getChildCount() does)
-                nodesToLoad.get(i).getChildCount();
+            if(currentIndex < maxLen){
+                //Need to wait for these nodes to load
+                for(int i=0; i<nodesToLoad.size(); i++){
+                    //Initiate load for each node (that's what getChildCount() does)
+                    nodesToLoad.get(i).getChildCount();
+                }
+                //Wait period of time then check again.
+                ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+                int finalCurrentIndex = currentIndex;
+                executorService.schedule(() -> {
+                    //This is called after the wait
+                    treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex, allowChildren);
+                }, 500, TimeUnit.MILLISECONDS);
             }
-            //Wait period of time then check again.
-            ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-            int finalCurrentIndex = currentIndex;
-            executorService.schedule(() -> {
-                //This is called after the wait
-                treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex, allowChildren);
-            }, 500, TimeUnit.MILLISECONDS);
         }else{
             // The children of the nodes have loaded
             // So go through and find the nodes you want
@@ -117,11 +121,12 @@ public class DebugTreeUtils {
             currentIndex = currentIndex + 1;
             if(currentIndex >= maxLen){
                 respondForFind(indexArrayJagged, rootNode, allowChildren);
+            }else{
+                //Don't need to wait before calling the method again
+                //It's likely that the children of these nodes found don't have their children loaded
+                //So the wait will just happen in this function call.
+                treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, currentIndex, allowChildren);
             }
-            //Don't need to wait before calling the method again
-            //It's likely that the children of these nodes found don't have their children loaded
-            //So the wait will just happen in this function call.
-            treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, currentIndex, allowChildren);
         }
     }
 
@@ -153,7 +158,7 @@ public class DebugTreeUtils {
     //Then see what position the newly found node is
     //From the last node in the path we have so far
     private static int seeWhereNextNodeIs(int[] indexArray, String[] stringArrayJagged, int currentIndex,
-                                           XDebuggerTreeNode rootNode){
+                                          XDebuggerTreeNode rootNode){
         //Get node at end of path we have so far
         XDebuggerTreeNode node = getNodeAtPath(rootNode, indexArray, currentIndex);
         if(!node.isLeaf()){
@@ -177,32 +182,76 @@ public class DebugTreeUtils {
         }
     }
 
+
+    //Calls a method in bgiViewer with a 2D array of items to be returned
+    //Each array in the 2D array is either: the single raw value of the node requested
+    //Or the raw value of every child belonging to the node requested
+    //May need to wait for loading
     private static void respondForFind(int[][] indexArrayJagged, XDebuggerTreeNode rootNode, boolean[] allowChildren){
         String[][] returnArray = new String[indexArrayJagged.length][];
+        List<XDebuggerTreeNode> nodesToLoad = new ArrayList<>();
         for(int i=0; i<indexArrayJagged.length; i++){
-            //Need the + 1 here because otherwise it'll stop one short
             XDebuggerTreeNode node = getNodeAtPath(rootNode, indexArrayJagged[i], indexArrayJagged[i].length);
 
-            String[] returnedItem;
+            String[] returnedItem = null;
             if(allowChildren[i]){
-                //Node has children, all of which need to be returned
-                //That's why each node reponse is returned as an array
-                //For situtations like for {"this", "Is"} (Intentions)
-                List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) node.getChildren();
-                List<String> childValueList = new ArrayList<String>();
-                for(XDebuggerTreeNode child : children){
-                    XValueNodeImpl valueNode = (XValueNodeImpl) child;
-                    childValueList.add(valueNode.getRawValue());
+                if(node.isLeaf()){
+                    //When the node has no children to get (so size = 0)
+                    returnedItem = new String[]{"No items"};
+                    returnArray[i] = returnedItem;
+                }else{
+                    //Node has children, all of which need to be returned
+                    //For situations like getting all intentions
+                    if(areChildrenLoaded(node)){
+                        returnedItem = addChildrenToList(node);
+                        //Can't just put this return statement at the end
+                        //Otherwise it will execute after the executorService schedule has been called for this function call
+                        returnArray[i] = returnedItem;
+
+                    }else{
+                        //This will make the function be re-called after a wait
+                        nodesToLoad.add(node);
+                    }
                 }
-                returnedItem = childValueList.toArray(new String[0]);
             }else{
-                //Just want to return the value
+                //Make returnedItem array just the single raw value
                 XValueNodeImpl valueNode = (XValueNodeImpl) node;
                 returnedItem = new String[]{valueNode.getRawValue()};
+                returnArray[i] = returnedItem;
             }
-            returnArray[i] = returnedItem;
         }
-        bgiViewer.receiveInfoGet(returnArray);
+
+        //If there are any nodes to load, then wait 500ms then call the function again
+        //The node children loads have already been initiated where needed
+        if(nodesToLoad.size() > 0){
+            for(int i=0; i<nodesToLoad.size(); i++){
+                //Initiate load for each node (that's what getChildCount() does)
+                nodesToLoad.get(i).getChildCount();
+            }
+            //Wait period of time then check again
+            ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+            executorService.schedule(() -> {
+                //This is called after the wait
+                respondForFind(indexArrayJagged, rootNode, allowChildren);
+            }, 500, TimeUnit.MILLISECONDS);
+        }else{
+            //If no nodes need their children loading, then everything can be sent to bgiViewer
+            bgiViewer.receiveInfoGet(returnArray);
+
+        }
+    }
+
+    //Go through list of node's children
+    //Add raw value of each node to list, return as array
+    private static String[] addChildrenToList(XDebuggerTreeNode node){
+        //Go through and add each child to returnedItem array
+        List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) node.getChildren();
+        List<String> childValueList = new ArrayList<String>();
+        for(XDebuggerTreeNode child : children){
+            XValueNodeImpl valueNode = (XValueNodeImpl) child;
+            childValueList.add(valueNode.getRawValue());
+        }
+        return childValueList.toArray(new String[0]);
     }
 
 }

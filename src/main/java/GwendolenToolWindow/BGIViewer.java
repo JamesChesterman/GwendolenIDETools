@@ -89,9 +89,9 @@ public class BGIViewer extends JPanel {
         boolean[] allowChildren = {
                 false,
                 false,
-                false,
-                false,
-                false
+                true,
+                true,
+                true
         };
         DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren);
     }
