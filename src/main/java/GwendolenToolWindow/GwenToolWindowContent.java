@@ -66,33 +66,10 @@ public class GwenToolWindowContent {
         controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
 
         makeSteppingCheckbox();
+        makeStartToolsButton();
+        makeNextCycleButton();
+        makeTabbedPane();
 
-        //Start tools button
-        startToolsButton = new JButton("Start Tools");
-        startToolsButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    startTools();
-                } catch (ExecutionException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-
-        //Next cycle button
-        nextCycleButton = new JButton("Next Cycle");
-        nextCycleButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                breakpointController.goToNextCycle(debugSession);
-            }
-        });
-
-        //Pane containing the information windows
-        tabbedPane = new JBTabbedPane();
-        bgiViewer = new BGIViewer();
-        tabbedPane.addTab("BGIViewer", bgiViewer);
 
         controlsPanel.add(steppingCheckBox);
         controlsPanel.add(startToolsButton);
@@ -147,6 +124,32 @@ public class GwenToolWindowContent {
         });
     }
 
+    private void makeStartToolsButton(){
+        //Start tools button
+        startToolsButton = new JButton("Start Tools");
+        startToolsButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    startTools();
+                } catch (ExecutionException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    private void makeNextCycleButton(){
+        //Next cycle button
+        nextCycleButton = new JButton("Next Cycle");
+        nextCycleButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                breakpointController.goToNextCycle(debugSession);
+            }
+        });
+    }
+
     private void makeSlider(JPanel controlsPanel){
         slider = new JSlider(JSlider.HORIZONTAL, 1, 50, 1);
         slider.setMinorTickSpacing(5);
@@ -192,6 +195,13 @@ public class GwenToolWindowContent {
         controlsPanel.add(sliderLabel);
         controlsPanel.add(sliderText);
         controlsPanel.add(warningLabel);
+    }
+
+    private void makeTabbedPane(){
+        //Pane containing the information windows
+        tabbedPane = new JBTabbedPane();
+        bgiViewer = new BGIViewer();
+        tabbedPane.addTab("BGIViewer", bgiViewer);
     }
 
 
