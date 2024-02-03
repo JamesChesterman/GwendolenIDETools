@@ -51,7 +51,10 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     @Override
     public void sessionPaused(){
         XDebugSessionListener.super.sessionPaused();
+        updateDebugInfo();
+    }
 
+    public void updateDebugInfo(){
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         executorService.schedule(() -> {
             //This is executed after the wait (time specified below)
@@ -62,7 +65,6 @@ public class JavaBreakpointListener implements XDebugSessionListener {
             gwenToolWindow.updateDebugTreeValues(tree);
         }, 500, TimeUnit.MILLISECONDS);
         executorService.shutdown();
-
     }
 
     public JavaBreakpointListener(XDebugSession debugSession, GwenToolWindowContent gwenToolWindow){
