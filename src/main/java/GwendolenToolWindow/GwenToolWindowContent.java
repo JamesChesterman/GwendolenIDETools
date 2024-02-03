@@ -11,6 +11,8 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
@@ -105,18 +107,49 @@ public class GwenToolWindowContent {
     }
 
     private void makeSlider(JPanel controlsPanel){
-        slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
+        slider = new JSlider(JSlider.HORIZONTAL, 1, 50, 1);
         slider.setMinorTickSpacing(5);
         slider.setMajorTickSpacing(20);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
+        slider.setValue(1);
 
         JLabel sliderLabel = new JLabel("Cycle Number: ");
         JTextField sliderText = new JTextField(5);
+        sliderText.setText("1");
+        JLabel warningText = new JLabel("");
+
+        slider.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e){
+                int value = slider.getValue();
+                sliderText.setText(String.valueOf(value));
+            }
+        });
+
+        sliderText.addActionListener(new ActionListener(){
+           @Override
+           public void actionPerformed(ActionEvent e){
+               try{
+                   int value = Integer.parseInt(sliderText.getText());
+                   if(value >= slider.getMinimum() && value <= slider.getMaximum()){
+                       slider.setValue(value);
+                       warningText.setText("");
+                   }else{
+                       warningText.setText("WARNING - please enter cycle number between: " + slider.getMinimum() + " and "
+                               + slider.getMaximum());
+                   }
+               }catch(NumberFormatException ex){
+                    warningText.setText("WARNING - please enter cycle number as an integer");
+               }
+           }
+
+        });
 
         controlsPanel.add(slider);
         controlsPanel.add(sliderLabel);
         controlsPanel.add(sliderText);
+        controlsPanel.add(warningText);
     }
 
     public JPanel getContentPanel(){
