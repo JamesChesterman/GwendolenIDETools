@@ -21,6 +21,7 @@ import java.awt.event.ItemListener;
 
 public class GwenToolWindowContent {
     private final JPanel contentPanel = new JPanel();
+    private JSlider slider;
     private final BreakpointController breakpointController;
     private boolean isStepping;
 
@@ -98,8 +99,24 @@ public class GwenToolWindowContent {
         controlsPanel.add(steppingCheckBox);
         controlsPanel.add(startToolsButton);
         controlsPanel.add(nextCycleButton);
+        makeSlider(controlsPanel);
         controlsPanel.add(tabbedPane);
         return controlsPanel;
+    }
+
+    private void makeSlider(JPanel controlsPanel){
+        slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
+        slider.setMinorTickSpacing(5);
+        slider.setMajorTickSpacing(20);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+
+        JLabel sliderLabel = new JLabel("Cycle Number: ");
+        JTextField sliderText = new JTextField(5);
+
+        controlsPanel.add(slider);
+        controlsPanel.add(sliderLabel);
+        controlsPanel.add(sliderText);
     }
 
     public JPanel getContentPanel(){
