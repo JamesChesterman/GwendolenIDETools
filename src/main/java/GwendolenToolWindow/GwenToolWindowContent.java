@@ -20,10 +20,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GwenToolWindowContent {
     private final JPanel contentPanel = new JPanel();
+
+    private JCheckBox steppingCheckBox;
+    private JButton startToolsButton;
+    private JButton nextCycleButton;
+    private JBTabbedPane tabbedPane;
     private JSlider slider;
+    private JLabel sliderLabel;
+    private JTextField sliderText;
+    private JLabel warningLabel;
+
     private final BreakpointController breakpointController;
     private boolean isStepping;
 
@@ -33,27 +45,19 @@ public class GwenToolWindowContent {
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
+
         breakpointController = new BreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 20));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
         contentPanel.add(createControlsPanel(), BorderLayout.PAGE_START);
-    }
 
-    //Get debug session and start breakpoint listener (to see when execution is paused)
-    private void startTools() throws ExecutionException {
-        debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
-        if(debugSession != null){
-            JavaBreakpointListener breakpointListener = new JavaBreakpointListener(debugSession, this);
-            debugSession.addSessionListener(breakpointListener);
-            //This will allow BGIViewer to have the first cycle recorded.
-            breakpointListener.updateDebugInfo();
-        }
+        isStartToolsEnabled();
+
     }
 
     //Call the updateWindow method of each of the windows.
     public void updateDebugTreeValues(XDebuggerTree newDebugTree){
         bgiViewer.updateWindow(newDebugTree);
-
     }
 
     @NotNull
@@ -61,20 +65,10 @@ public class GwenToolWindowContent {
         JPanel controlsPanel = new JPanel();
         controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
 
-        //Stepping checkbox
-        JCheckBox steppingCheckBox = new JCheckBox("Stepping Mode Enabled");
-        isStepping = breakpointController.checkBreakpoint();
-        steppingCheckBox.setSelected(isStepping);
-        steppingCheckBox.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent e){
-                isStepping = !isStepping;
-                breakpointController.toggleBreakpoint();
-            }
-        });
+        makeSteppingCheckbox();
 
         //Start tools button
-        JButton startToolsButton = new JButton("Start Tools");
+        startToolsButton = new JButton("Start Tools");
         startToolsButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -87,7 +81,7 @@ public class GwenToolWindowContent {
         });
 
         //Next cycle button
-        JButton nextCycleButton = new JButton("Next Cycle");
+        nextCycleButton = new JButton("Next Cycle");
         nextCycleButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -96,7 +90,7 @@ public class GwenToolWindowContent {
         });
 
         //Pane containing the information windows
-        JBTabbedPane tabbedPane = new JBTabbedPane();
+        tabbedPane = new JBTabbedPane();
         bgiViewer = new BGIViewer();
         tabbedPane.addTab("BGIViewer", bgiViewer);
 
@@ -105,7 +99,52 @@ public class GwenToolWindowContent {
         controlsPanel.add(nextCycleButton);
         makeSlider(controlsPanel);
         controlsPanel.add(tabbedPane);
+        setComponentsEnabled(false);
         return controlsPanel;
+    }
+
+
+    //Checks every period of time whether the startTools button should be enabled or not
+    private void isStartToolsEnabled(){
+        //Want stepping mode to be enabled AND debug session to be started AND cycle number = 0
+        debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
+        if(isStepping && debugSession != null){
+            startToolsButton.setEnabled(true);
+        }else{
+            setComponentsEnabled(false);
+        }
+        //Wait period of time then check again
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        executorService.schedule(() -> {
+            //This is called after the wait
+            isStartToolsEnabled();
+        }, 200, TimeUnit.MILLISECONDS);
+    }
+
+    //Get debug session and start breakpoint listener (to see when execution is paused)
+    private void startTools() throws ExecutionException {
+        debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
+        if(debugSession != null){
+            JavaBreakpointListener breakpointListener = new JavaBreakpointListener(debugSession, this);
+            debugSession.addSessionListener(breakpointListener);
+            //This will allow BGIViewer to have the first cycle recorded.
+            breakpointListener.updateDebugInfo();
+            setComponentsEnabled(true);
+        }
+    }
+
+    private void makeSteppingCheckbox(){
+        //Stepping checkbox
+        steppingCheckBox = new JCheckBox("Stepping Mode Enabled");
+        isStepping = breakpointController.checkBreakpoint();
+        steppingCheckBox.setSelected(isStepping);
+        steppingCheckBox.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e){
+                isStepping = !isStepping;
+                breakpointController.toggleBreakpoint();
+            }
+        });
     }
 
     private void makeSlider(JPanel controlsPanel){
@@ -116,10 +155,11 @@ public class GwenToolWindowContent {
         slider.setPaintLabels(true);
         slider.setValue(1);
 
-        JLabel sliderLabel = new JLabel("Cycle Number: ");
-        JTextField sliderText = new JTextField(5);
+        sliderLabel = new JLabel("Cycle Number: ");
+        sliderLabel.setEnabled(false);
+        sliderText = new JTextField(5);
         sliderText.setText("1");
-        JLabel warningText = new JLabel("");
+        warningLabel = new JLabel("");
 
         slider.addChangeListener(new ChangeListener(){
             @Override
@@ -136,13 +176,13 @@ public class GwenToolWindowContent {
                    int value = Integer.parseInt(sliderText.getText());
                    if(value >= slider.getMinimum() && value <= slider.getMaximum()){
                        slider.setValue(value);
-                       warningText.setText("");
+                       warningLabel.setText("");
                    }else{
-                       warningText.setText("WARNING - please enter cycle number between: " + slider.getMinimum() + " and "
+                       warningLabel.setText("WARNING - please enter cycle number between: " + slider.getMinimum() + " and "
                                + slider.getMaximum());
                    }
                }catch(NumberFormatException ex){
-                    warningText.setText("WARNING - please enter cycle number as an integer");
+                    warningLabel.setText("WARNING - please enter cycle number as an integer");
                }
            }
 
@@ -151,7 +191,20 @@ public class GwenToolWindowContent {
         controlsPanel.add(slider);
         controlsPanel.add(sliderLabel);
         controlsPanel.add(sliderText);
-        controlsPanel.add(warningText);
+        controlsPanel.add(warningLabel);
+    }
+
+
+    //Want every component apart from stepping mode checkbox to be disabled at the start
+    private void setComponentsEnabled(boolean enabled){
+        //This manages when each component should become enabled
+        //Everything starts off as disabled except for stepping mode checkbox
+        JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, tabbedPane, slider,
+                sliderLabel, sliderText, warningLabel, bgiViewer};
+
+        for(JComponent component : arrayOfComponents){
+            component.setEnabled(enabled);
+        }
     }
 
     public JPanel getContentPanel(){
