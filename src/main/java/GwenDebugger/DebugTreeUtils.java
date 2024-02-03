@@ -1,24 +1,18 @@
 package GwenDebugger;
 
 import GwendolenToolWindow.BGIViewer;
-import com.intellij.xdebugger.frame.XValue;
-import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 
-import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DebugTreeUtils {
-
-    int index;
     private static BGIViewer bgiViewer;
-    private static boolean respondReady;
+
     private DebugTreeUtils(){
         //Private constructor prevents instantiation
     }
@@ -27,17 +21,6 @@ public class DebugTreeUtils {
     public static void setBGIViewer(BGIViewer bgiViewerToGive){
         bgiViewer = bgiViewerToGive;
     }
-
-    /*
-    private static void respondForFindNodeFromParent(XDebuggerTreeNode node, int receiver){
-        switch(receiver){
-            case 0 -> bgiViewer.receiveStageName(node);
-            default -> System.out.println("None");
-        }
-    }
-
-     */
-
 
     public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged, boolean[] allowChildren){
         //Get max length of any array in the 2D array

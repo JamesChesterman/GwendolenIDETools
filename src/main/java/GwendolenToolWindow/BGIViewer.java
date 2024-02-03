@@ -103,8 +103,18 @@ public class BGIViewer extends JPanel {
     }
 
     public void receiveInfoGet(String[][] returnArray){
+        StringBuilder textToSet;
         for(int i=0; i<returnArray.length; i++){
-            allLabels[i].setText(labelStrings[i] + returnArray[i][0]);
+            textToSet = new StringBuilder("<html><b>" + labelStrings[i] + "</b><br/>" + returnArray[i][0]);
+            if(returnArray[i].length > 1){
+                for(int j=1; j<returnArray[i].length; j++){
+                    //If there are multiple entries returned
+                    //Display each one separated by a new line
+                    textToSet.append("<br/>").append(returnArray[i][j]);
+                }
+            }
+            textToSet.append("</html>");
+            allLabels[i].setText(textToSet.toString());
         }
     }
 
