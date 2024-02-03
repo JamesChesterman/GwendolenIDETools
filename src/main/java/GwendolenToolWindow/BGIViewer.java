@@ -6,6 +6,8 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BGIViewer extends JPanel {
     XDebuggerTree tree;
@@ -21,6 +23,7 @@ public class BGIViewer extends JPanel {
     String INBOXSTRING = "Inbox: ";
     String OUTBOXSTRING = "Outbox: ";
     String[] labelStrings;
+    List<List<String>> listOfAttributes;
 
     public BGIViewer(){
         super();
@@ -33,36 +36,14 @@ public class BGIViewer extends JPanel {
             allLabels[i] = new JLabel(labelStrings[i]);
             add(allLabels[i]);
         }
-
-    }
-
-    /*
-    private void getStage(){
-        stageReceived = false;
-        nameReceived = false;
-        stageLabel.setText("Stage: loading...");
-       // DebugTreeUtils.findNodeFromParent(tree.getRoot(), "stage", 0);
-        //DebugTreeUtils.checkIfChildrenLoaded(tree.getRoot(), "stage", 0);
-        String[][] findArray = {
-                {"this", "fAgName"},
-                {"this", "Is"},
-                {"stage", "name"}
-        };
-        DebugTreeUtils.findInTree(tree.getRoot(), findArray);
-    }
-
-    public void receiveStageName(XDebuggerTreeNode nodeReceived){
-        if(!stageReceived){
-            //DebugTreeUtils.findNodeFromParent(nodeReceived, "name", 0);
-            stageReceived = true;
-        }else if(!nameReceived){
-            XValueNodeImpl valueNode = (XValueNodeImpl) nodeReceived;
-            stageLabel.setText("Stage: " + valueNode.getRawValue());
-            nameReceived = true;
+        listOfAttributes = new ArrayList<List<String>>();
+        for(int i=0; i<allLabels.length; i++){
+            //Make an arrayList for each attribute
+            listOfAttributes.add(new ArrayList<String>());
         }
-    }
 
-     */
+
+    }
 
     //Called when the tree is changed
     //The parameter should be the new tree obtained
@@ -115,6 +96,7 @@ public class BGIViewer extends JPanel {
             }
             textToSet.append("</html>");
             allLabels[i].setText(textToSet.toString());
+            listOfAttributes.get(i).add(textToSet.toString());
         }
     }
 
