@@ -34,6 +34,7 @@ public class GwenToolWindowContent {
     private JSlider slider;
     private JLabel sliderLabel;
     private JTextField sliderText;
+    private JButton changeCycleNumber;
     private JLabel warningLabel;
 
     private final BreakpointController breakpointController;
@@ -174,8 +175,8 @@ public class GwenToolWindowContent {
         slider.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e){
-                int value = slider.getValue();
-                sliderText.setText(String.valueOf(value));
+                int cycleNum = slider.getValue();
+                sliderText.setText(String.valueOf(cycleNum));
             }
         });
 
@@ -183,9 +184,9 @@ public class GwenToolWindowContent {
            @Override
            public void actionPerformed(ActionEvent e){
                try{
-                   int value = Integer.parseInt(sliderText.getText());
-                   if(value >= slider.getMinimum() && value <= slider.getMaximum()){
-                       slider.setValue(value);
+                   int cycleNum = Integer.parseInt(sliderText.getText());
+                   if(cycleNum >= slider.getMinimum() && cycleNum <= slider.getMaximum()){
+                       slider.setValue(cycleNum);
                        warningLabel.setText("");
                    }else{
                        warningLabel.setText("WARNING - please enter cycle number between: " + slider.getMinimum() + " and "
@@ -198,9 +199,18 @@ public class GwenToolWindowContent {
 
         });
 
-        controlsPanel.add(slider);
+        changeCycleNumber = new JButton("Change Cycle Number");
+        changeCycleNumber.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                bgiViewer.updateCycleNumber(slider.getValue());
+            }
+        });
+
         controlsPanel.add(sliderLabel);
         controlsPanel.add(sliderText);
+        controlsPanel.add(slider);
+        controlsPanel.add(changeCycleNumber);
         controlsPanel.add(warningLabel);
     }
 
@@ -217,7 +227,7 @@ public class GwenToolWindowContent {
         //This manages when each component should become enabled
         //Everything starts off as disabled except for stepping mode checkbox
         JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, tabbedPane, slider,
-                sliderLabel, sliderText, warningLabel, bgiViewer};
+                sliderLabel, sliderText, changeCycleNumber, warningLabel, bgiViewer};
 
         for(JComponent component : arrayOfComponents){
             component.setEnabled(enabled);

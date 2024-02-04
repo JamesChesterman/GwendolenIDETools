@@ -24,6 +24,7 @@ public class BGIViewer extends JPanel {
     String OUTBOXSTRING = "Outbox: ";
     String[] labelStrings;
     List<List<String>> listOfAttributes;
+    private int cycleNumber;
 
     private GwenToolWindowContent gwenToolWindowContent;
 
@@ -31,6 +32,8 @@ public class BGIViewer extends JPanel {
         super();
 
         this.gwenToolWindowContent = gwenToolWindowContent;
+        //Is the cycle number of what is currently being displayed
+        cycleNumber = 1;
 
         //Make labels be placed one below another
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -57,6 +60,21 @@ public class BGIViewer extends JPanel {
         DebugTreeUtils.setBGIViewer(this);
         sendInfoGet();
     }
+
+    //Called when the slider's value is changed (could also be by changing the number in the text field)
+    //Compare against BGIViewer's value of cycle number to avoid loading multiple times.
+    public void updateCycleNumber(int cycleNumber){
+        if(this.cycleNumber != cycleNumber){
+            this.cycleNumber = cycleNumber;
+            for(int i=0; i<listOfAttributes.size(); i++){
+                //Each list in listOfAttributes is the history for ONE attribute
+                //So get the same position in each attribute list for all the attributes at this cycle number
+                List<String> listForAttribute = listOfAttributes.get(i);
+                allLabels[i].setText(listForAttribute.get(cycleNumber-1));
+            }
+        }
+    }
+
 
     //Calls the find function on the tree
     //Response is returned to a different function
