@@ -25,8 +25,13 @@ public class BGIViewer extends JPanel {
     String[] labelStrings;
     List<List<String>> listOfAttributes;
 
-    public BGIViewer(){
+    private GwenToolWindowContent gwenToolWindowContent;
+
+    public BGIViewer(GwenToolWindowContent gwenToolWindowContent){
         super();
+
+        this.gwenToolWindowContent = gwenToolWindowContent;
+
         //Make labels be placed one below another
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //Initialise Labels and give them their default strings
@@ -83,6 +88,9 @@ public class BGIViewer extends JPanel {
         }
     }
 
+    //Called from DebugTreeUtils with the information requested by the 'SendInfoGet' method
+    //Sets the labels to the new values
+    //Add the new values to the 2D list
     public void receiveInfoGet(String[][] returnArray){
         StringBuilder textToSet;
         for(int i=0; i<returnArray.length; i++){
@@ -98,6 +106,8 @@ public class BGIViewer extends JPanel {
             allLabels[i].setText(textToSet.toString());
             listOfAttributes.get(i).add(textToSet.toString());
         }
+        //Notify gwenToolWindowContent saying that the values have loaded
+        gwenToolWindowContent.cycleComplete();
     }
 
 

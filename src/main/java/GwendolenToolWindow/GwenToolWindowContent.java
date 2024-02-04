@@ -43,9 +43,11 @@ public class GwenToolWindowContent {
     private XDebugSession debugSession;
     private BGIViewer bgiViewer;
 
+    private int cyclesDone;
+
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
-
+        cyclesDone = 0;
         breakpointController = new BreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 20));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
@@ -96,6 +98,7 @@ public class GwenToolWindowContent {
             //This is called after the wait
             isStartToolsEnabled();
         }, 200, TimeUnit.MILLISECONDS);
+        executorService.shutdown();
     }
 
     //Get debug session and start breakpoint listener (to see when execution is paused)
@@ -107,6 +110,8 @@ public class GwenToolWindowContent {
             //This will allow BGIViewer to have the first cycle recorded.
             breakpointListener.updateDebugInfo();
             setComponentsEnabled(true);
+            //Need to wait for first lot of data to come back to enable the next cycle button
+            nextCycleButton.setEnabled(false);
         }
     }
 
@@ -145,6 +150,8 @@ public class GwenToolWindowContent {
         nextCycleButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
+                //Also want to disable the next cycle button, need to wait for values to be loaded before pressing it again
+                nextCycleButton.setEnabled(false);
                 breakpointController.goToNextCycle(debugSession);
             }
         });
@@ -152,8 +159,8 @@ public class GwenToolWindowContent {
 
     private void makeSlider(JPanel controlsPanel){
         slider = new JSlider(JSlider.HORIZONTAL, 1, 50, 1);
-        slider.setMinorTickSpacing(5);
-        slider.setMajorTickSpacing(20);
+        slider.setMinorTickSpacing(1);
+        slider.setMajorTickSpacing(5);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
         slider.setValue(1);
@@ -200,7 +207,7 @@ public class GwenToolWindowContent {
     private void makeTabbedPane(){
         //Pane containing the information windows
         tabbedPane = new JBTabbedPane();
-        bgiViewer = new BGIViewer();
+        bgiViewer = new BGIViewer(this);
         tabbedPane.addTab("BGIViewer", bgiViewer);
     }
 
@@ -219,5 +226,22 @@ public class GwenToolWindowContent {
 
     public JPanel getContentPanel(){
         return contentPanel;
+    }
+
+    //Called from BGIViewer when values for cycle are loaded. Increments cyclesDone
+    public void cycleComplete(){
+        cyclesDone += 1;
+        //Need to update the Swing component on an Event-Dispatch Thread
+        //Otherwise the program crashes
+        SwingUtilities.invokeLater(new Runnable() {
+           public void run(){
+               slider.setMaximum(cyclesDone);
+               slider.setValue(cyclesDone);
+               sliderText.setText(String.valueOf(cyclesDone));
+               //Also means that all values are loaded, so can re-enable 'Next Cycle' button
+               nextCycleButton.setEnabled(true);
+           }
+        });
+
     }
 }

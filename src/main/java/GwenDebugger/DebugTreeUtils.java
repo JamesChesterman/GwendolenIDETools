@@ -86,6 +86,7 @@ public class DebugTreeUtils {
                     //This is called after the wait
                     treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex, allowChildren);
                 }, 500, TimeUnit.MILLISECONDS);
+                executorService.shutdown();
             }
         }else{
             // The children of the nodes have loaded
@@ -217,6 +218,7 @@ public class DebugTreeUtils {
                 //This is called after the wait
                 respondForFind(indexArrayJagged, rootNode, allowChildren);
             }, 500, TimeUnit.MILLISECONDS);
+            executorService.shutdown();
         }else{
             //If no nodes need their children loading, then everything can be sent to bgiViewer
             bgiViewer.receiveInfoGet(returnArray);
