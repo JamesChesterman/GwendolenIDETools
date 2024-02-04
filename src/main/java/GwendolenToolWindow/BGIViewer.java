@@ -24,7 +24,6 @@ public class BGIViewer extends JPanel {
     String OUTBOXSTRING = "Outbox: ";
     String[] labelStrings;
     List<List<String>> listOfAttributes;
-    private int cycleNumber;
 
     private GwenToolWindowContent gwenToolWindowContent;
 
@@ -32,8 +31,6 @@ public class BGIViewer extends JPanel {
         super();
 
         this.gwenToolWindowContent = gwenToolWindowContent;
-        //Is the cycle number of what is currently being displayed
-        cycleNumber = 1;
 
         //Make labels be placed one below another
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -61,17 +58,14 @@ public class BGIViewer extends JPanel {
         sendInfoGet();
     }
 
-    //Called when the slider's value is changed (could also be by changing the number in the text field)
-    //Compare against BGIViewer's value of cycle number to avoid loading multiple times.
+    //Called when the 'Change Cycle Number' button is pressed
+    //Changes values displayed in BGIViewer to the cycleNumber inputted
     public void updateCycleNumber(int cycleNumber){
-        if(this.cycleNumber != cycleNumber){
-            this.cycleNumber = cycleNumber;
-            for(int i=0; i<listOfAttributes.size(); i++){
-                //Each list in listOfAttributes is the history for ONE attribute
-                //So get the same position in each attribute list for all the attributes at this cycle number
-                List<String> listForAttribute = listOfAttributes.get(i);
-                allLabels[i].setText(listForAttribute.get(cycleNumber-1));
-            }
+        for(int i=0; i<listOfAttributes.size(); i++){
+            //Each list in listOfAttributes is the history for ONE attribute
+            //So get the same position in each attribute list for all the attributes at this cycle number
+            List<String> listForAttribute = listOfAttributes.get(i);
+            allLabels[i].setText(listForAttribute.get(cycleNumber-1));
         }
     }
 
