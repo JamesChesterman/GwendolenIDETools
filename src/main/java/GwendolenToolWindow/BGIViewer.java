@@ -13,12 +13,14 @@ public class BGIViewer extends JPanel {
     XDebuggerTree tree;
     JLabel stageLabel = null;
     JLabel agentNameLabel = null;
+    JLabel agentsLabel = null;
     JLabel intentionsLabel = null;
     JLabel inboxLabel = null;
     JLabel outboxLabel = null;
     JLabel[] allLabels;
     String STAGESTRING = "Stage: ";
     String AGENTNAMESTRING = "Agent Name: ";
+    String AGENTSSTRING = "Agents: ";
     String INTENTIONSSTRING = "Intentions: ";
     String INBOXSTRING = "Inbox: ";
     String OUTBOXSTRING = "Outbox: ";
@@ -35,8 +37,9 @@ public class BGIViewer extends JPanel {
         //Make labels be placed one below another
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //Initialise Labels and give them their default strings
-        allLabels = new JLabel[]{stageLabel, agentNameLabel, intentionsLabel, inboxLabel, outboxLabel};
-        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, INTENTIONSSTRING, INBOXSTRING, OUTBOXSTRING};
+        allLabels = new JLabel[]{stageLabel, agentNameLabel, agentsLabel, intentionsLabel, inboxLabel, outboxLabel};
+        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, AGENTSSTRING, INTENTIONSSTRING, INBOXSTRING,
+                OUTBOXSTRING};
         for(int i=0; i<allLabels.length; i++){
             allLabels[i] = new JLabel(labelStrings[i]);
             add(allLabels[i]);
@@ -77,6 +80,7 @@ public class BGIViewer extends JPanel {
         String[][] findArray = {
                 {"stage", "name"},
                 {"this", "fAgName"},
+                {"this", "fMAS", "fAgents"},
                 {"this", "Is"},
                 {"this", "Inbox"},
                 {"this", "Outbox"}
@@ -87,6 +91,7 @@ public class BGIViewer extends JPanel {
         boolean[] allowChildren = {
                 false,
                 false,
+                true,
                 true,
                 true,
                 true
