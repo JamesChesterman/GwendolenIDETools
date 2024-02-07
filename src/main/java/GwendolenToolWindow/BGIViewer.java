@@ -96,7 +96,19 @@ public class BGIViewer extends JPanel {
                 true,
                 true
         };
-        DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren);
+        //This is when each element of a list is actually a map
+        //Therefore allowing you to get the key and the value of each element of the map
+        //When the information is stored in a map, it's returned in a separate function
+        boolean[] isMap = {
+                false,
+                false,
+                true,
+                false,
+                false,
+                false
+
+        };
+        DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren, isMap);
     }
 
     private void setLabelsLoading(){
@@ -125,6 +137,11 @@ public class BGIViewer extends JPanel {
         }
         //Notify gwenToolWindowContent saying that the values have loaded
         gwenToolWindowContent.cycleComplete();
+    }
+
+    public void receiveMapNodeInfo(List<List<List<String>>> mapNodeChildren){
+        int size = mapNodeChildren.size();
+        System.out.println(size);
     }
 
 

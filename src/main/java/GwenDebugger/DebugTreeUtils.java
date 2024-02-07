@@ -1,6 +1,7 @@
 package GwenDebugger;
 
 import GwendolenToolWindow.BGIViewer;
+import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 
@@ -22,7 +23,7 @@ public class DebugTreeUtils {
         bgiViewer = bgiViewerToGive;
     }
 
-    public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged, boolean[] allowChildren){
+    public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged, boolean[] allowChildren, boolean[] isMap){
         //Get max length of any array in the 2D array
         int maxLen = getLongestArrayIn2DArray(stringArrayJagged);
 
@@ -37,7 +38,7 @@ public class DebugTreeUtils {
 
         }
 
-        treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, 0, allowChildren);
+        treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, 0, allowChildren, isMap);
 
     }
 
@@ -53,7 +54,8 @@ public class DebugTreeUtils {
     }
 
     private static void treeFindRecursive(XDebuggerTreeNode rootNode, String[][] stringArrayJagged,
-                                          int[][] indexArrayJagged, int maxLen, int currentIndex, boolean[] allowChildren){
+                                          int[][] indexArrayJagged, int maxLen, int currentIndex, boolean[] allowChildren,
+                                          boolean[] isMap){
         // See which nodes have their children loaded and which don't
         // Add those that aren't loaded to an array
 
@@ -90,7 +92,7 @@ public class DebugTreeUtils {
                 int finalCurrentIndex = currentIndex;
                 executorService.schedule(() -> {
                     //This is called after the wait
-                    treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex, allowChildren);
+                    treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex, allowChildren, isMap);
                 }, 500, TimeUnit.MILLISECONDS);
                 executorService.shutdown();
             }
@@ -111,12 +113,12 @@ public class DebugTreeUtils {
 
             currentIndex = currentIndex + 1;
             if(currentIndex >= maxLen){
-                respondForFind(indexArrayJagged, rootNode, allowChildren);
+                respondForFind(indexArrayJagged, rootNode, allowChildren, isMap);
             }else{
                 //Don't need to wait before calling the method again
                 //It's likely that the children of these nodes found don't have their children loaded
                 //So the wait will just happen in this function call.
-                treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, currentIndex, allowChildren);
+                treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, currentIndex, allowChildren, isMap);
             }
         }
     }
@@ -178,9 +180,11 @@ public class DebugTreeUtils {
     //Each array in the 2D array is either: the single raw value of the node requested
     //Or the raw value of every child belonging to the node requested
     //May need to wait for loading
-    private static void respondForFind(int[][] indexArrayJagged, XDebuggerTreeNode rootNode, boolean[] allowChildren){
+    //Also keeps a list of map nodes (nodes with a key and a value) which are then processed in another method
+    private static void respondForFind(int[][] indexArrayJagged, XDebuggerTreeNode rootNode, boolean[] allowChildren, boolean[] isMap){
         String[][] returnArray = new String[indexArrayJagged.length][];
         List<XDebuggerTreeNode> nodesToLoad = new ArrayList<>();
+        List<XDebuggerTreeNode> mapNodes = new ArrayList<>();
         for(int i=0; i<indexArrayJagged.length; i++){
             XDebuggerTreeNode node = getNodeAtPath(rootNode, indexArrayJagged[i], indexArrayJagged[i].length);
 
@@ -198,7 +202,11 @@ public class DebugTreeUtils {
                         //Can't just put this return statement at the end
                         //Otherwise it will execute after the executorService schedule has been called for this function call
                         returnArray[i] = returnedItem;
-
+                        //Node will only be a map when there are keys and values that need to be returned
+                        if(isMap[i]){
+                            mapNodes.add((XDebuggerTreeNode) node);
+                            System.out.println("HERE");
+                        }
                     }else{
                         //This will make the function be re-called after a wait
                         nodesToLoad.add(node);
@@ -223,13 +231,75 @@ public class DebugTreeUtils {
             ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
             executorService.schedule(() -> {
                 //This is called after the wait
-                respondForFind(indexArrayJagged, rootNode, allowChildren);
+                respondForFind(indexArrayJagged, rootNode, allowChildren, isMap);
             }, 500, TimeUnit.MILLISECONDS);
             executorService.shutdown();
         }else{
             //If no nodes need their children loading, then everything can be sent to bgiViewer
             bgiViewer.receiveInfoGet(returnArray);
+            processMapNodes(mapNodes);
+        }
+    }
 
+
+    //Send the map values back in a separate method to avoid more complex method above
+    //We already know the mapNodes' children will be loaded.
+    //Now need to check if the children's children (usually key and value) are also loaded
+
+    //Example: fAgents is a map. The fAgents node will be the mapNode. This node has children (one for each agent)
+    //Then each of the children will have children, typically the key and the value
+    //So array will be indexed on: node(List parent), childNode(Element of the list), childOfChildNode(Key / Value of
+    //   list element)
+    private static void processMapNodes(List<XDebuggerTreeNode> mapNodes){
+        List<XDebuggerTreeNode[]> nodesToLoad = new ArrayList<>();
+        for(int i=0; i<mapNodes.size(); i++){
+            List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) mapNodes.get(i).getChildren();
+            for(XDebuggerTreeNode child : children){
+                if(!areChildrenLoaded(child)){
+                    //Add children for one node in its own array
+                    //So you know what belongs where
+                    nodesToLoad.add(child.getChildren().toArray(new XDebuggerTreeNode[0]));
+                }
+            }
+        }
+        //If there are nodes left to load
+        if(!nodesToLoad.isEmpty()){
+            //Go through and initiate loads for each node (which are all children of the mapNodes)
+            for(XDebuggerTreeNode[] nodeList : nodesToLoad){
+                for(XDebuggerTreeNode node : nodeList){
+                    node.getChildCount();
+                }
+            }
+            //Wait a delay then see if they're loaded
+            ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+            executorService.schedule(() -> {
+                //This is called after the wait
+                processMapNodes(mapNodes);
+            }, 500, TimeUnit.MILLISECONDS);
+            executorService.shutdown();
+        //If there are no child nodes left to load
+        }else{
+            List<List<List<String>>> valuesOfMapNodeChildren = new ArrayList<>();
+            //No more nodes to load. Get values of each node then call method in bgiViewer to send results
+            for(int i=0; i<mapNodes.size(); i++){
+                List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) mapNodes.get(i).getChildren();
+                List<List<String>> valuesOfListElementChildren = new ArrayList<>();
+                for(int j=0; j<children.size(); j++){
+                    List<XDebuggerTreeNode> childrenOfChild = (List<XDebuggerTreeNode>) children.get(j).getChildren();
+                    List<String> valuesOfMapNodeChild = new ArrayList<>();
+                    for(int k=0; k<childrenOfChild.size(); k++){
+                        //Each of these should either be a key or a value (the value associated with each)
+                        //E.g. the key of an element in fAgents list may have the value "medic"
+                        XValueNodeImpl valueNode = (XValueNodeImpl) childrenOfChild.get(k);
+                        valuesOfMapNodeChild.add(valueNode.getRawValue());
+                    }
+                    //Add values for each list element into a 2D array
+                    valuesOfListElementChildren.add(valuesOfMapNodeChild);
+                }
+                //Add values for each list of children (each of which having a list of attributes)
+                valuesOfMapNodeChildren.add(valuesOfListElementChildren);
+            }
+            bgiViewer.receiveMapNodeInfo(valuesOfMapNodeChildren);
         }
     }
 
