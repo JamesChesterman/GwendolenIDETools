@@ -44,6 +44,7 @@ public class GwenToolWindowContent {
     private XDebugSession debugSession;
     private BGIViewer bgiViewer;
 
+    //Word 'cycles' is inaccurate. In GUI have renamed anything 'cycle' related to 'step'
     private int cyclesDone;
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
@@ -147,7 +148,7 @@ public class GwenToolWindowContent {
 
     private void makeNextCycleButton(){
         //Next cycle button
-        nextCycleButton = new JButton("Next Cycle");
+        nextCycleButton = new JButton("Next Step");
         nextCycleButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -166,7 +167,7 @@ public class GwenToolWindowContent {
         slider.setPaintLabels(true);
         slider.setValue(1);
 
-        sliderLabel = new JLabel("Cycle Number: ");
+        sliderLabel = new JLabel("Step Number: ");
         sliderLabel.setEnabled(false);
         sliderText = new JTextField(5);
         sliderText.setText("1");
@@ -189,17 +190,17 @@ public class GwenToolWindowContent {
                        slider.setValue(cycleNum);
                        warningLabel.setText("");
                    }else{
-                       warningLabel.setText("WARNING - please enter cycle number between: " + slider.getMinimum() + " and "
+                       warningLabel.setText("WARNING - please enter step number between: " + slider.getMinimum() + " and "
                                + slider.getMaximum());
                    }
                }catch(NumberFormatException ex){
-                    warningLabel.setText("WARNING - please enter cycle number as an integer");
+                    warningLabel.setText("WARNING - please enter step number as an integer");
                }
            }
 
         });
 
-        changeCycleNumber = new JButton("Change Cycle Number");
+        changeCycleNumber = new JButton("Change Step Number");
         changeCycleNumber.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
