@@ -25,7 +25,20 @@ public class BGIViewer extends JPanel {
     String INBOXSTRING = "Inbox: ";
     String OUTBOXSTRING = "Outbox: ";
     String[] labelStrings;
+    String[] mapLabelStrings;
     List<List<String>> listOfAttributes;
+
+    //This is when each element of a list is actually a map
+    //Therefore allowing you to get the key and the value of each element of the map
+    //When the information is stored in a map, it's returned in a separate function
+    private boolean[] isMap = {
+            false,
+            false,
+            true,
+            false,
+            false,
+            false
+    };
 
     private GwenToolWindowContent gwenToolWindowContent;
 
@@ -40,6 +53,8 @@ public class BGIViewer extends JPanel {
         allLabels = new JLabel[]{stageLabel, agentNameLabel, agentsLabel, intentionsLabel, inboxLabel, outboxLabel};
         labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, AGENTSSTRING, INTENTIONSSTRING, INBOXSTRING,
                 OUTBOXSTRING};
+        //Any label that can be a map
+        mapLabelStrings = new String[]{AGENTSSTRING};
         for(int i=0; i<allLabels.length; i++){
             allLabels[i] = new JLabel(labelStrings[i]);
             add(allLabels[i]);
@@ -96,18 +111,6 @@ public class BGIViewer extends JPanel {
                 true,
                 true
         };
-        //This is when each element of a list is actually a map
-        //Therefore allowing you to get the key and the value of each element of the map
-        //When the information is stored in a map, it's returned in a separate function
-        boolean[] isMap = {
-                false,
-                false,
-                true,
-                false,
-                false,
-                false
-
-        };
         DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren, isMap);
     }
 
@@ -123,6 +126,9 @@ public class BGIViewer extends JPanel {
     public void receiveInfoGet(String[][] returnArray){
         StringBuilder textToSet;
         for(int i=0; i<returnArray.length; i++){
+            if(isMap[i]){
+                continue;
+            }
             textToSet = new StringBuilder("<html><b>" + labelStrings[i] + "</b><br/>" + returnArray[i][0]);
             if(returnArray[i].length > 1){
                 for(int j=1; j<returnArray[i].length; j++){
@@ -135,13 +141,54 @@ public class BGIViewer extends JPanel {
             allLabels[i].setText(textToSet.toString());
             listOfAttributes.get(i).add(textToSet.toString());
         }
+    }
+
+
+    //Called from DebugTreeUtils
+    //Each label may need something a bit different
+    //For example for agents I only need the raw value for the key for each agent
+    public void receiveMapNodeInfo(List<List<List<String>>> mapNodeChildren){
+        for(int i=0; i<mapNodeChildren.size(); i++){
+            //Each array here corresponds to a single label string
+            String labelString = mapLabelStrings[i];
+            if(labelString.equals("Agents: ")){
+                //Just want the key for each agent
+                String[] keyForEachAgent = getKeyForEachAgent(mapNodeChildren.get(i));
+                String agentsText = getTextForList(keyForEachAgent, labelString);
+                allLabels[getIndex(labelStrings, labelString)].setText(agentsText);
+            }
+        }
+
         //Notify gwenToolWindowContent saying that the values have loaded
         gwenToolWindowContent.cycleComplete();
     }
 
-    public void receiveMapNodeInfo(List<List<List<String>>> mapNodeChildren){
-        int size = mapNodeChildren.size();
-        System.out.println(size);
+    //Get raw value for 'key' for each agent. Return as string array.
+    private String[] getKeyForEachAgent(List<List<String>> agentsList){
+        List<String> keyForEachAgent = new ArrayList<>();
+        for(List<String> agent : agentsList){
+            //'Key' raw value for each agent is the first item in each array
+            keyForEachAgent.add(agent.get(0));
+        }
+        return keyForEachAgent.toArray(new String[0]);
+    }
+
+    private String getTextForList(String[] array, String labelString){
+        StringBuilder stringBuilder = new StringBuilder("<html><b>" + labelString + "</b>");
+        for(int i=0; i<array.length; i++){
+            stringBuilder.append("<br/>").append(array[i]);
+        }
+        stringBuilder.append("</html>");
+        return stringBuilder.toString();
+    }
+
+    private int getIndex(String[] array, String element){
+        for(int i=0; i<array.length; i++){
+            if(element.equals(array[i])){
+                return i;
+            }
+        }
+        return -1;
     }
 
 

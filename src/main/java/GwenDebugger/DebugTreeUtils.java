@@ -205,7 +205,6 @@ public class DebugTreeUtils {
                         //Node will only be a map when there are keys and values that need to be returned
                         if(isMap[i]){
                             mapNodes.add((XDebuggerTreeNode) node);
-                            System.out.println("HERE");
                         }
                     }else{
                         //This will make the function be re-called after a wait
