@@ -114,6 +114,8 @@ public class GwenToolWindowContent {
             setComponentsEnabled(true);
             //Need to wait for first lot of data to come back to enable the next cycle button
             nextCycleButton.setEnabled(false);
+            cyclesDone = 0;
+            slider.setValue(0);
         }
     }
 

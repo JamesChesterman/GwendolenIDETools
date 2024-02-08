@@ -15,6 +15,7 @@ public class BGIViewer extends JPanel {
     JLabel agentNameLabel = null;
     JLabel agentsLabel = null;
     JLabel beliefsLabel = null;
+    JLabel goalsLabel = null;
     JLabel intentionsLabel = null;
     JLabel inboxLabel = null;
     JLabel outboxLabel = null;
@@ -23,6 +24,7 @@ public class BGIViewer extends JPanel {
     String AGENTNAMESTRING = "Agent Name: ";
     String AGENTSSTRING = "Agents: ";
     String BELIEFSSTRING = "Beliefs: ";
+    String GOALSSTRING = "Goals: ";
     String INTENTIONSSTRING = "Intentions: ";
     String INBOXSTRING = "Inbox: ";
     String OUTBOXSTRING = "Outbox: ";
@@ -36,6 +38,7 @@ public class BGIViewer extends JPanel {
     private boolean[] isMap = {
             false,
             false,
+            true,
             true,
             true,
             false,
@@ -53,12 +56,12 @@ public class BGIViewer extends JPanel {
         //Make labels be placed one below another
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //Initialise Labels and give them their default strings
-        allLabels = new JLabel[]{stageLabel, agentNameLabel, agentsLabel, beliefsLabel,
+        allLabels = new JLabel[]{stageLabel, agentNameLabel, agentsLabel, beliefsLabel, goalsLabel,
                 intentionsLabel, inboxLabel, outboxLabel};
-        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, AGENTSSTRING, BELIEFSSTRING,
+        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, AGENTSSTRING, BELIEFSSTRING, GOALSSTRING,
                 INTENTIONSSTRING, INBOXSTRING, OUTBOXSTRING};
         //Any label that can be a map
-        mapLabelStrings = new String[]{AGENTSSTRING, BELIEFSSTRING};
+        mapLabelStrings = new String[]{AGENTSSTRING, BELIEFSSTRING, GOALSSTRING};
         for(int i=0; i<allLabels.length; i++){
             allLabels[i] = new JLabel(labelStrings[i]);
             add(allLabels[i]);
@@ -101,6 +104,7 @@ public class BGIViewer extends JPanel {
                 {"this", "fAgName"},
                 {"this", "fMAS", "fAgents"},
                 {"this", "bbmap", "0", "value", "belsMap"},
+                {"this", "gbmap", "0", "value", "goalMap"},
                 {"this", "Is"},
                 {"this", "Inbox"},
                 {"this", "Outbox"}
@@ -115,9 +119,10 @@ public class BGIViewer extends JPanel {
                 true,
                 true,
                 true,
+                true,
                 true
         };
-        DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren, isMap);
+        DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren, isMap, labelStrings);
     }
 
     private void setLabelsLoading(){
@@ -153,24 +158,28 @@ public class BGIViewer extends JPanel {
     //Called from DebugTreeUtils
     //Each label may need something a bit different
     //For example for agents I only need the raw value for the key for each agent
-    public void receiveMapNodeInfo(List<List<List<String>>> mapNodeChildren){
+    public void receiveMapNodeInfo(List<List<List<String>>> mapNodeChildren, List<String> labelStringsFound){
         //If label not covered, need to set it to not having any values. Default value of boolean is false
         boolean[] labelsCovered = new boolean[mapLabelStrings.length];
         for(int i=0; i<mapNodeChildren.size(); i++){
             //Each array here corresponds to a single label string
-            String labelString = mapLabelStrings[i];
+            String labelString = labelStringsFound.get(i);
             String textToSet = "<html><b>" + labelString + "</b></html>";
+            String[] valForEachElement = new String[0];
             if(labelString.equals("Agents: ")){
                 //Just want the key for each agent
-                String[] keyForEachAgent = getValForEachAgent(mapNodeChildren.get(i), 0);
-                textToSet = getTextForList(keyForEachAgent, labelString);
+                valForEachElement = getValForEachAgent(mapNodeChildren.get(i), 0);
                 labelsCovered[0] = true;
             }else if(labelString.equals("Beliefs: ")){
                 //Just want value for each belief not key
-                String[] valueForEachAgent = getValForEachAgent(mapNodeChildren.get(i), 1);
-                textToSet = getTextForList(valueForEachAgent, labelString);
+                valForEachElement = getValForEachAgent(mapNodeChildren.get(i), 1);
                 labelsCovered[1] = true;
+            }else if(labelString.equals("Goals: ")){
+                //Just want the value for each goal not key
+                valForEachElement = getValForEachAgent(mapNodeChildren.get(i), 0);
+                labelsCovered[2] = true;
             }
+            textToSet = getTextForList(valForEachElement, labelString);
             allLabels[getIndex(labelStrings, labelString)].setText(textToSet);
             listOfAttributes.get(i).add(textToSet);
         }
@@ -218,6 +227,7 @@ public class BGIViewer extends JPanel {
                 String labelString = mapLabelStrings[i];
                 String textToSet = "<html><b>" + labelString + "</b><br/>No Items</html>";
                 allLabels[getIndex(labelStrings, labelString)].setText(textToSet);
+                listOfAttributes.get(i).add(textToSet);
             }
         }
     }
