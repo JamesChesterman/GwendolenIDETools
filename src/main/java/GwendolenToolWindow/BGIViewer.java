@@ -154,21 +154,28 @@ public class BGIViewer extends JPanel {
     //Each label may need something a bit different
     //For example for agents I only need the raw value for the key for each agent
     public void receiveMapNodeInfo(List<List<List<String>>> mapNodeChildren){
+        //If label not covered, need to set it to not having any values. Default value of boolean is false
+        boolean[] labelsCovered = new boolean[mapLabelStrings.length];
         for(int i=0; i<mapNodeChildren.size(); i++){
             //Each array here corresponds to a single label string
             String labelString = mapLabelStrings[i];
+            String textToSet = "<html><b>" + labelString + "</b></html>";
             if(labelString.equals("Agents: ")){
                 //Just want the key for each agent
                 String[] keyForEachAgent = getValForEachAgent(mapNodeChildren.get(i), 0);
-                String agentsText = getTextForList(keyForEachAgent, labelString);
-                allLabels[getIndex(labelStrings, labelString)].setText(agentsText);
+                textToSet = getTextForList(keyForEachAgent, labelString);
+                labelsCovered[0] = true;
             }else if(labelString.equals("Beliefs: ")){
                 //Just want value for each belief not key
                 String[] valueForEachAgent = getValForEachAgent(mapNodeChildren.get(i), 1);
-                String beliefsText = getTextForList(valueForEachAgent, labelString);
-                allLabels[getIndex(labelStrings, labelString)].setText(beliefsText);
+                textToSet = getTextForList(valueForEachAgent, labelString);
+                labelsCovered[1] = true;
             }
+            allLabels[getIndex(labelStrings, labelString)].setText(textToSet);
+            listOfAttributes.get(i).add(textToSet);
         }
+        //Write default values to labels with no items
+        writeLabelsNoItems(labelsCovered);
 
         //Notify gwenToolWindowContent saying that the values have loaded
         gwenToolWindowContent.cycleComplete();
@@ -202,6 +209,17 @@ public class BGIViewer extends JPanel {
             }
         }
         return -1;
+    }
+
+    //Any labels that do not have values returned in receiveMapNodeInfo should have 'no items' written to
+    private void writeLabelsNoItems(boolean[] labelsCovered){
+        for(int i=0; i<labelsCovered.length; i++){
+            if(!labelsCovered[i]){
+                String labelString = mapLabelStrings[i];
+                String textToSet = "<html><b>" + labelString + "</b><br/>No Items</html>";
+                allLabels[getIndex(labelStrings, labelString)].setText(textToSet);
+            }
+        }
     }
 
 
