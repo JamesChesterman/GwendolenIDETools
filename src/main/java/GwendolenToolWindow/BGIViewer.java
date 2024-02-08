@@ -14,6 +14,7 @@ public class BGIViewer extends JPanel {
     JLabel stageLabel = null;
     JLabel agentNameLabel = null;
     JLabel agentsLabel = null;
+    JLabel beliefsLabel = null;
     JLabel intentionsLabel = null;
     JLabel inboxLabel = null;
     JLabel outboxLabel = null;
@@ -21,6 +22,7 @@ public class BGIViewer extends JPanel {
     String STAGESTRING = "Stage: ";
     String AGENTNAMESTRING = "Agent Name: ";
     String AGENTSSTRING = "Agents: ";
+    String BELIEFSSTRING = "Beliefs: ";
     String INTENTIONSSTRING = "Intentions: ";
     String INBOXSTRING = "Inbox: ";
     String OUTBOXSTRING = "Outbox: ";
@@ -34,6 +36,7 @@ public class BGIViewer extends JPanel {
     private boolean[] isMap = {
             false,
             false,
+            true,
             true,
             false,
             false,
@@ -50,11 +53,12 @@ public class BGIViewer extends JPanel {
         //Make labels be placed one below another
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //Initialise Labels and give them their default strings
-        allLabels = new JLabel[]{stageLabel, agentNameLabel, agentsLabel, intentionsLabel, inboxLabel, outboxLabel};
-        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, AGENTSSTRING, INTENTIONSSTRING, INBOXSTRING,
-                OUTBOXSTRING};
+        allLabels = new JLabel[]{stageLabel, agentNameLabel, agentsLabel, beliefsLabel,
+                intentionsLabel, inboxLabel, outboxLabel};
+        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, AGENTSSTRING, BELIEFSSTRING,
+                INTENTIONSSTRING, INBOXSTRING, OUTBOXSTRING};
         //Any label that can be a map
-        mapLabelStrings = new String[]{AGENTSSTRING};
+        mapLabelStrings = new String[]{AGENTSSTRING, BELIEFSSTRING};
         for(int i=0; i<allLabels.length; i++){
             allLabels[i] = new JLabel(labelStrings[i]);
             add(allLabels[i]);
@@ -96,6 +100,7 @@ public class BGIViewer extends JPanel {
                 {"stage", "name"},
                 {"this", "fAgName"},
                 {"this", "fMAS", "fAgents"},
+                {"this", "bbmap", "0", "value", "belsMap"},
                 {"this", "Is"},
                 {"this", "Inbox"},
                 {"this", "Outbox"}
@@ -106,6 +111,7 @@ public class BGIViewer extends JPanel {
         boolean[] allowChildren = {
                 false,
                 false,
+                true,
                 true,
                 true,
                 true,
@@ -153,9 +159,14 @@ public class BGIViewer extends JPanel {
             String labelString = mapLabelStrings[i];
             if(labelString.equals("Agents: ")){
                 //Just want the key for each agent
-                String[] keyForEachAgent = getKeyForEachAgent(mapNodeChildren.get(i));
+                String[] keyForEachAgent = getValForEachAgent(mapNodeChildren.get(i), 0);
                 String agentsText = getTextForList(keyForEachAgent, labelString);
                 allLabels[getIndex(labelStrings, labelString)].setText(agentsText);
+            }else if(labelString.equals("Beliefs: ")){
+                //Just want value for each belief not key
+                String[] valueForEachAgent = getValForEachAgent(mapNodeChildren.get(i), 1);
+                String beliefsText = getTextForList(valueForEachAgent, labelString);
+                allLabels[getIndex(labelStrings, labelString)].setText(beliefsText);
             }
         }
 
@@ -164,15 +175,17 @@ public class BGIViewer extends JPanel {
     }
 
     //Get raw value for 'key' for each agent. Return as string array.
-    private String[] getKeyForEachAgent(List<List<String>> agentsList){
+    private String[] getValForEachAgent(List<List<String>> agentsList, int index){
         List<String> keyForEachAgent = new ArrayList<>();
         for(List<String> agent : agentsList){
             //'Key' raw value for each agent is the first item in each array
-            keyForEachAgent.add(agent.get(0));
+            keyForEachAgent.add(agent.get(index));
         }
         return keyForEachAgent.toArray(new String[0]);
     }
 
+    //List of items is input
+    //Output is string that can be assigned to a label (with line breaks etc)
     private String getTextForList(String[] array, String labelString){
         StringBuilder stringBuilder = new StringBuilder("<html><b>" + labelString + "</b>");
         for(int i=0; i<array.length; i++){

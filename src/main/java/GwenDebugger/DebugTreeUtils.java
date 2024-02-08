@@ -63,8 +63,8 @@ public class DebugTreeUtils {
         List<XDebuggerTreeNode> nodesToLoad = new ArrayList<>();
         for(int i=0; i<indexArrayJagged.length; i++){
             int[] currentIndexArray = indexArrayJagged[i];
-            //No need to consider nodes which have their paths filled.
-            if(isIndexArrayFull(currentIndexArray)){
+            //No need to consider nodes which have their paths filled, or where you can't find a certain child
+            if(isIndexArrayFull(currentIndexArray) || isIndexArrayDone(currentIndexArray)){
                 continue;
             }
             //Get node at the last loaded node in the array
@@ -103,7 +103,7 @@ public class DebugTreeUtils {
             // Increment currentIndex and either call method again or call method to return info to where it was called from
 
             for(int i=0; i<indexArrayJagged.length; i++){
-                if(isIndexArrayFull(indexArrayJagged[i])){
+                if(isIndexArrayFull(indexArrayJagged[i]) || isIndexArrayDone(indexArrayJagged[i])){
                     continue;
                 }
                 int nextNodePos = seeWhereNextNodeIs(indexArrayJagged[i], stringArrayJagged[i], currentIndex, rootNode);
@@ -164,7 +164,7 @@ public class DebugTreeUtils {
                 }
             }
         }
-        return -1;
+        return -2;      //Return -2 to indicate that the next node couldn't be found, and to ignore this node from now on
     }
 
     private static boolean isIndexArrayFull(int[] indexArray){
@@ -173,6 +173,16 @@ public class DebugTreeUtils {
         }else{
             return true;
         }
+    }
+
+    //Index array is done with if there is a -2 in it
+    private static boolean isIndexArrayDone(int[] indexArray){
+        for(int i=0; i<indexArray.length; i++){
+            if (indexArray[i] == -2) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -186,6 +196,11 @@ public class DebugTreeUtils {
         List<XDebuggerTreeNode> nodesToLoad = new ArrayList<>();
         List<XDebuggerTreeNode> mapNodes = new ArrayList<>();
         for(int i=0; i<indexArrayJagged.length; i++){
+            if(isIndexArrayDone(indexArrayJagged[i])){
+                returnArray[i] = new String[]{"No items"};
+                continue;
+            }
+
             XDebuggerTreeNode node = getNodeAtPath(rootNode, indexArrayJagged[i], indexArrayJagged[i].length);
 
             String[] returnedItem = null;
@@ -254,7 +269,7 @@ public class DebugTreeUtils {
         for(int i=0; i<mapNodes.size(); i++){
             List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) mapNodes.get(i).getChildren();
             for(XDebuggerTreeNode child : children){
-                if(!areChildrenLoaded(child)){
+                if(!areChildrenLoaded(child) && !child.isLeaf()){
                     //Add children for one node in its own array
                     //So you know what belongs where
                     nodesToLoad.add(child.getChildren().toArray(new XDebuggerTreeNode[0]));
