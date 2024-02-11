@@ -1,7 +1,10 @@
 package GwendolenToolWindow;
 
 import GwenDebugger.DebugTreeUtils;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.components.JBComboBoxLabel;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
@@ -11,11 +14,18 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.swing.BoxLayout.X_AXIS;
+import static javax.swing.BoxLayout.Y_AXIS;
+
 public class BGIViewer extends JPanel {
     XDebuggerTree tree;
+    private ComboBox agentComboBox;
+    private JLabel agentComboBoxLabel;
+    private String[] agents;
+    private boolean agentsAdded;
     JLabel stageLabel = null;
-    JLabel agentNameLabel = null;
     JLabel agentsLabel = null;
+    JLabel agentNameLabel = null;
     JLabel beliefsLabel = null;
     JLabel goalsLabel = null;
     JLabel intentionsLabel = null;
@@ -24,8 +34,8 @@ public class BGIViewer extends JPanel {
     JLabel outboxLabel = null;
     JLabel[] allLabels;
     String STAGESTRING = "Stage: ";
-    String AGENTNAMESTRING = "Agent Name: ";
     String AGENTSSTRING = "Agents: ";
+    String AGENTNAMESTRING = "Agent Name: ";
     String BELIEFSSTRING = "Beliefs: ";
     String GOALSSTRING = "Goals: ";
     String INTENTIONSSTRING = "Intentions: ";
@@ -36,13 +46,16 @@ public class BGIViewer extends JPanel {
     String[] mapLabelStrings;
     List<List<String>> listOfAttributes;
 
+    private String currentAgent;
+    private List<String> listOfCurrentAgents;
+
     //This is when each element of a list is actually a map
     //Therefore allowing you to get the key and the value of each element of the map
     //When the information is stored in a map, it's returned in a separate function
     private boolean[] isMap = {
             false,
-            false,
             true,
+            false,
             true,
             true,
             false,
@@ -51,33 +64,59 @@ public class BGIViewer extends JPanel {
             false
     };
 
+
     private GwenToolWindowContent gwenToolWindowContent;
 
     public BGIViewer(GwenToolWindowContent gwenToolWindowContent){
         super();
+        agentsAdded = false;
+        listOfCurrentAgents = new ArrayList<String>();
 
         this.gwenToolWindowContent = gwenToolWindowContent;
 
-        //Make labels be placed one below another
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new GridBagLayout());
+
+        JPanel comboBoxPanel = new JPanel();
+        comboBoxPanel.setLayout(new GridBagLayout());
+
+        agentComboBoxLabel = new JLabel("Select an Agent: ");
+        addComponent(comboBoxPanel, agentComboBoxLabel, 0, 0, 1, 1);
+        //Initialise and add combobox
+        agentComboBox = new ComboBox<String>();
+        agentComboBox.setSize(200, 10);
+        addComponent(comboBoxPanel, agentComboBox, 1, 0, 1, 1);
+
+        addComponent(this, comboBoxPanel, 0, 0, 1, 1);
+
         //Initialise Labels and give them their default strings
-        allLabels = new JLabel[]{stageLabel, agentNameLabel, agentsLabel, beliefsLabel, goalsLabel,
+        allLabels = new JLabel[]{stageLabel, agentsLabel, agentNameLabel, beliefsLabel, goalsLabel,
                 intentionsLabel, plansLabel, inboxLabel, outboxLabel};
-        labelStrings = new String[]{STAGESTRING, AGENTNAMESTRING, AGENTSSTRING, BELIEFSSTRING, GOALSSTRING,
+        labelStrings = new String[]{STAGESTRING, AGENTSSTRING, AGENTNAMESTRING, BELIEFSSTRING, GOALSSTRING,
                 INTENTIONSSTRING, PLANSSTRING, INBOXSTRING, OUTBOXSTRING};
         //Any label that can be a map
         mapLabelStrings = new String[]{AGENTSSTRING, BELIEFSSTRING, GOALSSTRING, PLANSSTRING};
         for(int i=0; i<allLabels.length; i++){
             allLabels[i] = new JLabel(labelStrings[i]);
-            add(allLabels[i]);
+            allLabels[i].setHorizontalAlignment(SwingConstants.LEFT);
+            addComponent(this, allLabels[i], 0, i+1, 1, 1);
         }
         listOfAttributes = new ArrayList<List<String>>();
         for(int i=0; i<allLabels.length; i++){
             //Make an arrayList for each attribute
             listOfAttributes.add(new ArrayList<String>());
         }
-        allLabels[0].setVisible(false);
+        allLabels[1].setVisible(false);
+    }
 
+    private void addComponent(Container container, Component component, int column, int row, int width, int height){
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = column;
+        constraints.gridy = row;
+        constraints.gridwidth = width;
+        constraints.gridheight = height;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(5,5,5,5);
+        container.add(component, constraints);
     }
 
     //Called when the tree is changed
@@ -96,6 +135,9 @@ public class BGIViewer extends JPanel {
             //So get the same position in each attribute list for all the attributes at this cycle number
             List<String> listForAttribute = listOfAttributes.get(i);
             allLabels[i].setText(listForAttribute.get(cycleNumber-1));
+            if(labelStrings[i].equals(AGENTNAMESTRING)){
+                agentComboBox.setSelectedIndex(getIndex(agents, listOfCurrentAgents.get(cycleNumber-1)));
+            }
         }
     }
 
@@ -106,8 +148,8 @@ public class BGIViewer extends JPanel {
         setLabelsLoading();
         String[][] findArray = {
                 {"stage", "name"},
-                {"this", "fAgName"},
                 {"this", "fMAS", "fAgents"},
+                {"this", "fAgName"},
                 {"this", "bbmap", "0", "value", "belsMap"},
                 {"this", "gbmap", "0", "value", "goalMap"},
                 {"this", "Is"},
@@ -120,8 +162,8 @@ public class BGIViewer extends JPanel {
         //Used in the respondForFind method in DebugTreeUtils
         boolean[] allowChildren = {
                 false,
-                false,
                 true,
+                false,
                 true,
                 true,
                 true,
@@ -158,6 +200,19 @@ public class BGIViewer extends JPanel {
             textToSet.append("</html>");
             allLabels[i].setText(textToSet.toString());
             listOfAttributes.get(i).add(textToSet.toString());
+            setCurrentAgentName(i, returnArray);
+        }
+    }
+
+    //Change which agent name is selected when you advance the program
+    //Can't update the combo box here because the list of agents is only returned in receiveMapNodeInfo
+    //Which is always called after receiveInfoGet.
+    private void setCurrentAgentName(int index, String[][] returnArray){
+        if(labelStrings[index].equals(AGENTNAMESTRING)){
+            if(returnArray[index].length > 0){
+                currentAgent = returnArray[index][0];
+                listOfCurrentAgents.add(currentAgent);
+            }
         }
     }
 
@@ -176,6 +231,8 @@ public class BGIViewer extends JPanel {
             if(labelString.equals("Agents: ")){
                 //Just want the key for each agent
                 valForEachElement = getValForEachAgent(mapNodeChildren.get(i), 0);
+                addToAgentDropdown(valForEachElement);
+                agentComboBox.setSelectedIndex(getIndex(agents, currentAgent));
                 labelsCovered[0] = true;
             }else if(labelString.equals("Beliefs: ")){
                 //Just want value for each belief not key
@@ -245,7 +302,17 @@ public class BGIViewer extends JPanel {
         }
     }
 
-
+    //Adds each agent name to the agent dropdown.
+    private void addToAgentDropdown(String[] agents){
+        if(!agentsAdded){
+            this.agents = agents.clone();
+            for(int i=0; i<agents.length; i++){
+                agentComboBox.addItem(agents[i]);
+            }
+            //Ensures agents are only added to the dropdown one time
+            agentsAdded = true;
+        }
+    }
 
 
 
