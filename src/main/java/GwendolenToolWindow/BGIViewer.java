@@ -180,8 +180,9 @@ public class BGIViewer extends JPanel {
                 labelsCovered[2] = true;
             }
             textToSet = getTextForList(valForEachElement, labelString);
-            allLabels[getIndex(labelStrings, labelString)].setText(textToSet);
-            listOfAttributes.get(i).add(textToSet);
+            int index = getIndex(labelStrings, labelString);
+            allLabels[index].setText(textToSet);
+            listOfAttributes.get(index).add(textToSet);
         }
         //Write default values to labels with no items
         writeLabelsNoItems(labelsCovered);
@@ -226,8 +227,9 @@ public class BGIViewer extends JPanel {
             if(!labelsCovered[i]){
                 String labelString = mapLabelStrings[i];
                 String textToSet = "<html><b>" + labelString + "</b><br/>No Items</html>";
-                allLabels[getIndex(labelStrings, labelString)].setText(textToSet);
-                listOfAttributes.get(i).add(textToSet);
+                int index = getIndex(labelStrings, labelString);
+                allLabels[index].setText(textToSet);
+                listOfAttributes.get(index).add(textToSet);
             }
         }
     }

@@ -13,9 +13,14 @@ import java.util.concurrent.TimeUnit;
 
 public class DebugTreeUtils {
     private static BGIViewer bgiViewer;
+    private static final int TIMEPERIOD = 100;        //In milliseconds
 
     private DebugTreeUtils(){
         //Private constructor prevents instantiation
+    }
+
+    public static int getTimePeriod(){
+        return TIMEPERIOD;
     }
 
     //Need to set BGIViewer to the correct object before doing any findNodeFromParent calls from it
@@ -93,7 +98,7 @@ public class DebugTreeUtils {
                 executorService.schedule(() -> {
                     //This is called after the wait
                     treeFindRecursive(rootNode, stringArrayJagged, indexArrayJagged, maxLen, finalCurrentIndex, allowChildren, isMap, labelStrings);
-                }, 500, TimeUnit.MILLISECONDS);
+                }, TIMEPERIOD, TimeUnit.MILLISECONDS);
                 executorService.shutdown();
             }
         }else{
@@ -139,8 +144,8 @@ public class DebugTreeUtils {
     //Are this node's children loaded?
     private static boolean areChildrenLoaded(XDebuggerTreeNode node){
         List<XDebuggerTreeNode> listOfChildren = (List<XDebuggerTreeNode>) node.getChildren();
-        if(listOfChildren.size() == 1){
-            if(listOfChildren.get(0).toString().equals("Collecting data...")){
+        if(listOfChildren.size() >= 1){
+            if(listOfChildren.get(0).toString().equals("Collecting data...") || listOfChildren.get(0).toString().equals("\"Collecting data...\"")){
                 return false;
             }
         }
@@ -237,7 +242,7 @@ public class DebugTreeUtils {
             }
         }
 
-        //If there are any nodes to load, then wait 500ms then call the function again
+        //If there are any nodes to load, then wait TIMEPERIODms then call the function again
         //The node children loads have already been initiated where needed
         if(nodesToLoad.size() > 0){
             for(int i=0; i<nodesToLoad.size(); i++){
@@ -249,7 +254,7 @@ public class DebugTreeUtils {
             executorService.schedule(() -> {
                 //This is called after the wait
                 respondForFind(indexArrayJagged, rootNode, allowChildren, isMap, labelStrings);
-            }, 500, TimeUnit.MILLISECONDS);
+            }, TIMEPERIOD, TimeUnit.MILLISECONDS);
             executorService.shutdown();
         }else{
             //If no nodes need their children loading, then everything can be sent to bgiViewer
@@ -269,24 +274,21 @@ public class DebugTreeUtils {
     //   list element)
     // mapLabelStrings are the labels passed from BGIViewer. They're just the labels associated with the mapNodes
     private static void processMapNodes(List<XDebuggerTreeNode> mapNodes, List<String> mapLabelStrings){
-        List<XDebuggerTreeNode[]> nodesToLoad = new ArrayList<>();
+        List<XDebuggerTreeNode> nodesToLoad = new ArrayList<>();
         for(int i=0; i<mapNodes.size(); i++){
             List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) mapNodes.get(i).getChildren();
             for(XDebuggerTreeNode child : children){
                 if(!areChildrenLoaded(child) && !child.isLeaf()){
-                    //Add children for one node in its own array
-                    //So you know what belongs where
-                    nodesToLoad.add(child.getChildren().toArray(new XDebuggerTreeNode[0]));
+                    //Add node to array
+                    nodesToLoad.add(child);
                 }
             }
         }
         //If there are nodes left to load
         if(!nodesToLoad.isEmpty()){
             //Go through and initiate loads for each node (which are all children of the mapNodes)
-            for(XDebuggerTreeNode[] nodeList : nodesToLoad){
-                for(XDebuggerTreeNode node : nodeList){
-                    node.getChildCount();
-                }
+            for(XDebuggerTreeNode node : nodesToLoad){
+                node.getChildCount();
             }
             //Wait a delay then see if they're loaded
             ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
@@ -295,7 +297,7 @@ public class DebugTreeUtils {
                 processMapNodes(mapNodes, mapLabelStrings);
             }, 500, TimeUnit.MILLISECONDS);
             executorService.shutdown();
-        //If there are no child nodes left to load
+            //If there are no child nodes left to load
         }else{
             List<List<List<String>>> valuesOfMapNodeChildren = new ArrayList<>();
             //No more nodes to load. Get values of each node then call method in bgiViewer to send results
