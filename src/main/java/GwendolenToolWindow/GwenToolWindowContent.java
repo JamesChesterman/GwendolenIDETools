@@ -60,6 +60,11 @@ public class GwenToolWindowContent {
 
     }
 
+    public JSlider getSlider(){
+        return slider;
+    }
+
+
     //Call the updateWindow method of each of the windows.
     public void updateDebugTreeValues(XDebuggerTree newDebugTree){
         bgiViewer.updateWindow(newDebugTree);

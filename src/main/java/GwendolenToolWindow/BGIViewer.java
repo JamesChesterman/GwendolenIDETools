@@ -2,20 +2,14 @@ package GwendolenToolWindow;
 
 import GwenDebugger.DebugTreeUtils;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.components.JBComboBoxLabel;
-import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
-import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javax.swing.BoxLayout.X_AXIS;
-import static javax.swing.BoxLayout.Y_AXIS;
 
 public class BGIViewer extends JPanel {
     XDebuggerTree tree;
@@ -76,17 +70,7 @@ public class BGIViewer extends JPanel {
 
         setLayout(new GridBagLayout());
 
-        JPanel comboBoxPanel = new JPanel();
-        comboBoxPanel.setLayout(new GridBagLayout());
-
-        agentComboBoxLabel = new JLabel("Select an Agent: ");
-        addComponent(comboBoxPanel, agentComboBoxLabel, 0, 0, 1, 1);
-        //Initialise and add combobox
-        agentComboBox = new ComboBox<String>();
-        agentComboBox.setSize(200, 10);
-        addComponent(comboBoxPanel, agentComboBox, 1, 0, 1, 1);
-
-        addComponent(this, comboBoxPanel, 0, 0, 1, 1);
+        addComboBox();
 
         //Initialise Labels and give them their default strings
         allLabels = new JLabel[]{stageLabel, agentsLabel, agentNameLabel, beliefsLabel, goalsLabel,
@@ -108,6 +92,52 @@ public class BGIViewer extends JPanel {
         allLabels[1].setVisible(false);
     }
 
+    //Code for the combobox and combobox label
+    private void addComboBox(){
+        JPanel comboBoxPanel = new JPanel();
+        comboBoxPanel.setLayout(new GridBagLayout());
+
+        agentComboBoxLabel = new JLabel("Select an Agent: ");
+        addComponent(comboBoxPanel, agentComboBoxLabel, 0, 0, 1, 1);
+        //Initialise and add combobox
+        agentComboBox = new ComboBox<String>();
+        agentComboBox.setSize(200, 10);
+        agentComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                ComboBox<String> sourceComboBox = (ComboBox<String>) e.getSource();
+                String selectedItem = (String) sourceComboBox.getSelectedItem();
+                changeAgentSelected(selectedItem);
+            }
+        });
+        addComponent(comboBoxPanel, agentComboBox, 1, 0, 1, 1);
+
+        addComponent(this, comboBoxPanel, 0, 0, 1, 1);
+    }
+
+    //Change which step number is displayed
+    //Get the step that processed the selected agent last
+    //So you're getting the most up to date details for that agent.
+    private void changeAgentSelected(String agentToChangeTo){
+        //Make sure you don't select the agent that is already being displayed
+        if(!agentToChangeTo.equals(currentAgent)){
+            //Get the step number of the step that last processed this agent
+            for(int i=listOfCurrentAgents.size()-1; i>=0; i--){
+                String agent = listOfCurrentAgents.get(i);
+                if(agent.equals(agentToChangeTo)){
+                    //Do i+1 because cycle number starts at 1, but list indices start at 0
+                    gwenToolWindowContent.getSlider().setValue(i+1);
+                    updateCycleNumber(i+1);
+                    currentAgent = agent;
+                    break;
+                }
+            }
+
+        }
+    }
+
+
+    //Add component to grid bag layout.
     private void addComponent(Container container, Component component, int column, int row, int width, int height){
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = column;
@@ -137,6 +167,7 @@ public class BGIViewer extends JPanel {
             allLabels[i].setText(listForAttribute.get(cycleNumber-1));
             if(labelStrings[i].equals(AGENTNAMESTRING)){
                 agentComboBox.setSelectedIndex(getIndex(agents, listOfCurrentAgents.get(cycleNumber-1)));
+                currentAgent = listOfCurrentAgents.get(cycleNumber-1);
             }
         }
     }
