@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DebugTreeUtils {
     private static BGIViewer bgiViewer;
-    private static final int TIMEPERIOD = 100;        //In milliseconds
+    private static final int TIMEPERIOD = 50;        //In milliseconds
 
     private DebugTreeUtils(){
         //Private constructor prevents instantiation
@@ -144,8 +144,9 @@ public class DebugTreeUtils {
     //Are this node's children loaded?
     private static boolean areChildrenLoaded(XDebuggerTreeNode node){
         List<XDebuggerTreeNode> listOfChildren = (List<XDebuggerTreeNode>) node.getChildren();
-        if(listOfChildren.size() >= 1){
-            if(listOfChildren.get(0).toString().equals("Collecting data...") || listOfChildren.get(0).toString().equals("\"Collecting data...\"")){
+        if(!listOfChildren.isEmpty()){
+            String childText = listOfChildren.get(0).getText().toString();
+            if(childText.contains("Collecting data...")){
                 return false;
             }
         }
