@@ -5,6 +5,7 @@ import GwenDebugger.JavaBreakpointListener;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.xdebugger.*;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
@@ -221,7 +222,9 @@ public class GwenToolWindowContent {
         //Pane containing the information windows
         tabbedPane = new JBTabbedPane();
         bgiViewer = new BGIViewer(this);
-        tabbedPane.addTab("BGIViewer", bgiViewer);
+        JBScrollPane scrollPane = new JBScrollPane(bgiViewer);
+        scrollPane.setPreferredSize(new Dimension(200, 400));
+        tabbedPane.addTab("BGIViewer", scrollPane);
     }
 
 

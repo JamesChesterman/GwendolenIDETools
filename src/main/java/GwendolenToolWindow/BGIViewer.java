@@ -1,11 +1,13 @@
 package GwendolenToolWindow;
 
 import GwenDebugger.DebugTreeUtils;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +76,7 @@ public class BGIViewer extends JPanel {
             //Make an arrayList for each attribute
             listOfAttributes.add(new ArrayList<String>());
         }
-
+        allLabels[0].setVisible(false);
 
     }
 
