@@ -23,6 +23,7 @@ public class BGIViewer extends JPanel {
     JLabel beliefsLabel = null;
     JLabel goalsLabel = null;
     JLabel intentionsLabel = null;
+    JLabel currentIntentionLabel = null;
     JLabel plansLabel = null;
     JLabel inboxLabel = null;
     JLabel outboxLabel = null;
@@ -33,6 +34,7 @@ public class BGIViewer extends JPanel {
     String BELIEFSSTRING = "Beliefs: ";
     String GOALSSTRING = "Goals: ";
     String INTENTIONSSTRING = "Intentions: ";
+    String CURRENTINTENTIONSTRING = "Current Intention: ";
     String PLANSSTRING = "Plans: ";
     String INBOXSTRING = "Inbox: ";
     String OUTBOXSTRING = "Outbox: ";
@@ -47,15 +49,16 @@ public class BGIViewer extends JPanel {
     //Therefore allowing you to get the key and the value of each element of the map
     //When the information is stored in a map, it's returned in a separate function
     private boolean[] isMap = {
-            false,
-            true,
-            false,
-            true,
-            true,
-            false,
-            true,
-            false,
-            false
+            false,      //Stage
+            true,       //agents
+            false,      //agentName
+            true,       //beliefs
+            true,       //goals
+            false,      //intentions
+            false,      //current intention
+            true,       //rel plans
+            false,      //inbox
+            false       //outbox
     };
 
 
@@ -74,9 +77,9 @@ public class BGIViewer extends JPanel {
 
         //Initialise Labels and give them their default strings
         allLabels = new JLabel[]{stageLabel, agentsLabel, agentNameLabel, beliefsLabel, goalsLabel,
-                intentionsLabel, plansLabel, inboxLabel, outboxLabel};
+                intentionsLabel, currentIntentionLabel, plansLabel, inboxLabel, outboxLabel};
         labelStrings = new String[]{STAGESTRING, AGENTSSTRING, AGENTNAMESTRING, BELIEFSSTRING, GOALSSTRING,
-                INTENTIONSSTRING, PLANSSTRING, INBOXSTRING, OUTBOXSTRING};
+                INTENTIONSSTRING, CURRENTINTENTIONSTRING, PLANSSTRING, INBOXSTRING, OUTBOXSTRING};
         //Any label that can be a map
         mapLabelStrings = new String[]{AGENTSSTRING, BELIEFSSTRING, GOALSSTRING, PLANSSTRING};
         for(int i=0; i<allLabels.length; i++){
@@ -191,6 +194,7 @@ public class BGIViewer extends JPanel {
                 {"this", "bbmap", "0", "value", "belsMap"},
                 {"this", "gbmap", "0", "value", "goalMap"},
                 {"this", "Is"},
+                {"this", "I"},
                 {"this", "plmap", "0", "value", "relPlans"},
                 {"this", "Inbox"},
                 {"this", "Outbox"}
@@ -199,15 +203,16 @@ public class BGIViewer extends JPanel {
         //For Is (Intentions) you want to find all intentions and return them
         //Used in the respondForFind method in DebugTreeUtils
         boolean[] allowChildren = {
-                false,
-                true,
-                false,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true
+                false,      //stage
+                true,       //agents
+                false,      //agent name
+                true,       //beliefs
+                true,       //goals
+                true,       //intentions
+                false,      //current intention
+                true,       //plans
+                true,       //inbox
+                true        //outbox
         };
         DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren, isMap, labelStrings);
     }
