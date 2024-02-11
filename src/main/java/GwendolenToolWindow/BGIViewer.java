@@ -121,6 +121,7 @@ public class BGIViewer extends JPanel {
     private void changeAgentSelected(String agentToChangeTo){
         //Make sure you don't select the agent that is already being displayed
         if(!agentToChangeTo.equals(currentAgent)){
+            boolean agentFound = false;
             //Get the step number of the step that last processed this agent
             for(int i=listOfCurrentAgents.size()-1; i>=0; i--){
                 String agent = listOfCurrentAgents.get(i);
@@ -129,8 +130,14 @@ public class BGIViewer extends JPanel {
                     gwenToolWindowContent.getSlider().setValue(i+1);
                     updateCycleNumber(i+1);
                     currentAgent = agent;
+                    agentFound = true;
                     break;
                 }
+            }
+            //The agent doesn't have a step in which it's processed yet
+            //So change the selected item in the dropdown back to what it was before the user changes it
+            if(!agentFound){
+                agentComboBox.setSelectedIndex(listOfCurrentAgents.indexOf(currentAgent));
             }
 
         }
