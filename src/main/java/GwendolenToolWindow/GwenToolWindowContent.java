@@ -44,6 +44,7 @@ public class GwenToolWindowContent {
     private final Project project;
     private XDebugSession debugSession;
     private BGIViewer bgiViewer;
+    private BreakpointsViewer breakpointsViewer;
 
     //Word 'cycles' is inaccurate. In GUI have renamed anything 'cycle' related to 'step'
     private int cyclesDone;
@@ -228,8 +229,13 @@ public class GwenToolWindowContent {
         tabbedPane = new JBTabbedPane();
         bgiViewer = new BGIViewer(this);
         JBScrollPane scrollPane = new JBScrollPane(bgiViewer);
-        scrollPane.setPreferredSize(new Dimension(200, 400));
+        scrollPane.setPreferredSize(new Dimension(200, 300));
+
+        breakpointsViewer = new BreakpointsViewer(this);
+        JBScrollPane scrollPaneBreakpoints = new JBScrollPane(breakpointsViewer);
+        scrollPane.setPreferredSize(new Dimension(200,300));
         tabbedPane.addTab("BGIViewer", scrollPane);
+        tabbedPane.addTab("Breakpoints", scrollPaneBreakpoints);
     }
 
 
@@ -238,7 +244,7 @@ public class GwenToolWindowContent {
         //This manages when each component should become enabled
         //Everything starts off as disabled except for stepping mode checkbox
         JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, tabbedPane, slider,
-                sliderLabel, sliderText, changeCycleNumber, warningLabel, bgiViewer};
+                sliderLabel, sliderText, changeCycleNumber, warningLabel, bgiViewer, breakpointsViewer};
 
         for(JComponent component : arrayOfComponents){
             component.setEnabled(enabled);
