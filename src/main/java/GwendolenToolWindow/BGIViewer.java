@@ -44,6 +44,9 @@ public class BGIViewer extends JPanel {
 
     private String currentAgent;
     private List<String> listOfCurrentAgents;
+    JLabel agentNumOfSteps = null;
+    String AGENTNUMOFSTEPSSTRING = "Agent's Number of Steps Done: ";
+    int[] numOfStepsArray;
 
     //This is when each element of a list is actually a map
     //Therefore allowing you to get the key and the value of each element of the map
@@ -77,6 +80,9 @@ public class BGIViewer extends JPanel {
 
         addComboBox();
 
+        agentNumOfSteps = new JLabel(AGENTNUMOFSTEPSSTRING);
+        addComponent(this, agentNumOfSteps, 0, 1, 1, 1);
+
         //Initialise Labels and give them their default strings
         allLabels = new JLabel[]{stageLabel, agentsLabel, agentNameLabel, beliefsLabel, goalsLabel,
                 intentionsLabel, currentIntentionLabel, plansLabel, inboxLabel, outboxLabel};
@@ -87,7 +93,7 @@ public class BGIViewer extends JPanel {
         for (int i = 0; i < allLabels.length; i++) {
             allLabels[i] = new JLabel(labelStrings[i]);
             allLabels[i].setHorizontalAlignment(SwingConstants.LEFT);
-            addComponent(this, allLabels[i], 0, i + 1, 1, 1);
+            addComponent(this, allLabels[i], 0, i + 2, 1, 1);
         }
         listOfAttributes = new ArrayList<List<String>>();
         for (int i = 0; i < allLabels.length; i++) {
@@ -95,10 +101,6 @@ public class BGIViewer extends JPanel {
             listOfAttributes.add(new ArrayList<String>());
         }
         allLabels[1].setVisible(false);
-    }
-
-    public String[] getAgents(){
-        return agents;
     }
 
     //Code for the combobox and combobox label
@@ -282,6 +284,7 @@ public class BGIViewer extends JPanel {
                 valForEachElement = getValForEachAgent(mapNodeChildren.get(i), 0);
                 addToAgentDropdown(valForEachElement);
                 agentComboBox.setSelectedIndex(getIndex(agents, currentAgent));
+                incrementAgentStepCounter();
                 labelsCovered[0] = true;
             }else if(labelString.equals("Beliefs: ")){
                 //Just want value for each belief not key
@@ -360,8 +363,16 @@ public class BGIViewer extends JPanel {
             }
             //Ensures agents are only added to the dropdown one time
             agentsAdded = true;
+            numOfStepsArray = new int[agents.length];
             breakpointsViewer.addAgents(agents);
         }
+    }
+
+    //Increment counter of steps for the corresponding agent
+    private void incrementAgentStepCounter(){
+        int agentIndex = getIndex(agents,currentAgent);
+        numOfStepsArray[agentIndex] += 1;
+        agentNumOfSteps.setText("<html><b>" + AGENTNUMOFSTEPSSTRING + "</b><br/>" + String.valueOf(numOfStepsArray[agentIndex]));
     }
 
 
