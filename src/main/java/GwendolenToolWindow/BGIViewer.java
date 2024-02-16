@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.swing.BoxLayout.X_AXIS;
+
 public class BGIViewer extends JPanel {
     XDebuggerTree tree;
     private ComboBox agentComboBox;
@@ -108,13 +110,14 @@ public class BGIViewer extends JPanel {
     //Code for the combobox and combobox label
     private void addComboBox(){
         JPanel comboBoxPanel = new JPanel();
-        comboBoxPanel.setLayout(new GridBagLayout());
+        comboBoxPanel.setLayout(new BoxLayout(comboBoxPanel, X_AXIS));
 
         agentComboBoxLabel = new JLabel("Select an Agent: ");
-        addComponent(comboBoxPanel, agentComboBoxLabel, 0, 0, 1, 1);
+        comboBoxPanel.add(agentComboBoxLabel);
+        //addComponent(comboBoxPanel, agentComboBoxLabel, 0, 0, 1, 1);
         //Initialise and add combobox
         agentComboBox = new ComboBox<String>();
-        agentComboBox.setSize(200, 10);
+        agentComboBox.setSize(30, 10);
         agentComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -123,8 +126,8 @@ public class BGIViewer extends JPanel {
                 changeAgentSelected(selectedItem);
             }
         });
-        addComponent(comboBoxPanel, agentComboBox, 1, 0, 1, 1);
-
+        //addComponent(comboBoxPanel, agentComboBox, 1, 0, 1, 1);
+        comboBoxPanel.add(agentComboBox);
         addComponent(this, comboBoxPanel, 0, 0, 1, 1);
     }
 

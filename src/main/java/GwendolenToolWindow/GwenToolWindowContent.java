@@ -31,6 +31,7 @@ public class GwenToolWindowContent {
     private JCheckBox steppingCheckBox;
     private JButton startToolsButton;
     private JButton nextCycleButton;
+    private JButton continueButton;
     private JBTabbedPane tabbedPane;
     private JSlider slider;
     private JLabel sliderLabel;
@@ -53,7 +54,7 @@ public class GwenToolWindowContent {
         this.project = project;
         cyclesDone = 0;
         breakpointController = new BreakpointController(project);
-        contentPanel.setLayout(new BorderLayout(0, 20));
+        contentPanel.setLayout(new BorderLayout(0, 0));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
         contentPanel.add(createControlsPanel(), BorderLayout.PAGE_START);
 
@@ -74,21 +75,38 @@ public class GwenToolWindowContent {
     @NotNull
     private JPanel createControlsPanel(){
         JPanel controlsPanel = new JPanel();
-        controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
+        controlsPanel.setLayout(new GridBagLayout());
 
         makeSteppingCheckbox();
         makeStartToolsButton();
         makeNextCycleButton();
+        makeContinueButton();
         makeTabbedPane();
 
+        addComponent(controlsPanel, steppingCheckBox, 0, 0, 1, 1);
+        addComponent(controlsPanel, startToolsButton, 1, 0, 1, 1);
+        addComponent(controlsPanel, nextCycleButton, 0, 1, 1, 1);
+        addComponent(controlsPanel, continueButton, 1, 1, 1, 1);
 
-        controlsPanel.add(steppingCheckBox);
-        controlsPanel.add(startToolsButton);
-        controlsPanel.add(nextCycleButton);
         makeSlider(controlsPanel);
-        controlsPanel.add(tabbedPane);
+
+        addComponent(controlsPanel, tabbedPane, 0, 5, 2, 4);
         setComponentsEnabled(false);
         return controlsPanel;
+    }
+
+    //Add component to grid bag layout.
+    private void addComponent(Container container, Component component, int column, int row, int width, int height){
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = column;
+        constraints.gridy = row;
+        constraints.gridwidth = width;
+        constraints.gridheight = height;
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(5,5,5,5);
+        container.add(component, constraints);
     }
 
 
@@ -121,6 +139,7 @@ public class GwenToolWindowContent {
             setComponentsEnabled(true);
             //Need to wait for first lot of data to come back to enable the next cycle button
             nextCycleButton.setEnabled(false);
+            continueButton.setEnabled(false);
             cyclesDone = 0;
             slider.setValue(0);
         }
@@ -163,9 +182,15 @@ public class GwenToolWindowContent {
             public void actionPerformed(ActionEvent e){
                 //Also want to disable the next cycle button, need to wait for values to be loaded before pressing it again
                 nextCycleButton.setEnabled(false);
+                continueButton.setEnabled(false);
                 breakpointController.goToNextCycle(debugSession);
             }
         });
+    }
+
+    private void makeContinueButton(){
+        continueButton = new JButton("Continue");
+        //Advances execution to next custom breakpoint set in the breakpoints viewer
     }
 
     private void makeSlider(JPanel controlsPanel){
@@ -217,11 +242,11 @@ public class GwenToolWindowContent {
             }
         });
 
-        controlsPanel.add(sliderLabel);
-        controlsPanel.add(sliderText);
-        controlsPanel.add(slider);
-        controlsPanel.add(changeCycleNumber);
-        controlsPanel.add(warningLabel);
+        addComponent(controlsPanel, sliderLabel, 0, 2, 1, 1);
+        addComponent(controlsPanel, sliderText, 1, 2, 1, 1);
+        addComponent(controlsPanel, slider, 0, 3, 2, 1);
+        addComponent(controlsPanel, changeCycleNumber, 0, 4, 1, 1);
+        addComponent(controlsPanel, warningLabel, 1, 4, 1, 1);
     }
 
     private void makeTabbedPane(){
@@ -244,7 +269,7 @@ public class GwenToolWindowContent {
     private void setComponentsEnabled(boolean enabled){
         //This manages when each component should become enabled
         //Everything starts off as disabled except for stepping mode checkbox
-        JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, tabbedPane, slider,
+        JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, continueButton, tabbedPane, slider,
                 sliderLabel, sliderText, changeCycleNumber, warningLabel, bgiViewer, breakpointsViewer};
 
         for(JComponent component : arrayOfComponents){
@@ -268,6 +293,7 @@ public class GwenToolWindowContent {
                sliderText.setText(String.valueOf(cyclesDone));
                //Also means that all values are loaded, so can re-enable 'Next Cycle' button
                nextCycleButton.setEnabled(true);
+               continueButton.setEnabled(true);
            }
         });
 
