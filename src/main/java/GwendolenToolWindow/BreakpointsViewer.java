@@ -1,6 +1,8 @@
 package GwendolenToolWindow;
 
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.JBTextField;
 import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
@@ -13,15 +15,24 @@ public class BreakpointsViewer extends JPanel {
     DefaultTableModel model;
     JBTable table;
     JButton deleteButton;
+    ComboBox<String> agentComboBox;
+    private boolean agentsAdded;
 
 
     public BreakpointsViewer(GwenToolWindowContent gwenToolWindowContent){
         super();
+        agentsAdded = false;
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new GridBagLayout());
 
         makeTable();
         makeDeleteButton();
+
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        separator.setPreferredSize(new Dimension(this.getWidth(), 1));
+        addComponent(this, separator, 0, 0, 1, 1);
+
+        makeStepBreakpointUI();
     }
 
     private void makeTable(){
@@ -32,8 +43,8 @@ public class BreakpointsViewer extends JPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JBScrollPane tableScrollPane = new JBScrollPane(table);
-        tableScrollPane.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 3));
-        add(tableScrollPane);
+        //tableScrollPane.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 3));
+        addComponent(this, tableScrollPane, 0, 0, 2, 2);
     }
 
     private void makeDeleteButton(){
@@ -47,6 +58,42 @@ public class BreakpointsViewer extends JPanel {
                 }
             }
         });
-        add(deleteButton);
+        addComponent(this, deleteButton, 0, 1, 1, 1);
+    }
+
+    //UI for inserting a step breakpoint for an agent
+    //Will be the number of steps that have been processed on an agent.
+    private void makeStepBreakpointUI(){
+        JLabel agentComboBoxLabel = new JLabel("Breakpoint that activates when Agent: ");
+        addComponent(this, agentComboBoxLabel, 0, 2, 1, 1);
+
+        agentComboBox = new ComboBox<String>();
+        agentComboBox.setSize(200, 10);
+        addComponent(this, agentComboBox, 1, 2, 1, 1);
+
+        JLabel stepNumLabel = new JLabel("has number of steps: ");
+        addComponent(this, stepNumLabel, 0, 3, 1, 1);
+
+    }
+
+    //Add component to grid bag layout.
+    private void addComponent(Container container, Component component, int column, int row, int width, int height) {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = column;
+        constraints.gridy = row;
+        constraints.gridwidth = width;
+        constraints.gridheight = height;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        container.add(component, constraints);
+    }
+
+    public void addAgents(String[] agents){
+        if(agents != null && !agentsAdded){
+            for(int i=0; i<agents.length; i++){
+                agentComboBox.addItem(agents[i]);
+            }
+            agentsAdded = true;
+        }
     }
 }

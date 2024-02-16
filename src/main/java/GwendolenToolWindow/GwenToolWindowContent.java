@@ -227,11 +227,12 @@ public class GwenToolWindowContent {
     private void makeTabbedPane(){
         //Pane containing the information windows
         tabbedPane = new JBTabbedPane();
-        bgiViewer = new BGIViewer(this);
+
+        breakpointsViewer = new BreakpointsViewer(this);
+        bgiViewer = new BGIViewer(this, breakpointsViewer);
         JBScrollPane scrollPane = new JBScrollPane(bgiViewer);
         scrollPane.setPreferredSize(new Dimension(200, 300));
 
-        breakpointsViewer = new BreakpointsViewer(this);
         JBScrollPane scrollPaneBreakpoints = new JBScrollPane(breakpointsViewer);
         scrollPane.setPreferredSize(new Dimension(200,300));
         tabbedPane.addTab("BGIViewer", scrollPane);

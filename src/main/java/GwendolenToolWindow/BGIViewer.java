@@ -63,13 +63,15 @@ public class BGIViewer extends JPanel {
 
 
     private GwenToolWindowContent gwenToolWindowContent;
+    private BreakpointsViewer breakpointsViewer;
 
-    public BGIViewer(GwenToolWindowContent gwenToolWindowContent){
+    public BGIViewer(GwenToolWindowContent gwenToolWindowContent, BreakpointsViewer breakpointsViewer) {
         super();
         agentsAdded = false;
         listOfCurrentAgents = new ArrayList<String>();
 
         this.gwenToolWindowContent = gwenToolWindowContent;
+        this.breakpointsViewer = breakpointsViewer;
 
         setLayout(new GridBagLayout());
 
@@ -82,17 +84,21 @@ public class BGIViewer extends JPanel {
                 INTENTIONSSTRING, CURRENTINTENTIONSTRING, PLANSSTRING, INBOXSTRING, OUTBOXSTRING};
         //Any label that can be a map
         mapLabelStrings = new String[]{AGENTSSTRING, BELIEFSSTRING, GOALSSTRING, PLANSSTRING};
-        for(int i=0; i<allLabels.length; i++){
+        for (int i = 0; i < allLabels.length; i++) {
             allLabels[i] = new JLabel(labelStrings[i]);
             allLabels[i].setHorizontalAlignment(SwingConstants.LEFT);
-            addComponent(this, allLabels[i], 0, i+1, 1, 1);
+            addComponent(this, allLabels[i], 0, i + 1, 1, 1);
         }
         listOfAttributes = new ArrayList<List<String>>();
-        for(int i=0; i<allLabels.length; i++){
+        for (int i = 0; i < allLabels.length; i++) {
             //Make an arrayList for each attribute
             listOfAttributes.add(new ArrayList<String>());
         }
         allLabels[1].setVisible(false);
+    }
+
+    public String[] getAgents(){
+        return agents;
     }
 
     //Code for the combobox and combobox label
@@ -354,6 +360,7 @@ public class BGIViewer extends JPanel {
             }
             //Ensures agents are only added to the dropdown one time
             agentsAdded = true;
+            breakpointsViewer.addAgents(agents);
         }
     }
 
