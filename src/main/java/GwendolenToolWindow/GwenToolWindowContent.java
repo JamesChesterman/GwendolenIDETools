@@ -90,7 +90,7 @@ public class GwenToolWindowContent {
 
         makeSlider(controlsPanel);
 
-        addComponent(controlsPanel, tabbedPane, 0, 5, 2, 4);
+        addComponent(controlsPanel, tabbedPane, 0, 6, 2, 4);
         setComponentsEnabled(false);
         return controlsPanel;
     }
@@ -194,6 +194,8 @@ public class GwenToolWindowContent {
     }
 
     private void makeSlider(JPanel controlsPanel){
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+
         slider = new JSlider(JSlider.HORIZONTAL, 1, 50, 1);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(5);
@@ -242,11 +244,13 @@ public class GwenToolWindowContent {
             }
         });
 
-        addComponent(controlsPanel, sliderLabel, 0, 2, 1, 1);
-        addComponent(controlsPanel, sliderText, 1, 2, 1, 1);
-        addComponent(controlsPanel, slider, 0, 3, 2, 1);
-        addComponent(controlsPanel, changeCycleNumber, 0, 4, 1, 1);
-        addComponent(controlsPanel, warningLabel, 1, 4, 1, 1);
+        addComponent(controlsPanel, separator, 0, 2, 2, 1);
+
+        addComponent(controlsPanel, sliderLabel, 0, 3, 1, 1);
+        addComponent(controlsPanel, sliderText, 1, 3, 1, 1);
+        addComponent(controlsPanel, slider, 0, 4, 2, 1);
+        addComponent(controlsPanel, changeCycleNumber, 0, 5, 1, 1);
+        addComponent(controlsPanel, warningLabel, 1, 5, 1, 1);
     }
 
     private void makeTabbedPane(){

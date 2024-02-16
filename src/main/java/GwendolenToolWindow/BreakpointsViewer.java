@@ -69,28 +69,31 @@ public class BreakpointsViewer extends JPanel {
     //UI for inserting a step breakpoint for an agent
     //Will be the number of steps that have been processed on an agent.
     private void makeStepBreakpointUI(){
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        addComponent(this, separator, 0, 3, 2, 1);
+
         JLabel agentComboBoxLabel = new JLabel("Breakpoint that activates when Agent: ");
-        addComponent(this, agentComboBoxLabel, 0, 3, 1, 1);
+        addComponent(this, agentComboBoxLabel, 0, 4, 1, 1);
 
         agentComboBox = new ComboBox<String>();
         agentComboBox.setSize(200, 10);
-        addComponent(this, agentComboBox, 1, 3, 1, 1);
+        addComponent(this, agentComboBox, 1, 4, 1, 1);
 
         JLabel stepNumLabel = new JLabel("has number of steps: ");
-        addComponent(this, stepNumLabel, 0, 4, 1, 1);
+        addComponent(this, stepNumLabel, 0, 5, 1, 1);
 
         numOfStepsTextField = new JTextField(5);
-        addComponent(this, numOfStepsTextField, 1, 4, 1, 1);
+        addComponent(this, numOfStepsTextField, 1, 5, 1, 1);
 
         makeInsertStepBreakpointButton();
     }
 
     private void makeInsertStepBreakpointButton(){
         insertStepBreakpointButton = new JButton("Insert Step Number Breakpoint");
-        addComponent(this, insertStepBreakpointButton, 0, 5, 1, 1);
+        addComponent(this, insertStepBreakpointButton, 0, 6, 1, 1);
 
         JLabel warningLabel = new JLabel("");
-        addComponent(this, warningLabel, 1, 5, 1, 1);
+        addComponent(this, warningLabel, 1, 6, 1, 1);
         insertStepBreakpointButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
