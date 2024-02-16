@@ -11,40 +11,42 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BreakpointsViewer extends JPanel {
     DefaultTableModel model;
     JBTable table;
+    JBScrollPane tableScrollPane;
     JButton deleteButton;
     ComboBox<String> agentComboBox;
     JTextField numOfStepsTextField;
     JButton insertStepBreakpointButton;
     private boolean agentsAdded;
+    List<String[]> breakpointsList;
 
 
     public BreakpointsViewer(GwenToolWindowContent gwenToolWindowContent){
         super();
         agentsAdded = false;
+        breakpointsList = new ArrayList<>();
 
         setLayout(new GridBagLayout());
 
         makeTable();
         makeDeleteButton();
 
-        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-        separator.setPreferredSize(new Dimension(this.getWidth(), 1));
-        addComponent(this, separator, 0, 2, 2, 1);
-
         makeStepBreakpointUI();
     }
 
     private void makeTable(){
-        Object[][] data = new Object[][]{{"Agent1", "Has belief: ..."}, {"Agent2", "Has belief..."}, {"Agent3", "Has had ... steps processed"}, {"G", "1"}, {"H", "2"}, {"l", "3"}, {"p", "1"}, {"1", "l"}};
+        Object[][] data = new Object[][]{};
         String[] colNames = new String[]{"Agent Name", "Condition"};
         model = new DefaultTableModel(data, colNames);
         table = new JBTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JBScrollPane tableScrollPane = new JBScrollPane(table);
+        tableScrollPane = new JBScrollPane(table);
         //tableScrollPane.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 3));
         addComponent(this, tableScrollPane, 0, 0, 2, 2);
     }
@@ -55,12 +57,13 @@ public class BreakpointsViewer extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 int rowNum = table.getSelectedRow();
-                if(rowNum != 1){
+                if(rowNum != -1){
                     model.removeRow(rowNum);
+                    breakpointsList.remove(rowNum);
                 }
             }
         });
-        addComponent(this, deleteButton, 0, 1, 1, 1);
+        addComponent(this, deleteButton, 0, 2, 1, 1);
     }
 
     //UI for inserting a step breakpoint for an agent
@@ -95,10 +98,19 @@ public class BreakpointsViewer extends JPanel {
                 String numOfStepsString = null;
                 try{
                     int numOfSteps = Integer.parseInt(numOfStepsTextField.getText());
-                    numOfStepsString = "Has " + String.valueOf(numOfSteps) + " steps done";
-                    Object[] row = new Object[]{agent, numOfStepsString};
-                    model.addRow(row);
-                    warningLabel.setText("");
+                    if(numOfSteps <= 0){
+                        warningLabel.setText("WARNING - please enter step number above 0");
+                    }else{
+                        numOfStepsString = "Has " + String.valueOf(numOfSteps) + " steps done";
+                        Object[] row = new Object[]{agent, numOfStepsString};
+                        model.addRow(row);
+                        //Makes the table show the most recently added row
+                        table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1, 0, true));
+                        warningLabel.setText("");
+
+                        //Also want to add to list of breakpoints
+                        breakpointsList.add(new String[]{agent, "stepNum", numOfStepsString});
+                    }
                 }catch(NumberFormatException ex){
                     warningLabel.setText("WARNING - please enter a number for step number");
                 }
