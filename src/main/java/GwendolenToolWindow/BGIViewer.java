@@ -47,6 +47,7 @@ public class BGIViewer extends JPanel {
     JLabel agentNumOfSteps = null;
     String AGENTNUMOFSTEPSSTRING = "Agent's Number of Steps Done: ";
     int[] numOfStepsArray;
+    private List<String> listOfNumOfSteps;
 
     //This is when each element of a list is actually a map
     //Therefore allowing you to get the key and the value of each element of the map
@@ -72,6 +73,7 @@ public class BGIViewer extends JPanel {
         super();
         agentsAdded = false;
         listOfCurrentAgents = new ArrayList<String>();
+        listOfNumOfSteps = new ArrayList<String>();
 
         this.gwenToolWindowContent = gwenToolWindowContent;
         this.breakpointsViewer = breakpointsViewer;
@@ -178,6 +180,7 @@ public class BGIViewer extends JPanel {
     //Called when the 'Change Cycle Number' button is pressed
     //Changes values displayed in BGIViewer to the cycleNumber inputted
     public void updateCycleNumber(int cycleNumber){
+        agentNumOfSteps.setText(listOfNumOfSteps.get(cycleNumber-1));
         for(int i=0; i<listOfAttributes.size(); i++){
             //Each list in listOfAttributes is the history for ONE attribute
             //So get the same position in each attribute list for all the attributes at this cycle number
@@ -372,7 +375,9 @@ public class BGIViewer extends JPanel {
     private void incrementAgentStepCounter(){
         int agentIndex = getIndex(agents,currentAgent);
         numOfStepsArray[agentIndex] += 1;
-        agentNumOfSteps.setText("<html><b>" + AGENTNUMOFSTEPSSTRING + "</b><br/>" + String.valueOf(numOfStepsArray[agentIndex]));
+        String agentNumOfStepsText = "<html><b>" + AGENTNUMOFSTEPSSTRING + "</b><br/>" + String.valueOf(numOfStepsArray[agentIndex]);
+        agentNumOfSteps.setText(agentNumOfStepsText);
+        listOfNumOfSteps.add(agentNumOfStepsText);
     }
 
 
