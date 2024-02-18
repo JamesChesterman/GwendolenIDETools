@@ -107,6 +107,16 @@ public class BGIViewer extends JPanel {
         allLabels[1].setVisible(false);
     }
 
+    public String getCurrentAgent(){
+        return currentAgent;
+    }
+
+    public String getCurrentNumOfSteps(){
+        //Want the number of steps for the current agent
+        int agentIndex = getIndex(agents, currentAgent);
+        return String.valueOf(numOfStepsArray[agentIndex]);
+    }
+
     //Code for the combobox and combobox label
     private void addComboBox(){
         JPanel comboBoxPanel = new JPanel();

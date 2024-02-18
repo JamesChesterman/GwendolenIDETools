@@ -50,9 +50,12 @@ public class GwenToolWindowContent {
     //Word 'cycles' is inaccurate. In GUI have renamed anything 'cycle' related to 'step'
     private int cyclesDone;
 
+    private boolean continueMode;
+
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
         cyclesDone = 0;
+        continueMode = false;
         breakpointController = new BreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 0));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
@@ -191,6 +194,17 @@ public class GwenToolWindowContent {
     private void makeContinueButton(){
         continueButton = new JButton("Continue");
         //Advances execution to next custom breakpoint set in the breakpoints viewer
+        continueButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                //Sets continueMode to true and performs first 'next step' operation
+                //When continueMode is true, whenever a step is completed
+                //Breakpoints are iterated through to see if they are true
+                //If ALL breakpoints are false, then initiate next step
+                continueMode = true;
+                breakpointController.goToNextCycle(debugSession);
+            }
+        });
     }
 
     private void makeSlider(JPanel controlsPanel){
@@ -291,15 +305,52 @@ public class GwenToolWindowContent {
         //Need to update the Swing component on an Event-Dispatch Thread
         //Otherwise the program crashes
         SwingUtilities.invokeLater(new Runnable() {
-           public void run(){
-               slider.setMaximum(cyclesDone);
-               slider.setValue(cyclesDone);
-               sliderText.setText(String.valueOf(cyclesDone));
-               //Also means that all values are loaded, so can re-enable 'Next Cycle' button
-               nextCycleButton.setEnabled(true);
-               continueButton.setEnabled(true);
-           }
+            public void run(){
+                slider.setMaximum(cyclesDone);
+                slider.setValue(cyclesDone);
+                sliderText.setText(String.valueOf(cyclesDone));
+                //Also means that all values are loaded, so can re-enable 'Next Cycle' button
+                nextCycleButton.setEnabled(true);
+                continueButton.setEnabled(true);
+
+                checkBreakpoints();
+            }
         });
 
+    }
+
+    //If there are any breakpoints that are true, need to stop execution
+    //If all breakpoints are false, will initiate next step
+    private void checkBreakpoints(){
+        if(continueMode){
+            List<String[]> breakpointsList = breakpointsViewer.getBreakpointsList();
+            for(int i=0; i<breakpointsList.size(); i++){
+                String[] breakpointArray = breakpointsList.get(i);
+                //Index 1 in every array indicates the attribute we're looking for (e.g. numOfSteps)
+                if(breakpointArray[1].equals("numOfSteps")){
+                    if(checkNumOfStepsBreakpoint(breakpointArray[0], breakpointArray[2])){
+                        continueMode = false;
+                    }
+                }
+            }
+
+            if(continueMode){
+                //If continueMode hasn't been set false after having checked through all breakpoints,
+                //Initiate next step
+                breakpointController.goToNextCycle(debugSession);
+            }
+        }
+    }
+
+    //If the current agent is equal to the one specified in the breakpoint
+    //AND the current numOfSteps is equal to the one specified in the breakpoint
+    //Then return true
+    private boolean checkNumOfStepsBreakpoint(String breakpointAgent, String breakpointNumOfSteps){
+        if(bgiViewer.getCurrentAgent().equals(breakpointAgent)){
+            if(bgiViewer.getCurrentNumOfSteps().equals(breakpointNumOfSteps)){
+                return true;
+            }
+        }
+        return false;
     }
 }

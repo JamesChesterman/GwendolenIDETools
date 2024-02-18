@@ -39,6 +39,10 @@ public class BreakpointsViewer extends JPanel {
         makeStepBreakpointUI();
     }
 
+    public List<String[]> getBreakpointsList(){
+        return breakpointsList;
+    }
+
     private void makeTable(){
         Object[][] data = new Object[][]{};
         String[] colNames = new String[]{"Agent Name", "Condition"};
@@ -112,7 +116,7 @@ public class BreakpointsViewer extends JPanel {
                         warningLabel.setText("");
 
                         //Also want to add to list of breakpoints
-                        breakpointsList.add(new String[]{agent, "stepNum", numOfStepsString});
+                        breakpointsList.add(new String[]{agent, "numOfSteps", String.valueOf(numOfSteps)});
                     }
                 }catch(NumberFormatException ex){
                     warningLabel.setText("WARNING - please enter a number for step number");
