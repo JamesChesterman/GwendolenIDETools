@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,6 +31,7 @@ public class GwenToolWindowContent {
     private JButton startToolsButton;
     private JButton nextCycleButton;
     private JButton continueButton;
+    private JButton skipButton;
     private JButton stopButton;
     private JBTabbedPane tabbedPane;
     private JSlider slider;
@@ -85,6 +85,7 @@ public class GwenToolWindowContent {
         makeStartToolsButton();
         makeNextCycleButton();
         makeContinueButton();
+        makeSkipButton();
         makeStopButton();
         makeTabbedPane();
 
@@ -92,11 +93,12 @@ public class GwenToolWindowContent {
         addComponent(controlsPanel, startToolsButton, 1, 0, 1, 1);
         addComponent(controlsPanel, nextCycleButton, 0, 1, 1, 1);
         addComponent(controlsPanel, continueButton, 0, 2, 1, 1);
-        addComponent(controlsPanel, stopButton, 1, 2, 1, 1);
+        addComponent(controlsPanel, skipButton, 1, 2, 1, 1);
+        addComponent(controlsPanel, stopButton, 1, 3, 1, 1);
 
         makeSlider(controlsPanel);
 
-        addComponent(controlsPanel, tabbedPane, 0, 7, 2, 4);
+        addComponent(controlsPanel, tabbedPane, 0, 8, 2, 4);
         setComponentsEnabled(false);
         return controlsPanel;
     }
@@ -146,10 +148,11 @@ public class GwenToolWindowContent {
             //Need to wait for first lot of data to come back to enable the next cycle button
             nextCycleButton.setEnabled(false);
             continueButton.setEnabled(false);
+            skipButton.setEnabled(false);
             stopButton.setEnabled(false);
             cyclesDone = 0;
             slider.setValue(0);
-            //Set all variables back to defualt in bgiViewer so you can run the program again.
+            //Set all variables back to default in bgiViewer so you can run the program again.
             bgiViewer.initVars();
         }
     }
@@ -192,6 +195,7 @@ public class GwenToolWindowContent {
                 //Also want to disable the next cycle button, need to wait for values to be loaded before pressing it again
                 nextCycleButton.setEnabled(false);
                 continueButton.setEnabled(false);
+                skipButton.setEnabled(false);
                 breakpointController.goToNextCycle(debugSession);
             }
         });
@@ -210,10 +214,17 @@ public class GwenToolWindowContent {
                 continueMode = true;
                 nextCycleButton.setEnabled(false);
                 continueButton.setEnabled(false);
+                skipButton.setEnabled(false);
                 stopButton.setEnabled(true);
                 breakpointController.goToNextCycle(debugSession);
             }
         });
+    }
+
+    //Advances execution to next custom breakpoint set in the breakpoints viewer
+    //But the values in BGIViewer are set to 'skipped' for everything. Only increases step number
+    private void makeSkipButton(){
+        skipButton = new JButton("Skip");
     }
 
     private void makeStopButton(){
@@ -279,13 +290,13 @@ public class GwenToolWindowContent {
             }
         });
 
-        addComponent(controlsPanel, separator, 0, 3, 2, 1);
+        addComponent(controlsPanel, separator, 0, 4, 2, 1);
 
-        addComponent(controlsPanel, sliderLabel, 0, 4, 1, 1);
-        addComponent(controlsPanel, sliderText, 1, 4, 1, 1);
-        addComponent(controlsPanel, slider, 0, 5, 2, 1);
-        addComponent(controlsPanel, changeCycleNumber, 0, 6, 1, 1);
-        addComponent(controlsPanel, warningLabel, 1, 6, 1, 1);
+        addComponent(controlsPanel, sliderLabel, 0, 5, 1, 1);
+        addComponent(controlsPanel, sliderText, 1, 5, 1, 1);
+        addComponent(controlsPanel, slider, 0, 6, 2, 1);
+        addComponent(controlsPanel, changeCycleNumber, 0, 7, 1, 1);
+        addComponent(controlsPanel, warningLabel, 1, 7, 1, 1);
     }
 
     private void makeTabbedPane(){
@@ -308,8 +319,9 @@ public class GwenToolWindowContent {
     private void setComponentsEnabled(boolean enabled){
         //This manages when each component should become enabled
         //Everything starts off as disabled except for stepping mode checkbox
-        JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, continueButton, stopButton,
-                tabbedPane, slider, sliderLabel, sliderText, changeCycleNumber, warningLabel, bgiViewer, breakpointsViewer};
+        JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, continueButton, skipButton,
+                stopButton, tabbedPane, slider, sliderLabel, sliderText, changeCycleNumber, warningLabel, bgiViewer,
+                breakpointsViewer};
 
         for(JComponent component : arrayOfComponents){
             component.setEnabled(enabled);
@@ -333,6 +345,7 @@ public class GwenToolWindowContent {
                 //Also means that all values are loaded, so can re-enable 'Next Cycle' button
                 nextCycleButton.setEnabled(true);
                 continueButton.setEnabled(true);
+                skipButton.setEnabled(true);
                 stopButton.setEnabled(false);
                 checkBreakpoints();
             }
@@ -360,6 +373,7 @@ public class GwenToolWindowContent {
                 //Initiate next step
                 nextCycleButton.setEnabled(false);
                 continueButton.setEnabled(false);
+                skipButton.setEnabled(false);
                 stopButton.setEnabled(true);
                 breakpointController.goToNextCycle(debugSession);
             }
