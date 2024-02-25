@@ -149,6 +149,8 @@ public class GwenToolWindowContent {
             stopButton.setEnabled(false);
             cyclesDone = 0;
             slider.setValue(0);
+            //Set all variables back to defualt in bgiViewer so you can run the program again.
+            bgiViewer.initVars();
         }
     }
 

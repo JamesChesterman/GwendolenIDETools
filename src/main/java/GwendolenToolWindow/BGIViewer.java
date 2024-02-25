@@ -71,11 +71,21 @@ public class BGIViewer extends JPanel {
     private GwenToolWindowContent gwenToolWindowContent;
     private BreakpointsViewer breakpointsViewer;
 
-    public BGIViewer(GwenToolWindowContent gwenToolWindowContent, BreakpointsViewer breakpointsViewer) {
-        super();
+    //Initialise variables that you want to be reset each time you start the tools
+    public void initVars(){
         agentsAdded = false;
         listOfCurrentAgents = new ArrayList<String>();
         listOfNumOfSteps = new ArrayList<String>();
+
+        listOfAttributes = new ArrayList<List<String>>();
+        for (int i = 0; i < allLabels.length; i++) {
+            //Make an arrayList for each attribute
+            listOfAttributes.add(new ArrayList<String>());
+        }
+    }
+
+    public BGIViewer(GwenToolWindowContent gwenToolWindowContent, BreakpointsViewer breakpointsViewer) {
+        super();
 
         this.gwenToolWindowContent = gwenToolWindowContent;
         this.breakpointsViewer = breakpointsViewer;
@@ -99,11 +109,8 @@ public class BGIViewer extends JPanel {
             allLabels[i].setHorizontalAlignment(SwingConstants.LEFT);
             addComponent(this, allLabels[i], 0, i + 2, 1, 1);
         }
-        listOfAttributes = new ArrayList<List<String>>();
-        for (int i = 0; i < allLabels.length; i++) {
-            //Make an arrayList for each attribute
-            listOfAttributes.add(new ArrayList<String>());
-        }
+
+        initVars();
         allLabels[1].setVisible(false);
     }
 
