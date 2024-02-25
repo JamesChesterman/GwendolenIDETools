@@ -8,14 +8,20 @@
     <name>Gwendolen Language Support</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="" url=""></vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    Adds support for the Gwendolen language. The following features are packaged with this plugin:<br>
+    <ul>
+        <li>Syntax highlighting for .gwen files</li>
+        <li>Syntax highlighting customisation</li>
+        <li>Attribute viewer which takes important values from the debug window</li>
+        <li>Can go to previous steps and see the values from that step</li>
+        <li>Breakpoints can be inserted</li>
+    </ul>
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
