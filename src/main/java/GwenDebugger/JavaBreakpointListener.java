@@ -27,6 +27,18 @@ public class JavaBreakpointListener implements XDebugSessionListener {
 
     XDebugSession debugSession;
     GwenToolWindowContent gwenToolWindow;
+    private boolean skipMode;
+
+    public JavaBreakpointListener(XDebugSession debugSession, GwenToolWindowContent gwenToolWindow){
+        super();
+        this.debugSession = debugSession;
+        this.gwenToolWindow = gwenToolWindow;
+        skipMode = false;
+    }
+
+    public void setSkipMode(boolean skipMode) {
+        this.skipMode = skipMode;
+    }
 
     //Get the debug tree for the debug session's tool window (from RunContentDescriptor)
     private XDebuggerTree getDebugTree(Component component) {
@@ -54,23 +66,24 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         updateDebugInfo();
     }
 
+    //Get the debug tree from the correct window. Waits for it to be loaded first
+    //If skipMode is true, then don't need to do this, will just increase cycle number in GwenToolWindow
+    //And set values to skipped in BGIViewer
     public void updateDebugInfo(){
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        executorService.schedule(() -> {
-            //This is executed after the wait (time specified below)
-            RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
-            JComponent component = runContentDescriptor.getComponent();
-            XDebuggerTree tree = getDebugTree(component);
-            //Pass the new tree back to gwenToolWindow
-            gwenToolWindow.updateDebugTreeValues(tree);
-        }, 500, TimeUnit.MILLISECONDS);
-        executorService.shutdown();
-    }
-
-    public JavaBreakpointListener(XDebugSession debugSession, GwenToolWindowContent gwenToolWindow){
-        super();
-        this.debugSession = debugSession;
-        this.gwenToolWindow = gwenToolWindow;
+        if(!skipMode){
+            ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+            executorService.schedule(() -> {
+                //This is executed after the wait (time specified below)
+                RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
+                JComponent component = runContentDescriptor.getComponent();
+                XDebuggerTree tree = getDebugTree(component);
+                //Pass the new tree back to gwenToolWindow
+                gwenToolWindow.updateDebugTreeValues(tree, false);
+            }, 500, TimeUnit.MILLISECONDS);
+            executorService.shutdown();
+        }else{
+            gwenToolWindow.updateDebugTreeValues(null, true);
+        }
     }
 
 }

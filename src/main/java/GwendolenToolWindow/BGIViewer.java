@@ -71,19 +71,6 @@ public class BGIViewer extends JPanel {
     private GwenToolWindowContent gwenToolWindowContent;
     private BreakpointsViewer breakpointsViewer;
 
-    //Initialise variables that you want to be reset each time you start the tools
-    public void initVars(){
-        agentsAdded = false;
-        listOfCurrentAgents = new ArrayList<String>();
-        listOfNumOfSteps = new ArrayList<String>();
-
-        listOfAttributes = new ArrayList<List<String>>();
-        for (int i = 0; i < allLabels.length; i++) {
-            //Make an arrayList for each attribute
-            listOfAttributes.add(new ArrayList<String>());
-        }
-    }
-
     public BGIViewer(GwenToolWindowContent gwenToolWindowContent, BreakpointsViewer breakpointsViewer) {
         super();
 
@@ -112,6 +99,19 @@ public class BGIViewer extends JPanel {
 
         initVars();
         allLabels[1].setVisible(false);
+    }
+
+    //Initialise variables that you want to be reset each time you start the tools
+    public void initVars(){
+        agentsAdded = false;
+        listOfCurrentAgents = new ArrayList<String>();
+        listOfNumOfSteps = new ArrayList<String>();
+
+        listOfAttributes = new ArrayList<List<String>>();
+        for (int i = 0; i < allLabels.length; i++) {
+            //Make an arrayList for each attribute
+            listOfAttributes.add(new ArrayList<String>());
+        }
     }
 
     public String getCurrentAgent(){
@@ -400,6 +400,14 @@ public class BGIViewer extends JPanel {
         listOfNumOfSteps.add(agentNumOfStepsText);
     }
 
-
-
+    //Set all labels to SKIPPED
+    //Add this info to the list of attributes, so can go back to see this step from future step.
+    public void skipStep(){
+        for(int i=0; i<listOfAttributes.size(); i++){
+            String textToSet = "<html><b>" + labelStrings[i] + "</b><br/>SKIPPED<br/></html>";
+            allLabels[i].setText(textToSet);
+            listOfAttributes.get(i).add(textToSet);
+        }
+        gwenToolWindowContent.cycleComplete();
+    }
 }

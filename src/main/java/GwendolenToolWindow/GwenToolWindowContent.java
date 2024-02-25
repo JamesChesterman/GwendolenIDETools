@@ -52,11 +52,14 @@ public class GwenToolWindowContent {
     private int cyclesDone;
 
     private boolean continueMode;
+    private boolean skipMode;
+    private JavaBreakpointListener breakpointListener;
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
         cyclesDone = 0;
         continueMode = false;
+        skipMode = false;
         breakpointController = new BreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 0));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
@@ -72,8 +75,12 @@ public class GwenToolWindowContent {
 
 
     //Call the updateWindow method of each of the windows.
-    public void updateDebugTreeValues(XDebuggerTree newDebugTree){
-        bgiViewer.updateWindow(newDebugTree);
+    public void updateDebugTreeValues(XDebuggerTree newDebugTree, boolean skipped){
+        if(skipped){
+            bgiViewer.skipStep();
+        }else{
+            bgiViewer.updateWindow(newDebugTree);
+        }
     }
 
     @NotNull
@@ -140,7 +147,7 @@ public class GwenToolWindowContent {
     private void startTools() throws ExecutionException {
         debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
         if(debugSession != null){
-            JavaBreakpointListener breakpointListener = new JavaBreakpointListener(debugSession, this);
+            breakpointListener = new JavaBreakpointListener(debugSession, this);
             debugSession.addSessionListener(breakpointListener);
             //This will allow BGIViewer to have the first cycle recorded.
             breakpointListener.updateDebugInfo();
@@ -225,6 +232,21 @@ public class GwenToolWindowContent {
     //But the values in BGIViewer are set to 'skipped' for everything. Only increases step number
     private void makeSkipButton(){
         skipButton = new JButton("Skip");
+        skipButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                skipMode = true;
+                continueMode = true;
+                breakpointListener.setSkipMode(true);
+
+                nextCycleButton.setEnabled(false);
+                continueButton.setEnabled(false);
+                skipButton.setEnabled(false);
+                stopButton.setEnabled(true);
+
+                breakpointController.goToNextCycle(debugSession);
+            }
+        });
     }
 
     private void makeStopButton(){
@@ -234,6 +256,8 @@ public class GwenToolWindowContent {
             @Override
             public void actionPerformed(ActionEvent e){
                 continueMode = false;
+                skipMode = false;
+                breakpointListener.setSkipMode(false);
                 stopButton.setEnabled(false);
             }
         });
@@ -364,6 +388,8 @@ public class GwenToolWindowContent {
                 if(breakpointArray[1].equals("numOfSteps")){
                     if(checkNumOfStepsBreakpoint(breakpointArray[0], breakpointArray[2])){
                         continueMode = false;
+                        skipMode = false;
+                        breakpointListener.setSkipMode(false);
                     }
                 }
             }
