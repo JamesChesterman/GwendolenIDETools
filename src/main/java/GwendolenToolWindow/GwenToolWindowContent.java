@@ -56,6 +56,7 @@ public class GwenToolWindowContent {
 
     private final String ailAgentFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\semantics\\AILAgent.java";
     private final int ailAgentLineNum = 2034;
+    private PlansViewer plansViewer;
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
@@ -304,13 +305,19 @@ public class GwenToolWindowContent {
 
         breakpointsViewer = new BreakpointsViewer(this);
         bgiViewer = new BGIViewer(this, breakpointsViewer);
+        plansViewer = new PlansViewer(breakpointController);
         SkipControls skipControls = new SkipControls(this);
-        JBScrollPane scrollPane = new JBScrollPane(bgiViewer);
-        scrollPane.setPreferredSize(new Dimension(200, 300));
+
+        JBScrollPane scrollPaneBGIViewer = new JBScrollPane(bgiViewer);
+        scrollPaneBGIViewer.setPreferredSize(new Dimension(200, 300));
 
         JBScrollPane scrollPaneBreakpoints = new JBScrollPane(breakpointsViewer);
-        scrollPane.setPreferredSize(new Dimension(200,300));
-        tabbedPane.addTab("BGIViewer", scrollPane);
+        scrollPaneBreakpoints.setPreferredSize(new Dimension(200,300));
+
+        JBScrollPane scrollPanePlansViewer = new JBScrollPane(plansViewer);
+        scrollPanePlansViewer.setPreferredSize(new Dimension(200, 300));
+        tabbedPane.addTab("BGIViewer", scrollPaneBGIViewer);
+        tabbedPane.addTab("Plans Viewer", scrollPanePlansViewer);
         tabbedPane.addTab("Breakpoints", scrollPaneBreakpoints);
         tabbedPane.addTab("Skip Controls", skipControls);
     }
