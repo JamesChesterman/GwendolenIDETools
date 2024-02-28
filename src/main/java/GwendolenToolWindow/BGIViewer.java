@@ -140,7 +140,9 @@ public class BGIViewer extends JPanel {
             public void actionPerformed(ActionEvent e){
                 ComboBox<String> sourceComboBox = (ComboBox<String>) e.getSource();
                 String selectedItem = (String) sourceComboBox.getSelectedItem();
-                changeAgentSelected(selectedItem);
+                if(selectedItem != null){
+                    changeAgentSelected(selectedItem);
+                }
             }
         });
         //addComponent(comboBoxPanel, agentComboBox, 1, 0, 1, 1);
@@ -408,6 +410,8 @@ public class BGIViewer extends JPanel {
             allLabels[i].setText(textToSet);
             listOfAttributes.get(i).add(textToSet);
         }
+        listOfNumOfSteps.add("<html><b>" + AGENTNUMOFSTEPSSTRING + "</b><br/>SKIPPED<br/></html>");
+        listOfCurrentAgents.add("NONE");
         gwenToolWindowContent.cycleComplete();
     }
 }

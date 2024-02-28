@@ -268,7 +268,6 @@ public class GwenToolWindowContent {
 
         slider = new JSlider(JSlider.HORIZONTAL, 1, 50, 1);
         slider.setMinorTickSpacing(1);
-        slider.setMajorTickSpacing(5);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
         slider.setValue(1);
@@ -362,8 +361,13 @@ public class GwenToolWindowContent {
         //Need to update the Swing component on an Event-Dispatch Thread
         //Otherwise the program crashes
         SwingUtilities.invokeLater(new Runnable() {
-            public void run(){
+            public void run() {
                 slider.setMaximum(cyclesDone);
+                slider.setMinorTickSpacing(cyclesDone / 10);
+                slider.setMajorTickSpacing(cyclesDone / 10);
+                if(cyclesDone > 10){
+                    slider.setLabelTable(slider.createStandardLabels(cyclesDone / 10));
+                }
                 slider.setValue(cyclesDone);
                 sliderText.setText(String.valueOf(cyclesDone));
                 //Also means that all values are loaded, so can re-enable 'Next Cycle' button
@@ -374,6 +378,8 @@ public class GwenToolWindowContent {
                 checkBreakpoints();
             }
         });
+
+
 
     }
 
