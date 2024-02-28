@@ -77,9 +77,15 @@ public class JavaBreakpointListener implements XDebugSessionListener {
                 RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
                 JComponent component = runContentDescriptor.getComponent();
                 XDebuggerTree tree = getDebugTree(component);
-                //Pass the new tree back to gwenToolWindow
-                gwenToolWindow.updateDebugTreeValues(tree, false);
-            }, 500, TimeUnit.MILLISECONDS);
+
+                if(tree == null){
+                    //Start wait again and see if the tree has loaded yet.
+                    updateDebugInfo();
+                }else{
+                    //Pass the new tree back to gwenToolWindow
+                    gwenToolWindow.updateDebugTreeValues(tree, false);
+                }
+            }, 100, TimeUnit.MILLISECONDS);
             executorService.shutdown();
         }else{
             gwenToolWindow.updateDebugTreeValues(null, true);
