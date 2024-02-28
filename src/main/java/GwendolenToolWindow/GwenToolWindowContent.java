@@ -54,6 +54,9 @@ public class GwenToolWindowContent {
     private JavaBreakpointListener breakpointListener;
     private int stepToSkipTo;
 
+    private final String ailAgentFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\semantics\\AILAgent.java";
+    private final int ailAgentLineNum = 2034;
+
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
         cyclesDone = 0;
@@ -164,13 +167,13 @@ public class GwenToolWindowContent {
     private void makeSteppingCheckbox(){
         //Stepping checkbox
         steppingCheckBox = new JCheckBox("Stepping Mode Enabled");
-        isStepping = breakpointController.checkBreakpoint();
+        isStepping = breakpointController.checkBreakpoint(ailAgentFileURL, ailAgentLineNum);
         steppingCheckBox.setSelected(isStepping);
         steppingCheckBox.addItemListener(new ItemListener(){
             @Override
             public void itemStateChanged(ItemEvent e){
                 isStepping = !isStepping;
-                breakpointController.toggleBreakpoint();
+                breakpointController.toggleBreakpoint(ailAgentFileURL, ailAgentLineNum);
             }
         });
     }

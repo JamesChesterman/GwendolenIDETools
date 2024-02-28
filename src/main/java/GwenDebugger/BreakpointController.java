@@ -22,16 +22,13 @@ import java.util.List;
 
 public class BreakpointController {
 
-    final String fileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\semantics\\AILAgent.java";
-    final int lineNum = 2034;
-
     Project project;
     VirtualFile virtualFile;
     XBreakpointManager breakpointManager;
     GwenLineBreakpointType gwenLineBreakpointType;
     GwenBreakpointProperties gwenBreakpointProperties;
 
-    public void toggleBreakpoint(){
+    public void toggleBreakpoint(String fileURL, int lineNum){
         Runnable runnable = () -> breakpointManager.addLineBreakpoint(
                 gwenLineBreakpointType,
                 fileURL,
@@ -46,7 +43,7 @@ public class BreakpointController {
         XDebuggerUtil.getInstance().toggleLineBreakpoint(project, virtualFile, lineNum);
     }
 
-    public boolean checkBreakpoint(){
+    public boolean checkBreakpoint(String fileURL, int lineNum){
         virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(fileURL));
 
         XBreakpoint<?>[] breakpoints = breakpointManager.getAllBreakpoints();
