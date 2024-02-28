@@ -31,7 +31,6 @@ public class GwenToolWindowContent {
     private JButton startToolsButton;
     private JButton nextCycleButton;
     private JButton continueButton;
-    private JButton skipButton;
     private JButton stopButton;
     private JBTabbedPane tabbedPane;
     private JSlider slider;
@@ -52,14 +51,14 @@ public class GwenToolWindowContent {
     private int cyclesDone;
 
     private boolean continueMode;
-    private boolean skipMode;
     private JavaBreakpointListener breakpointListener;
+    private int stepToSkipTo;
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
         cyclesDone = 0;
+        stepToSkipTo = 0;
         continueMode = false;
-        skipMode = false;
         breakpointController = new BreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 0));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
@@ -92,7 +91,6 @@ public class GwenToolWindowContent {
         makeStartToolsButton();
         makeNextCycleButton();
         makeContinueButton();
-        makeSkipButton();
         makeStopButton();
         makeTabbedPane();
 
@@ -100,15 +98,15 @@ public class GwenToolWindowContent {
         addComponent(controlsPanel, startToolsButton, 1, 0, 1, 1);
         addComponent(controlsPanel, nextCycleButton, 0, 1, 1, 1);
         addComponent(controlsPanel, continueButton, 0, 2, 1, 1);
-        addComponent(controlsPanel, skipButton, 1, 2, 1, 1);
-        addComponent(controlsPanel, stopButton, 1, 3, 1, 1);
+        addComponent(controlsPanel, stopButton, 1, 2, 1, 1);
 
         makeSlider(controlsPanel);
 
-        addComponent(controlsPanel, tabbedPane, 0, 8, 2, 4);
+        addComponent(controlsPanel, tabbedPane, 0, 7, 2, 4);
         setComponentsEnabled(false);
         return controlsPanel;
     }
+
 
     //Add component to grid bag layout.
     private void addComponent(Container container, Component component, int column, int row, int width, int height){
@@ -155,7 +153,6 @@ public class GwenToolWindowContent {
             //Need to wait for first lot of data to come back to enable the next cycle button
             nextCycleButton.setEnabled(false);
             continueButton.setEnabled(false);
-            skipButton.setEnabled(false);
             stopButton.setEnabled(false);
             cyclesDone = 0;
             slider.setValue(0);
@@ -202,7 +199,6 @@ public class GwenToolWindowContent {
                 //Also want to disable the next cycle button, need to wait for values to be loaded before pressing it again
                 nextCycleButton.setEnabled(false);
                 continueButton.setEnabled(false);
-                skipButton.setEnabled(false);
                 breakpointController.goToNextCycle(debugSession);
             }
         });
@@ -221,29 +217,7 @@ public class GwenToolWindowContent {
                 continueMode = true;
                 nextCycleButton.setEnabled(false);
                 continueButton.setEnabled(false);
-                skipButton.setEnabled(false);
                 stopButton.setEnabled(true);
-                breakpointController.goToNextCycle(debugSession);
-            }
-        });
-    }
-
-    //Advances execution to next custom breakpoint set in the breakpoints viewer
-    //But the values in BGIViewer are set to 'skipped' for everything. Only increases step number
-    private void makeSkipButton(){
-        skipButton = new JButton("Skip");
-        skipButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                skipMode = true;
-                continueMode = true;
-                breakpointListener.setSkipMode(true);
-
-                nextCycleButton.setEnabled(false);
-                continueButton.setEnabled(false);
-                skipButton.setEnabled(false);
-                stopButton.setEnabled(true);
-
                 breakpointController.goToNextCycle(debugSession);
             }
         });
@@ -256,7 +230,6 @@ public class GwenToolWindowContent {
             @Override
             public void actionPerformed(ActionEvent e){
                 continueMode = false;
-                skipMode = false;
                 breakpointListener.setSkipMode(false);
                 stopButton.setEnabled(false);
             }
@@ -313,13 +286,13 @@ public class GwenToolWindowContent {
             }
         });
 
-        addComponent(controlsPanel, separator, 0, 4, 2, 1);
+        addComponent(controlsPanel, separator, 0, 3, 2, 1);
 
-        addComponent(controlsPanel, sliderLabel, 0, 5, 1, 1);
-        addComponent(controlsPanel, sliderText, 1, 5, 1, 1);
-        addComponent(controlsPanel, slider, 0, 6, 2, 1);
-        addComponent(controlsPanel, changeCycleNumber, 0, 7, 1, 1);
-        addComponent(controlsPanel, warningLabel, 1, 7, 1, 1);
+        addComponent(controlsPanel, sliderLabel, 0, 4, 1, 1);
+        addComponent(controlsPanel, sliderText, 1, 4, 1, 1);
+        addComponent(controlsPanel, slider, 0, 5, 2, 1);
+        addComponent(controlsPanel, changeCycleNumber, 0, 6, 1, 1);
+        addComponent(controlsPanel, warningLabel, 1, 6, 1, 1);
     }
 
     private void makeTabbedPane(){
@@ -328,6 +301,7 @@ public class GwenToolWindowContent {
 
         breakpointsViewer = new BreakpointsViewer(this);
         bgiViewer = new BGIViewer(this, breakpointsViewer);
+        SkipControls skipControls = new SkipControls(this);
         JBScrollPane scrollPane = new JBScrollPane(bgiViewer);
         scrollPane.setPreferredSize(new Dimension(200, 300));
 
@@ -335,6 +309,7 @@ public class GwenToolWindowContent {
         scrollPane.setPreferredSize(new Dimension(200,300));
         tabbedPane.addTab("BGIViewer", scrollPane);
         tabbedPane.addTab("Breakpoints", scrollPaneBreakpoints);
+        tabbedPane.addTab("Skip Controls", skipControls);
     }
 
 
@@ -342,7 +317,7 @@ public class GwenToolWindowContent {
     private void setComponentsEnabled(boolean enabled){
         //This manages when each component should become enabled
         //Everything starts off as disabled except for stepping mode checkbox
-        JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, continueButton, skipButton,
+        JComponent[] arrayOfComponents = new JComponent[]{startToolsButton, nextCycleButton, continueButton,
                 stopButton, tabbedPane, slider, sliderLabel, sliderText, changeCycleNumber, warningLabel, bgiViewer,
                 breakpointsViewer};
 
@@ -373,14 +348,33 @@ public class GwenToolWindowContent {
                 //Also means that all values are loaded, so can re-enable 'Next Cycle' button
                 nextCycleButton.setEnabled(true);
                 continueButton.setEnabled(true);
-                skipButton.setEnabled(true);
                 stopButton.setEnabled(false);
+                checkStepNumForSkip();
                 checkBreakpoints();
             }
         });
 
 
 
+    }
+
+    //Will check if the cyclesDone is equal to stepToSkipTo - 1
+    //Will then initiate going to next step
+    //So there will be values in BGIViewer for the step you want to skip to
+    //For skipping
+    private void checkStepNumForSkip(){
+        if(stepToSkipTo != 0){
+            if(cyclesDone == stepToSkipTo - 1){
+                continueMode = false;
+                breakpointListener.setSkipMode(false);
+
+                //Initiate next step
+                nextCycleButton.setEnabled(false);
+                continueButton.setEnabled(false);
+                stopButton.setEnabled(true);
+                breakpointController.goToNextCycle(debugSession);
+            }
+        }
     }
 
     //If there are any breakpoints that are true, need to stop execution
@@ -394,7 +388,6 @@ public class GwenToolWindowContent {
                 if(breakpointArray[1].equals("numOfSteps")){
                     if(checkNumOfStepsBreakpoint(breakpointArray[0], breakpointArray[2])){
                         continueMode = false;
-                        skipMode = false;
                         breakpointListener.setSkipMode(false);
                     }
                 }
@@ -405,7 +398,6 @@ public class GwenToolWindowContent {
                 //Initiate next step
                 nextCycleButton.setEnabled(false);
                 continueButton.setEnabled(false);
-                skipButton.setEnabled(false);
                 stopButton.setEnabled(true);
                 breakpointController.goToNextCycle(debugSession);
             }
@@ -422,5 +414,22 @@ public class GwenToolWindowContent {
             }
         }
         return false;
+    }
+
+    //Called from SkipControls. Will skip to cyclesDone (steps already completed) +
+    //Number specified in SkipControls - 1
+    //Will then go to next step again, therefore getting the information for cyclesDone + numOfStepsToSkip
+    //So there will be information in BGIViewer at the end of the skip.
+    public void skip(int numOfSteps){
+        continueMode = true;
+        breakpointListener.setSkipMode(true);
+        nextCycleButton.setEnabled(false);
+        continueButton.setEnabled(false);
+        stopButton.setEnabled(true);
+
+        //Will stop at this number of steps
+        stepToSkipTo = cyclesDone + numOfSteps;
+
+        breakpointController.goToNextCycle(debugSession);
     }
 }
