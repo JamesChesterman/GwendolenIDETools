@@ -82,7 +82,11 @@ public class PlansViewer extends JPanel {
 
     public void updateDebugTreeValues(XDebuggerTree newTree, boolean skipped){
         if(skipped) {
-            breakpointController.goToNextCycle(gwenToolWindow.getDebugSession());
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run(){
+                    breakpointController.goToNextCycle(gwenToolWindow.getDebugSession());
+                }
+            });
         }else{
             gwenToolWindow.setPlanMode(false);
             skipButton.setEnabled(true);
