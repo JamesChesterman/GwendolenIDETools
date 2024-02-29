@@ -3,6 +3,7 @@ package GwendolenToolWindow;
 import GwenDebugger.BreakpointController;
 import GwenDebugger.DebugTreeUtils;
 import GwenDebugger.JavaBreakpointListener;
+import com.intellij.ui.JBColor;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 
 import javax.swing.*;
@@ -23,8 +24,9 @@ public class PlansViewer extends JPanel {
     private int planLibraryLineNum;
     private JLabel explanationLabel;
     private JLabel piLabel;
+    private JLabel piValueLabel;
     private final String piText = "Predicate Indicator of event at the top of Current Intention's event stack: ";
-
+    private final Color greenColour = new Color(25,84,40);
 
     private boolean[] isMap = {
             false,
@@ -89,8 +91,17 @@ public class PlansViewer extends JPanel {
         explanationLabel = new JLabel("When current intention has 'which has no plan yet' at the top of its deed stack...");
         addComponent(this, explanationLabel, 0, 1, 2, 1);
 
+
         piLabel = new JLabel(piText);
-        addComponent(this, piLabel, 0, 2, 2, 1);
+        addComponent(this, piLabel, 0, 2, 1, 1);
+
+        //Add green box around the pi value
+        JPanel greenPanel = new JPanel();
+        greenPanel.setBackground(greenColour);
+        piValueLabel = new JLabel("");
+        greenPanel.add(piValueLabel);
+
+        addComponent(this, greenPanel, 1,2,1,1);
     }
 
     //Add component to grid bag layout.
@@ -162,12 +173,11 @@ public class PlansViewer extends JPanel {
                 //It's the predicate indicator of
                 //The event at the top of
                 //Current intention's event stack
-                piLabel.setText(piText + returnArray[i][0]);
+                piValueLabel.setText(returnArray[i][0]);
             }
 
         }
     }
-
 
     //Called from DebugTreeUtils
     //Should only be one node returned (just with its children)
