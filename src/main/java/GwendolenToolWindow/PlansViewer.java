@@ -85,6 +85,7 @@ public class PlansViewer extends JPanel {
             breakpointController.goToNextCycle(gwenToolWindow.getDebugSession());
         }else{
             gwenToolWindow.setPlanMode(false);
+            skipButton.setEnabled(true);
         }
     }
 

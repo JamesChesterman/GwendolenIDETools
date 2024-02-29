@@ -82,6 +82,7 @@ public class GwenToolWindowContent {
 
     public void setPlanMode(boolean planMode){
         breakpointListener.setPlanMode(planMode);
+        this.planMode = planMode;
     }
 
     public JSlider getSlider(){
