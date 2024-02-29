@@ -176,6 +176,8 @@ public class GwenToolWindowContent {
             slider.setValue(0);
             //Set all variables back to default in bgiViewer so you can run the program again.
             bgiViewer.initVars();
+            //Restart plansViewer so you can run the program again
+            plansViewer.setItemsEnabled(true);
         }
     }
 

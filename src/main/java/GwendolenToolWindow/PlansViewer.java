@@ -1,11 +1,13 @@
 package GwendolenToolWindow;
 
 import GwenDebugger.BreakpointController;
+import GwenDebugger.DebugTreeUtils;
 import GwenDebugger.JavaBreakpointListener;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -20,6 +22,13 @@ public class PlansViewer extends JPanel {
     private String planLibraryFileURL;
     private int planLibraryLineNum;
 
+
+    private boolean[] isMap = {
+            false,
+            true
+    };
+
+
     public PlansViewer(GwenToolWindowContent gwenToolWindow, BreakpointController breakpointController){
         super();
         this.gwenToolWindow = gwenToolWindow;
@@ -29,6 +38,10 @@ public class PlansViewer extends JPanel {
 
         makeBreakdownCheckbox();
         makeSkipToPlanBreakdown();
+    }
+
+    public void setItemsEnabled(boolean enabled){
+        skipButton.setEnabled(enabled);
     }
 
     //Checkbox that toggles whether or not there is a breakpoint in PlanLibrary.java
@@ -80,6 +93,8 @@ public class PlansViewer extends JPanel {
         container.add(component, constraints);
     }
 
+    //Called from breakpoint listener. Passes in the new debug tree and whether the breakpoint should be skipped over
+    //If skipped is true, it resumes the program again without doing anything with tree (should be null anyway)
     public void updateDebugTreeValues(XDebuggerTree newTree, boolean skipped){
         if(skipped) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -89,8 +104,62 @@ public class PlansViewer extends JPanel {
             });
         }else{
             gwenToolWindow.setPlanMode(false);
-            skipButton.setEnabled(true);
+
+            sendInfoGet(newTree);
         }
+    }
+
+    //Similar to BGIViewer code, sets up info to send to DebugTreeUtils
+    private void sendInfoGet(XDebuggerTree tree){
+        //TODO set anything to loading here
+
+        //relPlans key has the predicate indicator, value has the whole plan
+        String[][] findArray = {
+                {"pi"},
+                {"relPlans"}
+        };
+
+        boolean[] allowChildren = {
+                false,
+                true
+        };
+
+        //Used when receiving the map nodes
+        //Because they can be returned in any order
+        //Still need to have every node here.
+        String[] labelStrings = {
+                "pi",
+                "relPlans"
+        };
+
+        DebugTreeUtils.setPlansViewer(this);
+        DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren, isMap, labelStrings);
+    }
+
+    //Called from DebugTreeUtils with the information requested by the sendInfoGet method
+    //Adds list of relPlans
+    public void receiveInfoGet(String[][] returnArray){
+        for(int i=0; i<returnArray.length; i++){
+            if(isMap[i]){
+                continue;
+            }
+
+            if(i == 0){
+                //It's the predicate indicator of
+                //The event at the top of
+                //Current intention's event stack
+                System.out.println(returnArray[i][0]);
+            }
+
+        }
+    }
+
+
+    //Called from DebugTreeUtils
+    //Should only be one node returned (just with its children)
+    public void receiveMapInfo(List<List<List<String>>> mapNodeChildren, List<String> labelStringsFound){
+
+        skipButton.setEnabled(true);
     }
 
 }

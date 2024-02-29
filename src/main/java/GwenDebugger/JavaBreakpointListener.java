@@ -118,9 +118,7 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         updateDebugInfo(fileNum);
     }
 
-    //Get the debug tree from the correct window. Waits for it to be loaded first
-    //If skipMode is true, then don't need to do this, will just increase cycle number in GwenToolWindow
-    //And set values to skipped in BGIViewer
+
     public void updateDebugInfo(int fileNum){
         if(planMode) {
             //In plans mode, will skip over breakpoints in AILAgent
@@ -156,6 +154,10 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         }
     }
 
+
+    //Tries to get the debug tree
+    //If it's null, then call the method again after a delay
+    //If it's not null, send it to gwenToolWindow
     private void sendDebugTreeGwenToolWindow(){
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         executorService.schedule(() -> {
@@ -175,6 +177,10 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         executorService.shutdown();
     }
 
+
+    //Tries to get the debug tree
+    //If it's null, then call the method again after a delay
+    //If it's not null, send it to plansViewer
     private void sendDebugTreePlansViewer(){
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
         executorService.schedule(() -> {

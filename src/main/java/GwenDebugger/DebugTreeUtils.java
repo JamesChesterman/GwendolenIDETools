@@ -1,6 +1,7 @@
 package GwenDebugger;
 
 import GwendolenToolWindow.BGIViewer;
+import GwendolenToolWindow.PlansViewer;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
@@ -13,6 +14,10 @@ import java.util.concurrent.TimeUnit;
 
 public class DebugTreeUtils {
     private static BGIViewer bgiViewer;
+    private static PlansViewer plansViewer;
+    private static String classToReturnTo;
+    private static final String plansClass = "PlansViewer";
+    private static final String bgiClass = "BGIViewer";
     private static final int TIMEPERIOD = 50;        //In milliseconds
 
     private DebugTreeUtils(){
@@ -24,11 +29,21 @@ public class DebugTreeUtils {
     }
 
     //Need to set BGIViewer to the correct object before doing any findNodeFromParent calls from it
+    //Should always be called before findInTree (so classToReturnTo can have its value assigned).
     public static void setBGIViewer(BGIViewer bgiViewerToGive){
+        classToReturnTo = bgiClass;
         bgiViewer = bgiViewerToGive;
     }
 
-    public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged, boolean[] allowChildren, boolean[] isMap, String[] labelStrings){
+    //Need to set PlansViewer to the correct object
+    //Should always be called before findInTree (so classToReturnTo can have its value assigned).
+    public static void setPlansViewer(PlansViewer plansViewerToGive){
+        classToReturnTo = plansClass;
+        plansViewer = plansViewerToGive;
+    }
+
+    public static void findInTree(XDebuggerTreeNode rootNode, String[][] stringArrayJagged, boolean[] allowChildren,
+                                  boolean[] isMap, String[] labelStrings){
         //Get max length of any array in the 2D array
         int maxLen = getLongestArrayIn2DArray(stringArrayJagged);
 
@@ -192,7 +207,7 @@ public class DebugTreeUtils {
     }
 
 
-    //Calls a method in bgiViewer with a 2D array of items to be returned
+    //Calls a method in bgiViewer / plansViewer with a 2D array of items to be returned
     //Each array in the 2D array is either: the single raw value of the node requested
     //Or the raw value of every child belonging to the node requested
     //May need to wait for loading
@@ -258,8 +273,12 @@ public class DebugTreeUtils {
             }, TIMEPERIOD, TimeUnit.MILLISECONDS);
             executorService.shutdown();
         }else{
-            //If no nodes need their children loading, then everything can be sent to bgiViewer
-            bgiViewer.receiveInfoGet(returnArray);
+            //If no nodes need their children loading, then everything can be sent to bgiViewer / plansViewer
+            if(classToReturnTo.equals(plansClass)){
+                plansViewer.receiveInfoGet(returnArray);
+            }else{
+                bgiViewer.receiveInfoGet(returnArray);
+            }
             processMapNodes(mapNodes, mapLabelStrings);
         }
     }
@@ -273,7 +292,7 @@ public class DebugTreeUtils {
     //Then each of the children will have children, typically the key and the value
     //So array will be indexed on: node(List parent), childNode(Element of the list), childOfChildNode(Key / Value of
     //   list element)
-    // mapLabelStrings are the labels passed from BGIViewer. They're just the labels associated with the mapNodes
+    // mapLabelStrings are the labels passed from BGIViewer / plansViewer. They're just the labels associated with the mapNodes
     private static void processMapNodes(List<XDebuggerTreeNode> mapNodes, List<String> mapLabelStrings){
         List<XDebuggerTreeNode> nodesToLoad = new ArrayList<>();
         for(int i=0; i<mapNodes.size(); i++){
@@ -301,7 +320,7 @@ public class DebugTreeUtils {
             //If there are no child nodes left to load
         }else{
             List<List<List<String>>> valuesOfMapNodeChildren = new ArrayList<>();
-            //No more nodes to load. Get values of each node then call method in bgiViewer to send results
+            //No more nodes to load. Get values of each node then call method in bgiViewer / plansViewer to send results
             for(int i=0; i<mapNodes.size(); i++){
                 List<XDebuggerTreeNode> children = (List<XDebuggerTreeNode>) mapNodes.get(i).getChildren();
                 List<List<String>> valuesOfListElementChildren = new ArrayList<>();
@@ -320,7 +339,12 @@ public class DebugTreeUtils {
                 //Add values for each list of children (each of which having a list of attributes)
                 valuesOfMapNodeChildren.add(valuesOfListElementChildren);
             }
-            bgiViewer.receiveMapNodeInfo(valuesOfMapNodeChildren, mapLabelStrings);
+
+            if(classToReturnTo.equals(plansClass)){
+                plansViewer.receiveMapInfo(valuesOfMapNodeChildren, mapLabelStrings);
+            }else{
+                bgiViewer.receiveMapNodeInfo(valuesOfMapNodeChildren, mapLabelStrings);
+            }
         }
     }
 
