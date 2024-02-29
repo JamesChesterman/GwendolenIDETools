@@ -21,6 +21,9 @@ public class PlansViewer extends JPanel {
     private JButton skipButton;
     private String planLibraryFileURL;
     private int planLibraryLineNum;
+    private JLabel explanationLabel;
+    private JLabel piLabel;
+    private final String piText = "Predicate Indicator of event at the top of Current Intention's event stack: ";
 
 
     private boolean[] isMap = {
@@ -36,8 +39,11 @@ public class PlansViewer extends JPanel {
         planLibraryFileURL = JavaBreakpointListener.getPlanLibraryFileURL();
         planLibraryLineNum = JavaBreakpointListener.getPlanLibraryLineNum();
 
+        setLayout(new GridBagLayout());
+
         makeBreakdownCheckbox();
         makeSkipToPlanBreakdown();
+        makeLabels();
     }
 
     public void setItemsEnabled(boolean enabled){
@@ -76,7 +82,15 @@ public class PlansViewer extends JPanel {
                 breakpointController.goToNextCycle(gwenToolWindow.getDebugSession());
             }
         });
-        addComponent(this, skipButton, 0, 1, 1, 1);
+        addComponent(this, skipButton, 1, 0, 1, 1);
+    }
+
+    private void makeLabels(){
+        explanationLabel = new JLabel("When current intention has 'which has no plan yet' at the top of its deed stack...");
+        addComponent(this, explanationLabel, 0, 1, 2, 1);
+
+        piLabel = new JLabel(piText);
+        addComponent(this, piLabel, 0, 2, 2, 1);
     }
 
     //Add component to grid bag layout.
@@ -148,7 +162,7 @@ public class PlansViewer extends JPanel {
                 //It's the predicate indicator of
                 //The event at the top of
                 //Current intention's event stack
-                System.out.println(returnArray[i][0]);
+                piLabel.setText(piText + returnArray[i][0]);
             }
 
         }
