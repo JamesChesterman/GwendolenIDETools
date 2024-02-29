@@ -53,16 +53,20 @@ public class GwenToolWindowContent {
     private boolean continueMode;
     private JavaBreakpointListener breakpointListener;
     private int stepToSkipTo;
-
-    private final String ailAgentFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\semantics\\AILAgent.java";
-    private final int ailAgentLineNum = 2034;
     private PlansViewer plansViewer;
+    private boolean planMode;
+    private String ailAgentFileURL;
+    private int ailAgentLineNum;
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
         this.project = project;
         cyclesDone = 0;
         stepToSkipTo = 0;
         continueMode = false;
+        planMode = false;
+        ailAgentFileURL = JavaBreakpointListener.getAilAgentFileURL();
+        ailAgentLineNum = JavaBreakpointListener.getAilAgentLineNum();
+
         breakpointController = new BreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 0));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
@@ -72,15 +76,24 @@ public class GwenToolWindowContent {
 
     }
 
+    public XDebugSession getDebugSession(){
+        return debugSession;
+    }
+
+    public void setPlanMode(boolean planMode){
+        breakpointListener.setPlanMode(planMode);
+    }
+
     public JSlider getSlider(){
         return slider;
     }
 
 
     //Call the updateWindow method of each of the windows.
-    public void updateDebugTreeValues(XDebuggerTree newDebugTree, boolean skipped){
+    public void updateDebugTreeValues(XDebuggerTree newDebugTree, boolean skipped, boolean planMode){
         if(skipped){
             bgiViewer.skipStep();
+            this.planMode = planMode;
         }else{
             bgiViewer.updateWindow(newDebugTree);
         }
@@ -149,10 +162,10 @@ public class GwenToolWindowContent {
     private void startTools() throws ExecutionException {
         debugSession = XDebuggerManager.getInstance(project).getCurrentSession();
         if(debugSession != null){
-            breakpointListener = new JavaBreakpointListener(debugSession, this);
+            breakpointListener = new JavaBreakpointListener(debugSession, this, plansViewer);
             debugSession.addSessionListener(breakpointListener);
             //This will allow BGIViewer to have the first cycle recorded.
-            breakpointListener.updateDebugInfo();
+            breakpointListener.updateDebugInfo(1);
             setComponentsEnabled(true);
             //Need to wait for first lot of data to come back to enable the next cycle button
             nextCycleButton.setEnabled(false);
@@ -305,7 +318,7 @@ public class GwenToolWindowContent {
 
         breakpointsViewer = new BreakpointsViewer(this);
         bgiViewer = new BGIViewer(this, breakpointsViewer);
-        plansViewer = new PlansViewer(breakpointController);
+        plansViewer = new PlansViewer(this, breakpointController);
         SkipControls skipControls = new SkipControls(this);
 
         JBScrollPane scrollPaneBGIViewer = new JBScrollPane(bgiViewer);
@@ -359,8 +372,14 @@ public class GwenToolWindowContent {
                 nextCycleButton.setEnabled(true);
                 continueButton.setEnabled(true);
                 stopButton.setEnabled(false);
-                checkStepNumForSkip();
-                checkBreakpoints();
+                if(planMode){
+                    //If it's in plan mode and you hit an AILAgent breakpoint
+                    //Skip no matter what
+                    breakpointController.goToNextCycle(debugSession);
+                }else{
+                    checkStepNumForSkip();
+                    checkBreakpoints();
+                }
             }
         });
 
@@ -372,6 +391,7 @@ public class GwenToolWindowContent {
     //Will then initiate going to next step
     //So there will be values in BGIViewer for the step you want to skip to
     //For skipping
+    //If it's in plan mode then you just skip all the time
     private void checkStepNumForSkip(){
         if(stepToSkipTo != 0){
             if(cyclesDone == stepToSkipTo - 1){
