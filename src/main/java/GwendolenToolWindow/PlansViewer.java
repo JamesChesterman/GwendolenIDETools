@@ -59,7 +59,10 @@ public class PlansViewer extends JPanel {
     //Should reset the UI so you can run the program again
     public void setItemsEnabled(boolean enabled){
         skipButton.setEnabled(enabled);
-
+        piValueLabel.setText("");
+        for(int i=0; i<planPanels.size(); i++){
+            planPanels.get(i).setVisible(false);
+        }
     }
 
     //Checkbox that toggles whether or not there is a breakpoint in PlanLibrary.java
@@ -94,27 +97,27 @@ public class PlansViewer extends JPanel {
                 breakpointController.goToNextCycle(gwenToolWindow.getDebugSession());
             }
         });
-        addComponent(this, skipButton, 1, 0, 1, 1);
+        addComponent(this, skipButton, 0, 1, 1, 1);
     }
 
     private void makeLabels(){
         explanationLabel = new JLabel("When current intention has 'which has no plan yet' at the top of its deed stack...");
-        addComponent(this, explanationLabel, 0, 1, 2, 1);
+        addComponent(this, explanationLabel, 0, 2, 2, 1);
 
 
         piLabel = new JLabel(piText);
-        addComponent(this, piLabel, 0, 2, 1, 1);
+        addComponent(this, piLabel, 0, 3, 1, 1);
 
         //Add green box around the pi value
-        JPanel greenPanel = new JPanel();
-        greenPanel.setBackground(greenColour);
+        JPanel piPanel = new JPanel();
+        piPanel.setBackground(greenColour);
         piValueLabel = new JLabel("");
-        greenPanel.add(piValueLabel);
+        piPanel.add(piValueLabel);
 
-        addComponent(this, greenPanel, 0,3,1,1);
+        addComponent(this, piPanel, 0,4,1,1);
 
         JLabel applicablePlansLabel = new JLabel("Plans Applicable / Inapplicable:");
-        addComponent(this, applicablePlansLabel, 0, 4, 1, 1);
+        addComponent(this, applicablePlansLabel, 0, 5, 1, 1);
     }
 
     //Add component to grid bag layout.
@@ -187,7 +190,7 @@ public class PlansViewer extends JPanel {
                 //The event at the top of
                 //Current intention's event stack
                 currentPi = returnArray[i][0];
-                piValueLabel.setText(returnArray[i][0]);
+                piValueLabel.setText(currentPi);
             }
 
         }
@@ -233,7 +236,7 @@ public class PlansViewer extends JPanel {
                 panel.add(label);
                 planPanels.add(panel);
                 planLabels.add(label);
-                addComponent(this, panel, 0, 5 + planPanels.size()-1, 2, 1);
+                addComponent(this, panel, 0, 6 + planPanels.size()-1, 2, 1);
             }
         }
     }
