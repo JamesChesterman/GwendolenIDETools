@@ -315,7 +315,7 @@ public class DebugTreeUtils {
             executorService.schedule(() -> {
                 //This is called after the wait
                 processMapNodes(mapNodes, mapLabelStrings);
-            }, 500, TimeUnit.MILLISECONDS);
+            }, TIMEPERIOD, TimeUnit.MILLISECONDS);
             executorService.shutdown();
             //If there are no child nodes left to load
         }else{
