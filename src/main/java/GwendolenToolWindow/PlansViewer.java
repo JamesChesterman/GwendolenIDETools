@@ -8,6 +8,7 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,10 +24,14 @@ public class PlansViewer extends JPanel {
     private String planLibraryFileURL;
     private int planLibraryLineNum;
     private JLabel explanationLabel;
+    private String currentPi = "";
     private JLabel piLabel;
     private JLabel piValueLabel;
     private final String piText = "Predicate Indicator of event at the top of Current Intention's event stack: ";
     private final Color greenColour = new Color(25,84,40);
+    private final Color redColour = new Color(112,8,8);
+    private List<JPanel> planPanels;
+    private List<JLabel> planLabels;
 
     private boolean[] isMap = {
             false,
@@ -40,6 +45,8 @@ public class PlansViewer extends JPanel {
         this.breakpointController = breakpointController;
         planLibraryFileURL = JavaBreakpointListener.getPlanLibraryFileURL();
         planLibraryLineNum = JavaBreakpointListener.getPlanLibraryLineNum();
+        planPanels = new ArrayList<>();
+        planLabels = new ArrayList<>();
 
         setLayout(new GridBagLayout());
 
@@ -48,8 +55,11 @@ public class PlansViewer extends JPanel {
         makeLabels();
     }
 
+    //Called in gwentoolwindow when starttools is pressed
+    //Should reset the UI so you can run the program again
     public void setItemsEnabled(boolean enabled){
         skipButton.setEnabled(enabled);
+
     }
 
     //Checkbox that toggles whether or not there is a breakpoint in PlanLibrary.java
@@ -101,7 +111,10 @@ public class PlansViewer extends JPanel {
         piValueLabel = new JLabel("");
         greenPanel.add(piValueLabel);
 
-        addComponent(this, greenPanel, 1,2,1,1);
+        addComponent(this, greenPanel, 0,3,1,1);
+
+        JLabel applicablePlansLabel = new JLabel("Plans Applicable / Inapplicable:");
+        addComponent(this, applicablePlansLabel, 0, 4, 1, 1);
     }
 
     //Add component to grid bag layout.
@@ -173,6 +186,7 @@ public class PlansViewer extends JPanel {
                 //It's the predicate indicator of
                 //The event at the top of
                 //Current intention's event stack
+                currentPi = returnArray[i][0];
                 piValueLabel.setText(returnArray[i][0]);
             }
 
@@ -182,8 +196,69 @@ public class PlansViewer extends JPanel {
     //Called from DebugTreeUtils
     //Should only be one node returned (just with its children)
     public void receiveMapInfo(List<List<List<String>>> mapNodeChildren, List<String> labelStringsFound){
+        List<List<String>> listOfPlanMaps = mapNodeChildren.get(0);
+        int numOfPlans = listOfPlanMaps.size();
+        makeAllPanelsVisible();
+        checkMakeMorePanels(numOfPlans);
+        checkDisablePanels(numOfPlans);
+        for(int i=0; i<listOfPlanMaps.size(); i++){
+            //Predicate indicator of plan - must match current intention top event predicate indicator
+            List<String> planMap = listOfPlanMaps.get(i);
+            String planPi = planMap.get(0);
+            String plan = planMap.get(1);
+            processPlanPIs(planPi, plan, i);
+        }
+
 
         skipButton.setEnabled(true);
+    }
+
+    //When doing checkDisablePanels
+    //Some panels will become invisible
+    //This just makes them all visible before they're processed
+    private void makeAllPanelsVisible(){
+        for(int i=0; i<planPanels.size(); i++){
+            planPanels.get(i).setVisible(true);
+        }
+    }
+
+    //Each plan is contained in a panel
+    //When there are more plans than panels
+    //Will make more panels and add them to list of panels
+    private void checkMakeMorePanels(int numOfPlans){
+        if(numOfPlans > planPanels.size()){
+            for(int i=planPanels.size(); i<numOfPlans; i++){
+                JPanel panel = new JPanel();
+                JLabel label = new JLabel();
+                panel.add(label);
+                planPanels.add(panel);
+                planLabels.add(label);
+                addComponent(this, panel, 0, 5 + planPanels.size()-1, 2, 1);
+            }
+        }
+    }
+
+    //Each plan contained in a panel
+    //When there are fewer plans than panels
+    private void checkDisablePanels(int numOfPlans){
+        if(numOfPlans < planPanels.size()){
+            for(int i=numOfPlans; i<planPanels.size(); i++){
+                planPanels.get(i).setVisible(false);
+            }
+        }
+    }
+
+    private void processPlanPIs(String planPi, String plan, int i){
+        JPanel panel = planPanels.get(i);
+        //Colour the background green if plan is applicable. Red if not.
+        if(currentPi.equals(planPi)){
+            panel.setBackground(greenColour);
+        }else{
+            panel.setBackground(redColour);
+        }
+        //Get panel's corresponding label and set text to plan
+        JLabel planLabel = planLabels.get(i);
+        planLabel.setText(plan);
     }
 
 }
