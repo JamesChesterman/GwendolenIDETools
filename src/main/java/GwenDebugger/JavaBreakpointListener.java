@@ -110,13 +110,16 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         if(position != null){
             VirtualFile file = position.getFile();
             String fileURL = file.getPresentableUrl();
-            if(fileURL.equals(ailAgentFileURL)){
+            int fileLineNum = position.getLine();
+            if(fileURL.equals(ailAgentFileURL) && fileLineNum == ailAgentLineNum){
                 fileNum = 1;
-            }else if(fileURL.equals(planLibraryFileURL)){
+            }else if(fileURL.equals(planLibraryFileURL) && fileLineNum == planLibraryLineNum){
                 fileNum = 2;
             }
         }
-        updateDebugInfo(fileNum);
+        if(fileNum == 1 || fileNum == 2){
+            updateDebugInfo(fileNum);
+        }
     }
 
 
