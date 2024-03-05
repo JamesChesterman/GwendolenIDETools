@@ -41,6 +41,7 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     private static String planLibraryFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\syntax\\PlanLibrary.java";
     private static int planLibraryLineNum = 174;
     private boolean planMode;
+    private static int TIMETOGETTREE = 100;
 
     public JavaBreakpointListener(XDebugSession debugSession, GwenToolWindowContent gwenToolWindow, PlansViewer plansViewer){
         super();
@@ -165,7 +166,6 @@ public class JavaBreakpointListener implements XDebugSessionListener {
             RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
             JComponent component = runContentDescriptor.getComponent();
             XDebuggerTree tree = getDebugTree(component);
-
             if(tree == null){
                 //Start wait again and see if the tree has loaded yet.
                 sendDebugTreeGwenToolWindow();
@@ -173,9 +173,12 @@ public class JavaBreakpointListener implements XDebugSessionListener {
                 //Pass the new tree to right place
                 gwenToolWindow.updateDebugTreeValues(tree, false, false);
             }
-        }, 100, TimeUnit.MILLISECONDS);
+        }, TIMETOGETTREE, TimeUnit.MILLISECONDS);
         executorService.shutdown();
+
     }
+
+
 
 
     //Tries to get the debug tree
@@ -196,8 +199,10 @@ public class JavaBreakpointListener implements XDebugSessionListener {
                 //Pass the new tree to right place
                 plansViewer.updateDebugTreeValues(tree, false);
             }
-        }, 100, TimeUnit.MILLISECONDS);
+        }, TIMETOGETTREE, TimeUnit.MILLISECONDS);
         executorService.shutdown();
+
     }
+
 
 }
