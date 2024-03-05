@@ -17,6 +17,7 @@ import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.frame.XDebuggerFramesList;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeListener;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
@@ -41,7 +42,7 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     private static String planLibraryFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\syntax\\PlanLibrary.java";
     private static int planLibraryLineNum = 174;
     private boolean planMode;
-    private static int TIMETOGETTREE = 50;
+    private static int TIMETOGETTREE = 100;
 
     public JavaBreakpointListener(XDebugSession debugSession, GwenToolWindowContent gwenToolWindow, PlansViewer plansViewer){
         super();
@@ -169,8 +170,8 @@ public class JavaBreakpointListener implements XDebugSessionListener {
             RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
             JComponent component = runContentDescriptor.getComponent();
             XDebuggerTree tree = getDebugTree(component);
-            boolean correctTree = checkCorrectTree(tree, ailAgentFileURL, ailAgentLineNum);
-            if(!correctTree){
+
+            if(tree == null){
                 //Start wait again and see if the tree has loaded yet.
                 sendDebugTreeGwenToolWindow();
             }else{
@@ -195,8 +196,8 @@ public class JavaBreakpointListener implements XDebugSessionListener {
             RunContentDescriptor runContentDescriptor = debugSession.getRunContentDescriptor();
             JComponent component = runContentDescriptor.getComponent();
             XDebuggerTree tree = getDebugTree(component);
-            boolean correctTree = checkCorrectTree(tree, planLibraryFileURL, planLibraryLineNum);
-            if(!correctTree){
+
+            if(tree == null){
                 //Start wait again and see if the tree has loaded yet.
                 sendDebugTreePlansViewer();
             }else{
@@ -206,24 +207,6 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         }, TIMETOGETTREE, TimeUnit.MILLISECONDS);
         executorService.shutdown();
 
-    }
-
-    //Check the tree obtained has the correct source position
-    //Because the tree you've obtained might not have changed since the last time the program stopped
-    private boolean checkCorrectTree(XDebuggerTree tree, String fileURL, int lineNum){
-        XSourcePosition position = tree.getSourcePosition();
-        if(position != null){
-            VirtualFile file = position.getFile();
-            String treeFileURL = file.getPresentableUrl();
-            int treeLineNum = position.getLine();
-            if(treeFileURL.equals(fileURL) && treeLineNum == lineNum){
-                return true;
-            }else{
-                return false;
-            }
-        }else{
-            return false;
-        }
     }
 
 
