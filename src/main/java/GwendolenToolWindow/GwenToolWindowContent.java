@@ -332,7 +332,8 @@ public class GwenToolWindowContent {
 
         JBScrollPane scrollPanePlansViewer = new JBScrollPane(plansViewer);
         scrollPanePlansViewer.setPreferredSize(new Dimension(200, 300));
-        tabbedPane.addTab("BGIViewer", scrollPaneBGIViewer);
+        //Anywhere that says 'BGIViewer' means the Agent Inspection tab
+        tabbedPane.addTab("Agent Inspection", scrollPaneBGIViewer);
         tabbedPane.addTab("Plans Viewer", scrollPanePlansViewer);
         tabbedPane.addTab("Breakpoints", scrollPaneBreakpoints);
         tabbedPane.addTab("Skip Controls", skipControls);
