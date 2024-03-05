@@ -152,7 +152,7 @@ public class PlansViewer extends JPanel {
 
     //Similar to BGIViewer code, sets up info to send to DebugTreeUtils
     private void sendInfoGet(XDebuggerTree tree){
-        //TODO set anything to loading here
+        setLabelsLoading();
 
         //relPlans key has the predicate indicator, value has the whole plan
         String[][] findArray = {
@@ -175,6 +175,14 @@ public class PlansViewer extends JPanel {
 
         DebugTreeUtils.setPlansViewer(this);
         DebugTreeUtils.findInTree(tree.getRoot(), findArray, allowChildren, isMap, labelStrings);
+    }
+
+    //Set all labels (for values) to 'Loading...' whilst their values are being retrieved from the debug tree
+    private void setLabelsLoading(){
+        piValueLabel.setText("Loading...");
+        for(int i=0; i<planLabels.size(); i++){
+            planLabels.get(i).setText("Loading...");
+        }
     }
 
     //Called from DebugTreeUtils with the information requested by the sendInfoGet method
