@@ -51,6 +51,13 @@
             implementationClass="Language.GwendolenSyntaxHighlighterFactory"/>
         <colorSettingsPage
             implementation="Language.GwendolenColourSettings"/>
+        <applicationService
+            serviceImplementation="Settings.GwenSettingsState"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="Settings.GwenSettingsConfigurable"
+            id="Settings.GwenSettingsConfigurable"
+            displayName="Gwendolen Plugin Settings"/>
     </extensions>
 
 
