@@ -17,6 +17,7 @@ public class GwenSettingsComponent {
     private final JBTextField ailAgentLineNumField = new JBTextField();
     private final JBTextField planLibraryFilePathField = new JBTextField();
     private final JBTextField planLibraryLineNumField = new JBTextField();
+    private JBLabel warningLabel = new JBLabel("");
 
     public GwenSettingsComponent(){
          mainPanel = FormBuilder.createFormBuilder()
@@ -24,6 +25,7 @@ public class GwenSettingsComponent {
                  .addLabeledComponent(new JBLabel("AILAgent.java line number for: 'rule.apply(this);'"), ailAgentLineNumField, 1, false)
                  .addLabeledComponent(new JBLabel("PlanLibrary.java file path: "), planLibraryFilePathField, 1, false)
                  .addLabeledComponent(new JBLabel("PlanLibrary.java line number for: 'PlanSet l = relPlans.get(pi);'"), planLibraryLineNumField, 1, false)
+                 .addComponent(warningLabel, 0)
                  .addComponentFillVertically(new JPanel(), 0)
                  .getPanel();
     }
@@ -69,6 +71,11 @@ public class GwenSettingsComponent {
 
     public void setPlanLibraryLineNumField(@NotNull String newText){
         planLibraryLineNumField.setText(newText);
+    }
+
+    //Set value in warning label
+    public void setWarningLabel(String warningText){
+        warningLabel.setText(warningText);
     }
 
 

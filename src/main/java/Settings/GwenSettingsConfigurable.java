@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
 
 //Methods in here are called by IntelliJ
 //Then this interacts with the GwenSettingsComponent and GwenSettingsState
@@ -48,11 +49,18 @@ public class GwenSettingsConfigurable implements Configurable {
     @Override
     public void apply(){
         GwenSettingsState gwenSettings = GwenSettingsState.getInstance();
-        gwenSettings.ailAgentFilePath = gwenSettingsComponent.getAilAgentFilePath();
+        String ailAgentFilePath = gwenSettingsComponent.getAilAgentFilePath();
+        if(isValidFile(ailAgentFilePath)){
+            gwenSettings.ailAgentFilePath = ailAgentFilePath;
+        }
         //Need to subtract 1 from the line number the user inputs
         //Because in the text editor, lines start at 1. In code, the lines start at 0.
         gwenSettings.ailAgentLineNum = String.valueOf(Integer.parseInt(gwenSettingsComponent.getAilAgentLineNum()) - 1);
-        gwenSettings.planLibraryFilePath = gwenSettingsComponent.getPlanLibraryFilePath();
+
+        String planLibraryFilePath = gwenSettingsComponent.getPlanLibraryFilePath();
+        if(isValidFile(planLibraryFilePath)){
+            gwenSettings.planLibraryFilePath = gwenSettingsComponent.getPlanLibraryFilePath();
+        }
         gwenSettings.planLibraryLineNum = String.valueOf(Integer.parseInt(gwenSettingsComponent.getPlanLibraryLineNum()) - 1);
     }
 
@@ -73,6 +81,21 @@ public class GwenSettingsConfigurable implements Configurable {
         }
         if(gwenSettings.getPlanLibraryLineNum() != null){
             gwenSettingsComponent.setPlanLibraryLineNumField(String.valueOf(Integer.parseInt(gwenSettings.getPlanLibraryLineNum()) + 1));
+        }
+    }
+
+    private boolean isValidFile(String filePath){
+        File file = new File(filePath);
+        if(!file.isFile() || !file.exists()) {
+            //Warning message set to 'File doesn't exist'
+            gwenSettingsComponent.setWarningLabel("File doesn't exist at: " + filePath);
+            return false;
+        }else if(!filePath.endsWith(".java")){
+            //Warning message set to 'File must be a .java file'
+            gwenSettingsComponent.setWarningLabel("File must be a .java file at: " + filePath);
+            return false;
+        }else{
+            return true;
         }
     }
 
