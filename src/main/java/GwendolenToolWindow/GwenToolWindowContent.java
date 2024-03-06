@@ -2,6 +2,8 @@ package GwendolenToolWindow;
 
 import GwenDebugger.BreakpointController;
 import GwenDebugger.JavaBreakpointListener;
+import Settings.GwenSettingsComponent;
+import Settings.GwenSettingsState;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -55,7 +57,6 @@ public class GwenToolWindowContent {
     private int stepToSkipTo;
     private PlansViewer plansViewer;
     private boolean planMode;
-    private String ailAgentFileURL;
     private int ailAgentLineNum;
 
     public GwenToolWindowContent(Project project, ToolWindow toolWindow){
@@ -64,7 +65,6 @@ public class GwenToolWindowContent {
         stepToSkipTo = 0;
         continueMode = false;
         planMode = false;
-        ailAgentFileURL = JavaBreakpointListener.getAilAgentFileURL();
         ailAgentLineNum = JavaBreakpointListener.getAilAgentLineNum();
 
         breakpointController = new BreakpointController(project);
@@ -184,13 +184,13 @@ public class GwenToolWindowContent {
     private void makeSteppingCheckbox(){
         //Stepping checkbox
         steppingCheckBox = new JCheckBox("Stepping Mode Enabled");
-        isStepping = breakpointController.checkBreakpoint(ailAgentFileURL, ailAgentLineNum);
+        isStepping = breakpointController.checkBreakpoint(GwenSettingsState.getInstance().ailAgentFilePath, ailAgentLineNum);
         steppingCheckBox.setSelected(isStepping);
         steppingCheckBox.addItemListener(new ItemListener(){
             @Override
             public void itemStateChanged(ItemEvent e){
                 isStepping = !isStepping;
-                breakpointController.toggleBreakpoint(ailAgentFileURL, ailAgentLineNum);
+                breakpointController.toggleBreakpoint(GwenSettingsState.getInstance().ailAgentFilePath, ailAgentLineNum);
             }
         });
     }

@@ -9,6 +9,7 @@ import javax.swing.*;
 
 //Methods in here are called by IntelliJ
 //Then this interacts with the GwenSettingsComponent and GwenSettingsState
+//Like a Controller in MVC
 public class GwenSettingsConfigurable implements Configurable {
     private GwenSettingsComponent gwenSettingsComponent;
 

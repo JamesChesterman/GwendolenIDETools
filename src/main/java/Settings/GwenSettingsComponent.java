@@ -9,6 +9,7 @@ import javax.swing.*;
 
 
 //Menu for the settings to be entered
+//Like a view in MVC
 public class GwenSettingsComponent {
     //Have a panel here rather than inheriting JPanel so you can set FormBuilder to the panel
     private final JPanel mainPanel;

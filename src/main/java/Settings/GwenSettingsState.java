@@ -13,12 +13,13 @@ import org.jetbrains.annotations.Nullable;
         name = "Settings.GwenSettingsState",
         storages = @Storage("GwenPluginSettings.xml")
 )
+//Like a Model in MVC
 public class GwenSettingsState implements PersistentStateComponent<GwenSettingsState> {
     //Fields need to be public so PersistentStateComponent will serialize them
     public String ailAgentFilePath;
 
     //Allos GwenSettingsConfigurable to get the right class easily
-    static GwenSettingsState getInstance(){
+    public static GwenSettingsState getInstance(){
         return ApplicationManager.getApplication().getService(GwenSettingsState.class);
     }
 
