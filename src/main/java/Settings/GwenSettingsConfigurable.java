@@ -36,7 +36,10 @@ public class GwenSettingsConfigurable implements Configurable {
         GwenSettingsState gwenSettings = GwenSettingsState.getInstance();
         //When the file path stored doesn't match the file path entered in the form
         //Then it has been modified
-        boolean hasBeenModified = !gwenSettingsComponent.getAilAgentFilePath().equals(gwenSettings.ailAgentFilePath);
+        boolean hasBeenModified = !gwenSettingsComponent.getAilAgentFilePath().equals(gwenSettings.ailAgentFilePath)
+                | !gwenSettingsComponent.getAilAgentLineNum().equals(gwenSettings.getAilAgentLineNum())
+                | !gwenSettingsComponent.getPlanLibraryFilePath().equals(gwenSettings.planLibraryFilePath)
+                | !gwenSettingsComponent.getPlanLibraryLineNum().equals(gwenSettings.planLibraryLineNum);
         return hasBeenModified;
     }
 
@@ -46,9 +49,11 @@ public class GwenSettingsConfigurable implements Configurable {
     public void apply(){
         GwenSettingsState gwenSettings = GwenSettingsState.getInstance();
         gwenSettings.ailAgentFilePath = gwenSettingsComponent.getAilAgentFilePath();
-        gwenSettings.ailAgentLineNum = gwenSettingsComponent.getAilAgentLineNum();
+        //Need to subtract 1 from the line number the user inputs
+        //Because in the text editor, lines start at 1. In code, the lines start at 0.
+        gwenSettings.ailAgentLineNum = String.valueOf(Integer.parseInt(gwenSettingsComponent.getAilAgentLineNum()) - 1);
         gwenSettings.planLibraryFilePath = gwenSettingsComponent.getPlanLibraryFilePath();
-        gwenSettings.planLibraryLineNum = gwenSettingsComponent.getPlanLibraryLineNum();
+        gwenSettings.planLibraryLineNum = String.valueOf(Integer.parseInt(gwenSettingsComponent.getPlanLibraryLineNum()) - 1);
     }
 
     //Sets the text fields to what is stored in the settings
@@ -59,13 +64,15 @@ public class GwenSettingsConfigurable implements Configurable {
             gwenSettingsComponent.setAilAgentFilePath(gwenSettings.ailAgentFilePath);
         }
         if(gwenSettings.getAilAgentLineNum() != null){
-            gwenSettingsComponent.setAilAgentLineNumField(gwenSettings.getAilAgentLineNum());
+            //Need to add 1 to line numbers obtained from the state
+            //So the user will see the line number corresponding to the one in their text editor
+            gwenSettingsComponent.setAilAgentLineNumField(String.valueOf(Integer.parseInt(gwenSettings.getAilAgentLineNum()) + 1));
         }
         if(gwenSettings.planLibraryFilePath != null){
             gwenSettingsComponent.setPlanLibraryFilePathField(gwenSettings.planLibraryFilePath);
         }
         if(gwenSettings.getPlanLibraryLineNum() != null){
-            gwenSettingsComponent.setPlanLibraryLineNumField(gwenSettings.getPlanLibraryLineNum());
+            gwenSettingsComponent.setPlanLibraryLineNumField(String.valueOf(Integer.parseInt(gwenSettings.getPlanLibraryLineNum()) + 1));
         }
     }
 

@@ -53,9 +53,6 @@ public class JavaBreakpointListener implements XDebugSessionListener {
         this.plansViewer = plansViewer;
         skipMode = false;
         planMode = false;
-
-        //gwenSettingsState = GwenSettingsState.getInstance();
-        //System.out.println(gwenSettingsState.ailAgentFilePath);
     }
 
     public static String getAilAgentFileURL(){

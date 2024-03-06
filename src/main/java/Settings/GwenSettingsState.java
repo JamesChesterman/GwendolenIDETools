@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 public class GwenSettingsState implements PersistentStateComponent<GwenSettingsState> {
     //Fields need to be public so PersistentStateComponent will serialize them
     public String ailAgentFilePath;
+    //Line numbers are strings because this way their initial value will be null
+    //Then if the string is null, you can set their real value to -1
+    //If they were integers, their initial value would be 0. Which may well be a real value entered by the user
     public String ailAgentLineNum;
     public String planLibraryFilePath;
     public String planLibraryLineNum;
