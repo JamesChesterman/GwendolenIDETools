@@ -63,7 +63,7 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     }
 
     public static int getAilAgentLineNum(){
-        String lineNumStr = GwenSettingsState.getInstance().ailAgentLineNum;
+        String lineNumStr = GwenSettingsState.getInstance().getAilAgentLineNum();
         if(lineNumStr != null){
             return Integer.parseInt(lineNumStr);
         }else{
@@ -76,7 +76,7 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     }
 
     public static int getPlanLibraryLineNum(){
-        String lineNumStr = GwenSettingsState.getInstance().planLibraryLineNum;
+        String lineNumStr = GwenSettingsState.getInstance().getPlanLibraryLineNum();
         if(lineNumStr != null){
             return Integer.parseInt(lineNumStr);
         }else{

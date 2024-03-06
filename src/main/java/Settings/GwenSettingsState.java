@@ -21,9 +21,27 @@ public class GwenSettingsState implements PersistentStateComponent<GwenSettingsS
     public String planLibraryFilePath;
     public String planLibraryLineNum;
 
-    //Allos GwenSettingsConfigurable to get the right class easily
+    //Allows GwenSettingsConfigurable to get the right class easily
     public static GwenSettingsState getInstance(){
         return ApplicationManager.getApplication().getService(GwenSettingsState.class);
+    }
+
+    public String getAilAgentLineNum(){
+        //Default value if no changes made to line num is 2034
+        if(ailAgentLineNum == null){
+            return String.valueOf(2034);
+        }else{
+            return ailAgentLineNum;
+        }
+    }
+
+    public String getPlanLibraryLineNum(){
+        //Default value if no changes made to line num is 174
+        if(planLibraryLineNum == null){
+            return String.valueOf(174);
+        }else{
+            return planLibraryLineNum;
+        }
     }
 
     @Nullable

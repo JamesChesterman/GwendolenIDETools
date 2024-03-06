@@ -58,14 +58,14 @@ public class GwenSettingsConfigurable implements Configurable {
         if(gwenSettings.ailAgentFilePath != null){
             gwenSettingsComponent.setAilAgentFilePath(gwenSettings.ailAgentFilePath);
         }
-        if(gwenSettings.ailAgentLineNum != null){
-            gwenSettingsComponent.setAilAgentLineNumField(gwenSettings.ailAgentLineNum);
+        if(gwenSettings.getAilAgentLineNum() != null){
+            gwenSettingsComponent.setAilAgentLineNumField(gwenSettings.getAilAgentLineNum());
         }
         if(gwenSettings.planLibraryFilePath != null){
             gwenSettingsComponent.setPlanLibraryFilePathField(gwenSettings.planLibraryFilePath);
         }
-        if(gwenSettings.planLibraryLineNum != null){
-            gwenSettingsComponent.setPlanLibraryLineNumField(gwenSettings.planLibraryLineNum);
+        if(gwenSettings.getPlanLibraryLineNum() != null){
+            gwenSettingsComponent.setPlanLibraryLineNumField(gwenSettings.getPlanLibraryLineNum());
         }
     }
 

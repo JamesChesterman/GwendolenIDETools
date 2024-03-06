@@ -188,7 +188,7 @@ public class GwenToolWindowContent {
             @Override
             public void itemStateChanged(ItemEvent e){
                 isStepping = !isStepping;
-                breakpointController.toggleBreakpoint(JavaBreakpointListener.getPlanLibraryFileURL(), JavaBreakpointListener.getPlanLibraryLineNum());
+                breakpointController.toggleBreakpoint(JavaBreakpointListener.getAilAgentFileURL(), JavaBreakpointListener.getAilAgentLineNum());
             }
         });
     }
