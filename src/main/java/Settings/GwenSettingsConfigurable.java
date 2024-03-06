@@ -55,10 +55,18 @@ public class GwenSettingsConfigurable implements Configurable {
     @Override
     public void reset(){
         GwenSettingsState gwenSettings = GwenSettingsState.getInstance();
-        gwenSettingsComponent.setAilAgentFilePath(gwenSettings.ailAgentFilePath);
-        gwenSettingsComponent.setAilAgentLineNumField(gwenSettings.ailAgentLineNum);
-        gwenSettingsComponent.setPlanLibraryFilePathField(gwenSettings.planLibraryFilePath);
-        gwenSettingsComponent.setPlanLibraryLineNumField(gwenSettings.planLibraryLineNum);
+        if(gwenSettings.ailAgentFilePath != null){
+            gwenSettingsComponent.setAilAgentFilePath(gwenSettings.ailAgentFilePath);
+        }
+        if(gwenSettings.ailAgentLineNum != null){
+            gwenSettingsComponent.setAilAgentLineNumField(gwenSettings.ailAgentLineNum);
+        }
+        if(gwenSettings.planLibraryFilePath != null){
+            gwenSettingsComponent.setPlanLibraryFilePathField(gwenSettings.planLibraryFilePath);
+        }
+        if(gwenSettings.planLibraryLineNum != null){
+            gwenSettingsComponent.setPlanLibraryLineNumField(gwenSettings.planLibraryLineNum);
+        }
     }
 
     @Override

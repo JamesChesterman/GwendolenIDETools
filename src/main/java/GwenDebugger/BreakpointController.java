@@ -29,34 +29,40 @@ public class BreakpointController {
     GwenBreakpointProperties gwenBreakpointProperties;
 
     public void toggleBreakpoint(String fileURL, int lineNum){
-        Runnable runnable = () -> breakpointManager.addLineBreakpoint(
-                gwenLineBreakpointType,
-                fileURL,
-                lineNum,
-                gwenBreakpointProperties
-        );
+        if(fileURL != null && lineNum != -1){
+            Runnable runnable = () -> breakpointManager.addLineBreakpoint(
+                    gwenLineBreakpointType,
+                    fileURL,
+                    lineNum,
+                    gwenBreakpointProperties
+            );
 
-        WriteCommandAction.runWriteCommandAction(project, runnable);
+            WriteCommandAction.runWriteCommandAction(project, runnable);
 
-        //Toggle the breakpoint to active
-        virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(fileURL));
-        XDebuggerUtil.getInstance().toggleLineBreakpoint(project, virtualFile, lineNum);
+            //Toggle the breakpoint to active.
+            virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(fileURL));
+            XDebuggerUtil.getInstance().toggleLineBreakpoint(project, virtualFile, lineNum);
+        }
     }
 
     public boolean checkBreakpoint(String fileURL, int lineNum){
-        virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(fileURL));
+        if(fileURL != null && lineNum != -1) {
+            virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(fileURL));
 
-        XBreakpoint<?>[] breakpoints = breakpointManager.getAllBreakpoints();
-        for(XBreakpoint<?> breakpoint : breakpoints){
-            if(breakpoint.getSourcePosition() != null){
-                VirtualFile fileFound = breakpoint.getSourcePosition().getFile();
-                int line = breakpoint.getSourcePosition().getLine();
-                if(fileFound.equals(virtualFile) && line == lineNum){
-                    return true;
+            XBreakpoint<?>[] breakpoints = breakpointManager.getAllBreakpoints();
+            for(XBreakpoint<?> breakpoint : breakpoints){
+                if(breakpoint.getSourcePosition() != null){
+                    VirtualFile fileFound = breakpoint.getSourcePosition().getFile();
+                    int line = breakpoint.getSourcePosition().getLine();
+                    if(fileFound.equals(virtualFile) && line == lineNum){
+                        return true;
+                    }
                 }
             }
+            return false;
+        }else{
+            return false;
         }
-        return false;
     }
 
     public void goToNextCycle(XDebugSession debugSession){

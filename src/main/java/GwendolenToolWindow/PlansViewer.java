@@ -21,8 +21,6 @@ public class PlansViewer extends JPanel {
     private BreakpointController breakpointController;
     private GwenToolWindowContent gwenToolWindow;
     private JButton skipButton;
-    private String planLibraryFileURL;
-    private int planLibraryLineNum;
     private JLabel explanationLabel;
     private String currentPi = "";
     private JLabel piLabel;
@@ -43,8 +41,6 @@ public class PlansViewer extends JPanel {
         super();
         this.gwenToolWindow = gwenToolWindow;
         this.breakpointController = breakpointController;
-        planLibraryFileURL = JavaBreakpointListener.getPlanLibraryFileURL();
-        planLibraryLineNum = JavaBreakpointListener.getPlanLibraryLineNum();
         planPanels = new ArrayList<>();
         planLabels = new ArrayList<>();
 
@@ -69,14 +65,16 @@ public class PlansViewer extends JPanel {
     //This gives important information for plans
     private void makeBreakdownCheckbox(){
         planBreakdownCheckBox = new JCheckBox("Plan Breakdown Enabled");
-        breakpointEnabled = breakpointController.checkBreakpoint(planLibraryFileURL, planLibraryLineNum);
+        breakpointEnabled = breakpointController.checkBreakpoint(JavaBreakpointListener.getPlanLibraryFileURL(),
+                                                                JavaBreakpointListener.getPlanLibraryLineNum());
         planBreakdownCheckBox.setSelected(breakpointEnabled);
         planBreakdownCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 breakpointEnabled = !breakpointEnabled;
                 skipButton.setEnabled(breakpointEnabled);
-                breakpointController.toggleBreakpoint(planLibraryFileURL, planLibraryLineNum);
+                breakpointController.toggleBreakpoint(JavaBreakpointListener.getPlanLibraryFileURL(),
+                                                    JavaBreakpointListener.getPlanLibraryLineNum());
             }
         });
 

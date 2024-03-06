@@ -38,10 +38,10 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     PlansViewer plansViewer;
     private boolean skipMode;
     //private static String ailAgentFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\semantics\\AILAgent.java";
-    private static int ailAgentLineNum = 2034;
+    //private static int ailAgentLineNum = 2034;
 
-    private static String planLibraryFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\syntax\\PlanLibrary.java";
-    private static int planLibraryLineNum = 174;
+    //private static String planLibraryFileURL = "C:\\Users\\chest\\mcapl-mcapl2023\\src\\classes\\ail\\syntax\\PlanLibrary.java";
+    //private static int planLibraryLineNum = 174;
     private boolean planMode;
     private static int TIMETOGETTREE = 100;
     private static GwenSettingsState gwenSettingsState;
@@ -63,15 +63,25 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     }
 
     public static int getAilAgentLineNum(){
-        return ailAgentLineNum;
+        String lineNumStr = GwenSettingsState.getInstance().ailAgentLineNum;
+        if(lineNumStr != null){
+            return Integer.parseInt(lineNumStr);
+        }else{
+            return -1;
+        }
     }
 
     public static String getPlanLibraryFileURL(){
-        return planLibraryFileURL;
+        return GwenSettingsState.getInstance().planLibraryFilePath;
     }
 
     public static int getPlanLibraryLineNum(){
-        return planLibraryLineNum;
+        String lineNumStr = GwenSettingsState.getInstance().planLibraryLineNum;
+        if(lineNumStr != null){
+            return Integer.parseInt(lineNumStr);
+        }else{
+            return -1;
+        }
     }
 
     public void setSkipMode(boolean skipMode) {
@@ -117,9 +127,11 @@ public class JavaBreakpointListener implements XDebugSessionListener {
             VirtualFile file = position.getFile();
             String fileURL = file.getPresentableUrl();
             int fileLineNum = position.getLine();
-            if(fileURL.equals(GwenSettingsState.getInstance().ailAgentFilePath) && fileLineNum == ailAgentLineNum){
+            //When no input is given for line numbers
+            //These cases will just be skipped over
+            if(fileURL.equals(getAilAgentFileURL()) && fileLineNum == getAilAgentLineNum()){
                 fileNum = 1;
-            }else if(fileURL.equals(planLibraryFileURL) && fileLineNum == planLibraryLineNum){
+            }else if(fileURL.equals(getPlanLibraryFileURL()) && fileLineNum == getPlanLibraryLineNum()){
                 fileNum = 2;
             }
         }

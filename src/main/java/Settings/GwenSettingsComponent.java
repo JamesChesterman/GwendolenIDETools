@@ -23,7 +23,7 @@ public class GwenSettingsComponent {
                 .addLabeledComponent(new JBLabel("AILAgent.java file path: "), ailAgentFilePathField, 1, false)
                  .addLabeledComponent(new JBLabel("AILAgent.java line number for: 'rule.apply(this);'"), ailAgentLineNumField, 1, false)
                  .addLabeledComponent(new JBLabel("PlanLibrary.java file path: "), planLibraryFilePathField, 1, false)
-                 .addLabeledComponent(new JBLabel("PlanLibrary.java line number for:"), planLibraryLineNumField, 1, false)
+                 .addLabeledComponent(new JBLabel("PlanLibrary.java line number for: 'PlanSet l = relPlans.get(pi);'"), planLibraryLineNumField, 1, false)
                  .addComponentFillVertically(new JPanel(), 0)
                  .getPanel();
     }
