@@ -46,6 +46,9 @@ public class GwenSettingsConfigurable implements Configurable {
     public void apply(){
         GwenSettingsState gwenSettings = GwenSettingsState.getInstance();
         gwenSettings.ailAgentFilePath = gwenSettingsComponent.getAilAgentFilePath();
+        gwenSettings.ailAgentLineNum = gwenSettingsComponent.getAilAgentLineNum();
+        gwenSettings.planLibraryFilePath = gwenSettingsComponent.getPlanLibraryFilePath();
+        gwenSettings.planLibraryLineNum = gwenSettingsComponent.getPlanLibraryLineNum();
     }
 
     //Sets the text fields to what is stored in the settings
@@ -53,6 +56,9 @@ public class GwenSettingsConfigurable implements Configurable {
     public void reset(){
         GwenSettingsState gwenSettings = GwenSettingsState.getInstance();
         gwenSettingsComponent.setAilAgentFilePath(gwenSettings.ailAgentFilePath);
+        gwenSettingsComponent.setAilAgentLineNumField(gwenSettings.ailAgentLineNum);
+        gwenSettingsComponent.setPlanLibraryFilePathField(gwenSettings.planLibraryFilePath);
+        gwenSettingsComponent.setPlanLibraryLineNumField(gwenSettings.planLibraryLineNum);
     }
 
     @Override

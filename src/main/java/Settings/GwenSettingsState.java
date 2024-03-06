@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 public class GwenSettingsState implements PersistentStateComponent<GwenSettingsState> {
     //Fields need to be public so PersistentStateComponent will serialize them
     public String ailAgentFilePath;
+    public String ailAgentLineNum;
+    public String planLibraryFilePath;
+    public String planLibraryLineNum;
 
     //Allos GwenSettingsConfigurable to get the right class easily
     public static GwenSettingsState getInstance(){
