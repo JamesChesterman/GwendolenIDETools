@@ -7,15 +7,22 @@ import Settings.GwenSettingsState;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.xdebugger.*;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.PanelUI;
+import javax.swing.plaf.SplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -67,7 +74,7 @@ public class GwenToolWindowContent {
 
         breakpointController = new BreakpointController(project);
         contentPanel.setLayout(new BorderLayout(0, 0));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         contentPanel.add(createControlsPanel(), BorderLayout.PAGE_START);
 
         isStartToolsEnabled();
@@ -119,6 +126,7 @@ public class GwenToolWindowContent {
         makeSlider(controlsPanel);
 
         addComponent(controlsPanel, tabbedPane, 0, 7, 2, 4);
+
         setComponentsEnabled(false);
         return controlsPanel;
     }
@@ -335,6 +343,7 @@ public class GwenToolWindowContent {
         tabbedPane.addTab("Plans Viewer", scrollPanePlansViewer);
         tabbedPane.addTab("Breakpoints", scrollPaneBreakpoints);
         tabbedPane.addTab("Skip Controls", skipControls);
+
     }
 
 
