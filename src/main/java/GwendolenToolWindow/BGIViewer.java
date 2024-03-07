@@ -112,6 +112,7 @@ public class BGIViewer extends JPanel {
             //Make an arrayList for each attribute
             listOfAttributes.add(new ArrayList<String>());
         }
+        agentComboBox.removeAllItems();
     }
 
     public String getCurrentAgent(){
