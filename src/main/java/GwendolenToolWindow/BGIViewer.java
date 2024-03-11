@@ -416,4 +416,31 @@ public class BGIViewer extends JPanel {
         listOfCurrentAgents.add("NONE");
         gwenToolWindowContent.cycleComplete();
     }
+
+    //Get the current attribute value for the attribute specified
+    public String getCurrentAttribute(String breakpointAttribute){
+        //listOfAttributes is list of lists. Each list is the values for one attribute
+        int attributeIndex = getIndex(labelStrings, breakpointAttribute);
+        List<String> attributeList = listOfAttributes.get(attributeIndex);
+        return attributeList.get(attributeList.size() -1);
+    }
+
+    //Get the agent's previous state
+    //Get the attribute specified in this state
+    public String getPreviousAttribute(String breakpointAgent, String breakpointAttribute){
+        if(listOfCurrentAgents.size() < 2){
+            return "";
+        }else{
+            //Start from -2 because you want to start from the second to last step
+            for(int i=listOfCurrentAgents.size()-2; i>=0; i--){
+                String agent = listOfCurrentAgents.get(i);
+                if(agent.equals(breakpointAgent)){
+                    int indexOfAttribute = getIndex(labelStrings, breakpointAttribute);
+                    return listOfAttributes.get(indexOfAttribute).get(i);
+                }
+            }
+            //If there are no other steps that have processed this agent
+            return "";
+        }
+    }
 }

@@ -431,6 +431,11 @@ public class GwenToolWindowContent {
                         continueMode = false;
                         breakpointListener.setSkipMode(false);
                     }
+                }else if(breakpointArray[1].equals("attribute")){
+                    if(checkAttributeBreakpoint(breakpointArray[0], breakpointArray[2])){
+                        continueMode = false;
+                        breakpointListener.setSkipMode(false);
+                    }
                 }
             }
 
@@ -451,6 +456,21 @@ public class GwenToolWindowContent {
     private boolean checkNumOfStepsBreakpoint(String breakpointAgent, String breakpointNumOfSteps){
         if(bgiViewer.getCurrentAgent().equals(breakpointAgent)){
             if(bgiViewer.getCurrentNumOfSteps().equals(breakpointNumOfSteps)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Get current agent's list of attributes
+    //Get current agent's list of attributes for the last time this agent was updated
+    //Compare the two for the breakpointAttribute specified
+    // If they aren't equal, then stop here
+    private boolean checkAttributeBreakpoint(String breakpointAgent, String breakpointAttribute){
+        if(bgiViewer.getCurrentAgent().equals(breakpointAgent)){
+            String currentAttribute = bgiViewer.getCurrentAttribute(breakpointAttribute);
+            String previousAttribute = bgiViewer.getPreviousAttribute(breakpointAgent, breakpointAttribute);
+            if(!currentAttribute.equals(previousAttribute)){
                 return true;
             }
         }
