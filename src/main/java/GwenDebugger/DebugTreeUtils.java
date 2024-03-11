@@ -228,7 +228,7 @@ public class DebugTreeUtils {
 
             String[] returnedItem = null;
             if(allowChildren[i]){
-                if(node.isLeaf()){
+                if(node.isLeaf() && !node.getText().toString().contains("Collecting data...")){
                     //When the node has no children to get (so size = 0)
                     returnedItem = new String[]{"No items"};
                     returnArray[i] = returnedItem;
