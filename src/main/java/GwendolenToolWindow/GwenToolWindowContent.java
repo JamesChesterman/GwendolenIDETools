@@ -426,12 +426,12 @@ public class GwenToolWindowContent {
             for(int i=0; i<breakpointsList.size(); i++){
                 String[] breakpointArray = breakpointsList.get(i);
                 //Index 1 in every array indicates the attribute we're looking for (e.g. numOfSteps)
-                if(breakpointArray[1].equals("numOfSteps")){
+                if(breakpointArray[1].equals("numOfSteps") && !breakpointListener.getSkipMode()){
                     if(checkNumOfStepsBreakpoint(breakpointArray[0], breakpointArray[2])){
                         continueMode = false;
                         breakpointListener.setSkipMode(false);
                     }
-                }else if(breakpointArray[1].equals("attribute")){
+                }else if(breakpointArray[1].equals("attribute") && !breakpointListener.getSkipMode()){
                     if(checkAttributeBreakpoint(breakpointArray[0], breakpointArray[2])){
                         continueMode = false;
                         breakpointListener.setSkipMode(false);

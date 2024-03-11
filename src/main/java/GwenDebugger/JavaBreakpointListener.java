@@ -84,6 +84,9 @@ public class JavaBreakpointListener implements XDebugSessionListener {
     public void setSkipMode(boolean skipMode) {
         this.skipMode = skipMode;
     }
+    public boolean getSkipMode(){
+        return skipMode;
+    }
     public void setPlanMode(boolean planMode){
         this.planMode = planMode;
     }
