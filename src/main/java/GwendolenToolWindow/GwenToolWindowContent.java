@@ -171,6 +171,9 @@ public class GwenToolWindowContent {
         if(debugSession != null){
             breakpointListener = new JavaBreakpointListener(debugSession, this, plansViewer);
             debugSession.addSessionListener(breakpointListener);
+            breakpointListener.setSkipMode(false);
+            continueMode = false;
+            planMode = false;
             //This will allow BGIViewer to have the first cycle recorded.
             breakpointListener.updateDebugInfo(1);
             setComponentsEnabled(true);
