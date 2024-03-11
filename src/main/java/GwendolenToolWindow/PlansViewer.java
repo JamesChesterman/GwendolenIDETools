@@ -205,6 +205,7 @@ public class PlansViewer extends JPanel {
     //Called from DebugTreeUtils
     //Should only be one node returned (just with its children)
     public void receiveMapInfo(List<List<List<String>>> mapNodeChildren, List<String> labelStringsFound){
+        skipButton.setEnabled(true);
         List<List<String>> listOfPlanMaps = mapNodeChildren.get(0);
         int numOfPlans = listOfPlanMaps.size();
         makeAllPanelsVisible();
@@ -217,9 +218,6 @@ public class PlansViewer extends JPanel {
             String plan = planMap.get(1);
             processPlanPIs(planPi, plan, i);
         }
-
-
-        skipButton.setEnabled(true);
     }
 
     //When doing checkDisablePanels
