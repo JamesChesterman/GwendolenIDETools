@@ -158,6 +158,27 @@ public class BreakpointsViewer extends JPanel {
     private void makeInsertAttributeBreakpointButton(){
         JButton insertButton = new JButton("Insert Attribute Breakpoint");
         addComponent(this, insertButton, 0, 10, 1, 1);
+        insertButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String agent = (String) agentComboBox1.getSelectedItem();
+                String attribute = (String) attributeComboBox.getSelectedItem();
+                String attributeString = "Has " + attribute + " updated";
+                Object[] row = new Object[]{agent, attributeString};
+                model.addRow(row);
+                //Makes the table show the most recently added row
+                table.scrollRectToVisible(table.getCellRect(table.getRowCount()-1, 0, true));
+
+                //Want to add the string with colon at the end so it matches the labels in BGIViewer
+                for(int i=0; i<dropdownStrings.size(); i++){
+                    if(attribute.equals(dropdownStrings.get(i))){
+                        breakpointsList.add(new String[]{agent, "attribute", labelStrings[i]});
+                        breakpointsList.add(new String[]{agent, "attribute", labelStrings[i]});
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     //Add component to grid bag layout.
