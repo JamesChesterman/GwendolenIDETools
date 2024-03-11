@@ -219,4 +219,20 @@ public class BreakpointsViewer extends JPanel {
             attributesAdded = true;
         }
     }
+
+    //Set booleans to false and reset table etc
+    //Otherwise the agent from the previous program executed will still be there
+    public void resetUI(){
+        agentsAdded = false;
+        attributesAdded = false;
+        breakpointsList = new ArrayList<>();
+        dropdownStrings = new ArrayList<>();
+
+        agentComboBox.removeAllItems();
+        agentComboBox1.removeAllItems();
+        attributeComboBox.removeAllItems();
+
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+    }
 }

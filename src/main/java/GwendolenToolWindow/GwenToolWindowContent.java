@@ -187,6 +187,8 @@ public class GwenToolWindowContent {
             bgiViewer.initVars();
             //Restart plansViewer so you can run the program again
             plansViewer.setItemsEnabled(true);
+            //Restart breakpoints viewer
+            breakpointsViewer.resetUI();
         }
     }
 
