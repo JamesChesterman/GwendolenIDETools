@@ -391,6 +391,7 @@ public class BGIViewer extends JPanel {
             agentsAdded = true;
             numOfStepsArray = new int[agents.length];
             breakpointsViewer.addAgents(agents);
+            breakpointsViewer.addAttributes(labelStrings);
         }
     }
 

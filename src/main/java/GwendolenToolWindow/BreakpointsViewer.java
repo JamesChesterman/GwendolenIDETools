@@ -20,16 +20,23 @@ public class BreakpointsViewer extends JPanel {
     JBScrollPane tableScrollPane;
     JButton deleteButton;
     ComboBox<String> agentComboBox;
+    ComboBox<String> agentComboBox1;
+    ComboBox<String> attributeComboBox;
     JTextField numOfStepsTextField;
     JButton insertStepBreakpointButton;
     private boolean agentsAdded;
+    private boolean attributesAdded;
     List<String[]> breakpointsList;
+    String[] labelStrings;
+    List<String> dropdownStrings;
 
 
     public BreakpointsViewer(GwenToolWindowContent gwenToolWindowContent){
         super();
         agentsAdded = false;
+        attributesAdded = false;
         breakpointsList = new ArrayList<>();
+        dropdownStrings = new ArrayList<>();
 
         setLayout(new GridBagLayout());
 
@@ -37,6 +44,8 @@ public class BreakpointsViewer extends JPanel {
         makeDeleteButton();
 
         makeStepBreakpointUI();
+
+        makeAttributeBreakpointUI();
     }
 
     public List<String[]> getBreakpointsList(){
@@ -125,6 +134,32 @@ public class BreakpointsViewer extends JPanel {
         });
     }
 
+    private void makeAttributeBreakpointUI(){
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        addComponent(this, separator, 0, 7, 2, 1);
+
+        //Agent combobox
+        JLabel label = new JLabel("Breakpoint that activates when Agent:");
+        agentComboBox1 = new ComboBox<String>();
+        agentComboBox1.setSize(200, 10);
+        addComponent(this, label, 0, 8, 1, 1);
+        addComponent(this, agentComboBox1, 1, 8, 1, 1);
+
+        JLabel label1 = new JLabel("has the following attribute updated: ");
+        attributeComboBox = new ComboBox<String>();
+        attributeComboBox.setSize(200, 10);
+        addComponent(this, label1, 0, 9, 1, 1);
+        addComponent(this, attributeComboBox, 1, 9, 1, 1);
+
+        makeInsertAttributeBreakpointButton();
+
+    }
+
+    private void makeInsertAttributeBreakpointButton(){
+        JButton insertButton = new JButton("Insert Attribute Breakpoint");
+        addComponent(this, insertButton, 0, 10, 1, 1);
+    }
+
     //Add component to grid bag layout.
     private void addComponent(Container container, Component component, int column, int row, int width, int height) {
         GridBagConstraints constraints = new GridBagConstraints();
@@ -141,8 +176,26 @@ public class BreakpointsViewer extends JPanel {
         if(agents != null && !agentsAdded){
             for(int i=0; i<agents.length; i++){
                 agentComboBox.addItem(agents[i]);
+                agentComboBox1.addItem(agents[i]);
             }
             agentsAdded = true;
+        }
+    }
+
+    public void addAttributes(String[] labelStrings){
+        if(labelStrings != null && !attributesAdded){
+            this.labelStrings = labelStrings;
+            for(int i=0; i<labelStrings.length; i++){
+                //Remove trailing colon
+                int indexOfColon = labelStrings[i].lastIndexOf(':');
+                String cleanedLabel = labelStrings[i];
+                if(indexOfColon != -1){
+                    cleanedLabel = labelStrings[i].substring(0, indexOfColon);
+                }
+                dropdownStrings.add(cleanedLabel);
+                attributeComboBox.addItem(cleanedLabel);
+            }
+            attributesAdded = true;
         }
     }
 }
