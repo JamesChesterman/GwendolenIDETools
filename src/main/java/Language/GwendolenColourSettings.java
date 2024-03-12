@@ -42,52 +42,36 @@ final class GwendolenColourSettings implements ColorSettingsPage {
     @Override
     public String getDemoText(){
         return """
-// ----------------------------------------------------------------------------
-// Copyright (C) 2015 Louise A. Dennis and Michael Fisher
-//
-// This file is part of Gwendolen
-//
-// Gwendolen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-// 
-// Gwendolen is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-// Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public
-// License along with Gwendolen if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
-// To contact the authors:
-// http://www.csc.liv.ac.uk/~lad
-//----------------------------------------------------------------------------
-
+//This is a comment at the start of the program
 GWENDOLEN
 
-:name: printagentstate
+:name: robot
 
 :Initial Beliefs:
-
-string1("hello")
-string2(" ")
-string3("world")
+Gone
+Went
+Skipped
 
 :Initial Goals:
 
-compose_strings [perform]
+goto55 [perform]
 
 :Plans:
 
-+! compose_strings [perform] : {B string1(S1), B string2(S2), B string3(S3)} <-
-	append(S1, S2, Sp),
-	printagentstate,
-	append(Sp, S3, Sout),
-	printstate,
-	print(Sout),
-	print("hello world");
++!goto55 [perform] : {True} <- move_to(5,5);
+
++rubble(5, 5): {True} <- +holding(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z);
+
++wentTo : {B Gone} <- print(wentTo);
+-wentTo : {~B Gone} <- print("Not went to");
+
++gone : {~B Went} <- print(Gone);
+-gone : {B Went} <- print("Not Gone");
+
++holding(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z): {True} <- print(done);
+
++skipped : {B Skipped} <- print(Skip);
+-skipped : {~B Skipped, B Gone} <- print(Skip);
                 """;
     }
 
